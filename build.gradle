@@ -1,17 +1,22 @@
-
 // 插件的目的是为了引入依赖、管理依赖、打包成可执行文件等
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.2.0.RELEASE'
     id "io.spring.dependency-management" version "1.0.8.RELEASE"
+    id "org.zeroturnaround.gradle.jrebel" version "1.1.9"
 }
 
 group 'com.gradle.cn'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
 
 apply plugin: 'java'
+apply plugin: 'org.zeroturnaround.gradle.jrebel'
+apply plugin: 'io.spring.dependency-management'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+sourceCompatibility = 1.8
 
 repositories {
     // 使用阿里巴巴仓库
@@ -25,6 +30,9 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }
