@@ -16,13 +16,12 @@ public class Main {
 
     @GetMapping("/")
     public ResponseEntity<Void> index2(){
-        System.out.println(2323);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/index")
     public ResponseEntity<Void> index(){
-        //System.out.println(2323);
+        System.out.println(232);
         return ResponseEntity.ok().build();
     }
 }
