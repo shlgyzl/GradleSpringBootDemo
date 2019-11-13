@@ -15,13 +15,15 @@ public class Main {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Void> index2(){
+    public ResponseEntity<Void> index2() {
+        System.out.println(Thread.currentThread().getName());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/index")
-    public ResponseEntity<Void> index(){
+    public ResponseEntity<Void> index() {
         System.out.println(232);
         return ResponseEntity.ok().build();
     }
+
 }

@@ -1,22 +1,24 @@
 // 插件的目的是为了引入依赖、管理依赖、打包成可执行文件等
 plugins {
     id 'java'
+    id "net.ltgt.apt-idea" version "0.21"
+    id "com.querydsl.generator" version "1.2.3"
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.9"
     id 'org.springframework.boot' version '2.2.0.RELEASE'
     id "io.spring.dependency-management" version "1.0.8.RELEASE"
     id "org.zeroturnaround.gradle.jrebel" version "1.1.9"
 }
 
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.zeroturnaround.gradle.jrebel'
+
 group 'com.gradle.cn'
 version '1.0-SNAPSHOT'
 
-
-apply plugin: 'java'
-apply plugin: 'org.zeroturnaround.gradle.jrebel'
-apply plugin: 'io.spring.dependency-management'
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-sourceCompatibility = 1.8
 
 repositories {
     // 使用阿里巴巴仓库
@@ -24,16 +26,82 @@ repositories {
     maven { url 'https://mirrors.huaweicloud.com/repository/maven/' }
     maven { url 'https://repo.spring.io/milestone' }
     maven { url 'https://repo.spring.io/snapshot' }
+    maven { url "https://plugins.gradle.org/m2/" }
     gradlePluginPortal()
     mavenCentral()
 }
 
 dependencies {
+    // 引入libs目录下的所有jar包作为依赖
+    compile fileTree(dir: 'libs', include: ['*.jar']) // 像是这样
+    compile "org.springframework.boot:spring-boot-loader-tools"
+    compile "org.springframework.boot:spring-boot-starter-mail"
+    compile "org.springframework.boot:spring-boot-starter-logging"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-aop"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    //compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-websocket"
+    // 引入号称最快的数据库连接池HikariCP
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.4.1'
+    // 引入dbcp2数据源
+    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.7.0'
+    // 引入dbcp数据源
+    compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+    // 引入tomcat-jdbc数据源
+    compile group: 'org.apache.tomcat', name: 'tomcat-jdbc', version: '9.0.27'
+    // 引入druid数据源,自定义第三方数据源并配置
+    compile group: 'com.alibaba', name: 'druid', version: '1.1.20'
+    // 引入API接口文档UI用于网页展示
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    // 引入API接口文档用于传输API信息
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    // 引入Lombok注解
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    // 引入liquibase数据库版本和迁移工具
+    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.8.0'
+    // 引入H2database数据库方便开发测试
     compile group: 'com.h2database', name: 'h2', version: '1.4.200'
+    compile group: 'com.querydsl', name: 'querydsl-jpa', version: '4.2.0'
+    compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.2.0'
+    // 引入嵌入式容器Tomcat
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    // 引入测试单元
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    // 引入Lombok测试依赖
+    testCompile 'org.projectlombok:lombok:1.18.10'
+
+    // 引入编译注解执行器
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'com.querydsl:querydsl-apt:4.2.0'
+    // 引入测试注解执行器
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+}
+idea {
+    module {
+        sourceDirs += file('src/main/generated')
+        testSourceDirs += file('src/test/generated')
+    }
+}
+//QueryDSL
+def generatedSrcDir = 'src/main/generated'
+def generatedTestDir = 'src/test/generated'
+
+compileJava {
+    file(generatedSrcDir).mkdirs()
+    options.compilerArgs << '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor' << '-s' << file(generatedSrcDir).absolutePath
 }
 
+compileTestJava {
+    file(generatedTestDir).mkdirs()
+    options.compilerArgs << '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor' << '-s' << file(generatedTestDir).absolutePath
+}
+
+clean {
+    delete generatedSrcDir
+    delete generatedTestDir
+}
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }

@@ -1,10 +1,14 @@
 package com.application.config;
 
+import com.application.helper.H2ServerStartHelper;
+import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+
+import java.sql.SQLException;
 
 @Configuration
 public class H2DataBaseConfiguration {
@@ -16,11 +20,11 @@ public class H2DataBaseConfiguration {
     }
 
     @Bean(initMethod = "start", destroyMethod = "stop")
-    public Object h2TCPServer() {
+    public Server h2TCPServer() throws SQLException {
         String port = getValidPortForH2();
         log.debug("H2 database is available on port {}", port);
-
-        return null;
+        // 默认是9092端口
+        return H2ServerStartHelper.createServer();
     }
 
     private String getValidPortForH2() {
