@@ -25,4 +25,5 @@ public class Dam implements Serializable {
     @Column
     @ApiModelProperty(name = "name")
     private String name;
+
 }
