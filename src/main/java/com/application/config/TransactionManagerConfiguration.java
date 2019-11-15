@@ -27,7 +27,7 @@ public class TransactionManagerConfiguration {
     private DataSource jdbcDataSource;
 
     @Bean
-    public PlatformTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
 

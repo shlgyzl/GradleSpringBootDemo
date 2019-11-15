@@ -1,22 +1,6 @@
-/*buildscript {
-    repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
-        gradlePluginPortal()
-        jcenter()
-    }
-    dependencies {
-        classpath "gradle.plugin.com.querydsl.generator:querydsl-plugin:2.0.1"
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.2.0.RELEASE"
-        classpath "gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.10"
-        classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
-    }
-}*/
-
 // 插件的目的是为了引入依赖、管理依赖、打包成可执行文件等
 plugins {
     id 'java'
-    //id "net.ltgt.apt-idea" version "0.21"
-    //id "com.querydsl.generator" version "2.0.1"
     //id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id 'org.springframework.boot' version '2.2.0.RELEASE'
     id "io.spring.dependency-management" version "1.0.8.RELEASE"
@@ -28,28 +12,21 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.zeroturnaround.gradle.jrebel'
-//apply plugin: "com.querydsl.generator"
 apply plugin: 'eclipse'
-//apply plugin: 'spring-boot'
-//apply plugin: "net.ltgt.apt"
-//apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
-
+//QueryDSL
+def generatedSrcDir = 'src/main/generate-sources'
+def generatedTestDir = 'src/test/generate-sources'
 idea {
     module {
-        sourceDirs += file('generated-sources/querydsl')
-        testSourceDirs += file('generated-sources-test/querydsl')
+        sourceDirs += file(generatedSrcDir)
+        testSourceDirs += file(generatedTestDir)
     }
 }
-//QueryDSL
-def generatedSrcDir = 'generated-sources/querydsl'
-def generatedTestDir = 'generated-sources-test/querydsl'
-
 compileJava {
     file(generatedSrcDir).mkdirs()
     options.compilerArgs << '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor,lombok.launch.AnnotationProcessorHider$AnnotationProcessor' << '-s' << file(generatedSrcDir).absolutePath
 }
-
 compileTestJava {
     file(generatedTestDir).mkdirs()
     options.compilerArgs << '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor' << '-s' << file(generatedTestDir).absolutePath
@@ -79,7 +56,7 @@ repositories {
 
 dependencies {
     // 引入libs目录下的所有jar包作为依赖
-    compile fileTree(dir: 'libs', include: ['*.jar']) // 像是这样
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.springframework.boot:spring-boot-loader-tools"
     compile "org.springframework.boot:spring-boot-starter-mail"
     compile "org.springframework.boot:spring-boot-starter-logging"
@@ -108,13 +85,10 @@ dependencies {
     compile group: 'com.h2database', name: 'h2', version: '1.4.200'
     // 引入Lombok注解
     compile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    // 引入QueryDsl注解执行器
+    compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.2.1'
     compile group: 'com.querydsl', name: 'querydsl-jpa', version: '4.2.1'
-    //compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.2.1'
-    compile("com.querydsl:querydsl-apt:4.2.1"){
-        exclude group: 'com.google.guava'
-    }
     compile group: 'com.querydsl', name: 'querydsl-mongodb', version: '4.2.1'
-
     // 引入嵌入式容器Tomcat
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
@@ -123,15 +97,19 @@ dependencies {
     // 引入Lombok测试依赖
     testCompile 'org.projectlombok:lombok:1.18.10'
 
-    // 引入编译注解执行器
+    // 引入编译注解执行器,不引入注解执行器那么将会出现无法解析注解的问题
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
-    annotationProcessor 'com.querydsl:querydsl-apt:4.2.1:jpa'
-    annotationProcessor 'javax.annotation:javax.annotation-api:1.3.1'
+    annotationProcessor 'com.querydsl:querydsl-apt:4.2.1'
+    annotationProcessor 'com.querydsl:querydsl-jpa:4.2.1'
+    annotationProcessor 'javax.annotation:javax.annotation-api:1.3.2'
     annotationProcessor 'org.springframework.boot:spring-boot-starter-data-jpa:2.2.0.RELEASE'
 
     // 引入测试注解执行器
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
-
+    testAnnotationProcessor 'com.querydsl:querydsl-apt:4.2.1'
+    testAnnotationProcessor 'com.querydsl:querydsl-jpa:4.2.1'
+    testAnnotationProcessor 'javax.annotation:javax.annotation-api:1.3.2'
+    testAnnotationProcessor 'org.springframework.boot:spring-boot-starter-data-jpa:2.2.0.RELEASE'
 }
 
 tasks.withType(JavaCompile) {
