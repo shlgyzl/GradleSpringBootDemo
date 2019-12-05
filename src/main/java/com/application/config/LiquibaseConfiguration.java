@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 @EnableConfigurationProperties(LiquibaseProperties.class)
 public class LiquibaseConfiguration {
     @Bean
-    public SpringLiquibase liquibase(@Qualifier(value = "jdbcDataSource") DataSource dataSource, LiquibaseProperties liquibaseProperties) {
+    public SpringLiquibase liquibase(@Qualifier(value = "druidDataSource") DataSource dataSource, LiquibaseProperties liquibaseProperties) {
 
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
@@ -22,6 +22,7 @@ public class LiquibaseConfiguration {
         liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
         liquibase.setDropFirst(liquibaseProperties.isDropFirst());
         liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
+        liquibase.setShouldRun(true);
         return liquibase;
     }
 }

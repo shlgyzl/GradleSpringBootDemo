@@ -2,6 +2,9 @@ package com.application;
 
 import org.junit.Test;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +36,14 @@ public class CommonTest {
         latch.await();
         System.out.println("main thread finishes await. ");
     }
+
+    @Test
+    public void test03() {
+        //ZonedDateTime zone = Instant.now().atZone(ZoneId.systemDefault());
+        //System.out.println(zone.toLocalDateTime());
+        System.out.println(ZoneId.systemDefault());
+    }
+
 }
 
 class Service {

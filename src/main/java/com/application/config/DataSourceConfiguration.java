@@ -6,10 +6,13 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
 
@@ -26,6 +29,7 @@ public class DataSourceConfiguration {
         dataSourceBuilder.password(dataSourceProperties.getPassword());
         dataSourceBuilder.username(dataSourceProperties.getUsername());
         dataSourceBuilder.driverClassName(dataSourceProperties.getDriverClassName());
+        dataSourceBuilder.type(dataSourceProperties.getType());
     }
 
     //@Bean(name = "hikariDataSource")// 配置HikariDataSource数据源
@@ -48,7 +52,8 @@ public class DataSourceConfiguration {
         return new HikariDataSource(config);
     }
 
-    //@Bean(name = "druidDataSource")// 自定义DruidDataSource数据源
+    @ConfigurationProperties(prefix = "spring.datasource")
+    @Bean(name = "druidDataSource")// 自定义DruidDataSource数据源
     public DataSource druidDataSource() {
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUrl(dataSourceProperties.getUrl());
@@ -63,12 +68,12 @@ public class DataSourceConfiguration {
         return druidDataSource;
     }
 
-    //@Bean(name = "basicDataSource")
+    @Bean(name = "basicDataSource")
     public DataSource basicDataSource() {
         return dataSourceBuilder.type(BasicDataSource.class).build();
     }
 
-    //@Bean(name = "basic2DataSource")
+    @Bean(name = "basic2DataSource")
     public DataSource basic2DataSource() {
         return dataSourceBuilder.type(org.apache.commons.dbcp2.BasicDataSource.class).build();
     }
@@ -76,5 +81,16 @@ public class DataSourceConfiguration {
     @Bean(name = "jdbcDataSource")
     public DataSource jdbcDataSource() {
         return dataSourceBuilder.type(org.apache.tomcat.jdbc.pool.DataSource.class).build();
+    }
+
+    /**
+     * 创建嵌入式数据源
+     *
+     * @return DataSource
+     */
+    @Bean(name = "hSQLDataSource")
+    public DataSource hSQLDataSource() {
+        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+        return builder.setType(EmbeddedDatabaseType.HSQL).build();
     }
 }

@@ -21,8 +21,7 @@ public class SchedulingConfiguration implements SchedulingConfigurer {
     // 获取本系统的每个CPU的线程数
     private final static int num = Runtime.getRuntime().availableProcessors();
     @Resource
-    @Qualifier(value = "getAsyncExecutor")
-    private Executor executor;
+    private Executor taskExecutor;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
@@ -30,7 +29,7 @@ public class SchedulingConfiguration implements SchedulingConfigurer {
     }
 
     public Executor executorTasks() {
-        ThreadFactory factory = (ThreadPoolTaskExecutor) executor;
+        ThreadFactory factory = (ThreadPoolTaskExecutor) taskExecutor;
         return Executors.newScheduledThreadPool(num / 2, factory);
     }
 }

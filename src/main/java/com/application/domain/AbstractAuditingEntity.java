@@ -13,27 +13,32 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * Base abstract class for entities which will hold definitions for created, last modified by and created,
  * last modified by date.
  */
 @MappedSuperclass
-//@EntityListeners(AuditingEntityListener.class)
+@EntityListeners(AuditingEntityListener.class)
 @Data
 public abstract class AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false, length = 50, updatable = false)
+    @Column(name = "created_by", length = 50, updatable = false)
     @JsonIgnore
     private String createdBy;
 
     @CreatedDate
+    //@Temporal(TemporalType.TIMESTAMP)//生成yyyy-MM-dd类型的日期实体类上必须有Date类型或calendar类型才有效
+    //@JsonFormat(pattern = "yyyy-MM-dd")//出参时间格式化
+    //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")//入参时，请求报文只需要传入yyyy mm dd hh mm ss字符串进来，则自动转换为Date类型数据
     @Column(name = "created_date", updatable = false)
-    @JsonIgnore
-    private Instant createdDate = Instant.now();
+    //@JsonIgnore
+    private LocalDateTime createdDate = LocalDateTime.now(ZoneId.systemDefault());
 
     @LastModifiedBy
     @Column(name = "last_modified_by", length = 50)
@@ -41,7 +46,10 @@ public abstract class AbstractAuditingEntity implements Serializable {
     private String lastModifiedBy;
 
     @LastModifiedDate
+    //@Temporal(TemporalType.TIMESTAMP)//生成yyyy-MM-dd类型的日期
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")//出参时间格式化
+    //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")//入参时，请求报文只需要传入yyyy mm dd hh mm ss字符串进来，则自动转换为Date类型数据
     @Column(name = "last_modified_date")
-    @JsonIgnore
-    private Instant lastModifiedDate = Instant.now();
+    //@JsonIgnore
+    private LocalDateTime lastModifiedDate = LocalDateTime.now(ZoneId.systemDefault());
 }

@@ -11,15 +11,37 @@ import java.sql.SQLException;
 
 public class H2ServerStartHelper {
     public static Server createServer() throws SQLException {
-        return createServer("9092");
+        // 默认情况创建WEB
+        return createWebServer("9092");
     }
 
-    public static Server createServer(String port) throws SQLException {
+    public static Server createWebServer(String port) throws SQLException {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             Class<?> serverClass = Class.forName("org.h2.tools.Server", true, loader);
             Method createServer = serverClass.getMethod("createWebServer", String[].class);
             return (Server) createServer.invoke(null, new Object[]{new String[]{"-web", "-webAllowOthers", "-webPort", port}});
+
+        } catch (ClassNotFoundException | LinkageError e) {
+            throw new RuntimeException("Failed to load and initialize org.h2.tools.Server", e);
+
+        } catch (SecurityException | NoSuchMethodException e) {
+            throw new RuntimeException("Failed to get method org.h2.tools.Server.createTcpServer()", e);
+
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            throw new RuntimeException("Failed to invoke org.h2.tools.Server.createTcpServer()", e);
+
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException("Unchecked exception in org.h2.tools.Server.createTcpServer()");
+        }
+    }
+
+    public static Server createTcpServer(String port) throws SQLException {
+        try {
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            Class<?> serverClass = Class.forName("org.h2.tools.Server", true, loader);
+            Method createServer = serverClass.getMethod("createTcpServer", String[].class);
+            return (Server) createServer.invoke(null, new Object[]{new String[]{"-tcp", "-tcpAllowOthers", "-tcpPort", port}});
 
         } catch (ClassNotFoundException | LinkageError e) {
             throw new RuntimeException("Failed to load and initialize org.h2.tools.Server", e);

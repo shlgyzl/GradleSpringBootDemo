@@ -1,0 +1,50 @@
+def getLiquibaseProperties = {
+    def properties = new Properties()
+    file("src/main/resources/config/liquibase/liquibase.properties").withInputStream { inputStream ->
+        properties.load(inputStream)
+    }
+    properties
+}
+
+ext.liquibaseProperties = getLiquibaseProperties()
+project.ext.diffChangelogFile = 'src/main/resources/config/liquibase/changelog/' + new Date().format('yyyyMMddHHmmss') + '_changelog.xml'
+if (!project.hasProperty('runList')) {
+    project.ext.runList = 'main'
+}
+liquibase {
+    activities {
+        main {
+            driver liquibaseProperties['driver']
+            changeLogFile liquibaseProperties['changeLogFile']
+            url liquibaseProperties['url']
+            username liquibaseProperties['username']
+            password liquibaseProperties['password']
+            logLevel liquibaseProperties['logLevel']
+            classpath 'src/main/resources/'
+        }
+        diffLog {
+            driver liquibaseProperties['driver']
+            changeLogFile liquibaseProperties['changeLogFile']
+            url liquibaseProperties['url']
+            username liquibaseProperties['username']
+            password liquibaseProperties['password']
+            logLevel liquibaseProperties['logLevel']
+            //changeLogFile project.ext.diffChangelogFile
+            referenceUrl 'hibernate:spring:com.ecidi.dpi.domain?dialect=org.hibernate.dialect.H2Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
+            //classpath "$buildDir/classes/java/main"
+            classpath 'src/main/resources/'
+        }
+        data {
+            driver liquibaseProperties['driver']
+            changeLogFile liquibaseProperties['changeLogFile']
+            url liquibaseProperties['url']
+            username liquibaseProperties['username']
+            password liquibaseProperties['password']
+            logLevel liquibaseProperties['logLevel']
+            outputFile 'src/main/resources/config/liquibase/data.sql'
+            diffTypes 'data'
+            classpath "src/main/resources/"
+        }
+    }
+    runList = project.ext.runList
+}

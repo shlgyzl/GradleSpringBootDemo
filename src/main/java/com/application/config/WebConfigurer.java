@@ -8,12 +8,15 @@ import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
+import java.sql.SQLException;
 import java.util.EnumSet;
 
+import static com.application.helper.H2ServerStartHelper.createTcpServer;
 import static com.application.helper.H2ServerStartHelper.initH2Console;
 
 @Configuration
@@ -37,7 +40,14 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         }
         EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
         initCachingHttpHeadersFilter(servletContext, dispatcherTypes);
-        initH2Console(servletContext);
+        // 使用WEB则需配置访问路径
+//        initH2Console(servletContext);
+        // 使用TCP则需要屏蔽WEB的JAVA配置,因为此处的TCP启动在SpringBoot之后,在使用容器部署时会出现连接超时
+        try {
+            createTcpServer("9092").start();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         log.info("Web application fully configured");
     }
 

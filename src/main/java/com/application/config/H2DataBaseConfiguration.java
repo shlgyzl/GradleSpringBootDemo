@@ -6,9 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 
 import java.sql.SQLException;
+import java.util.Objects;
 
 @Configuration
 public class H2DataBaseConfiguration {
@@ -19,16 +22,16 @@ public class H2DataBaseConfiguration {
         this.env = env;
     }
 
-    @Bean(initMethod = "start", destroyMethod = "stop")
+    //@Bean(initMethod = "start", destroyMethod = "stop")
     public Server h2TCPServer() throws SQLException {
         String port = getValidPortForH2();
         log.debug("H2 database is available on port {}", port);
-        // 默认是9092端口
+        // 默认是9092端口,且是WEB方式
         return H2ServerStartHelper.createServer();
     }
 
     private String getValidPortForH2() {
-        int port = Integer.parseInt(env.getProperty("server.port"));
+        int port = Integer.parseInt(Objects.requireNonNull(env.getProperty("server.port")));
         while (port < 10000 || port > 63536 - 2000) {
             if (port < 10000) {
                 port += 2000;

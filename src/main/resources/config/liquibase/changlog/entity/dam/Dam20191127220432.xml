@@ -3,10 +3,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-
-    <changeSet id="00000000000001" author="YangHaiYong" context="dev, test, prod">
-        <!-- 加载初始化数据 -->
-        <loadData tableName="tbl_dam" separator=";" file="config/liquibase/data/dam.csv"/>
-        <loadData tableName="tbl_user" separator=";" file="config/liquibase/data/user.csv"/>
+    <!-- 实体修改 -->
+    <changeSet id="20191127220502" author="YangHaiYong" context="dev, test, prod">
+        <setColumnRemarks tableName="tbl_dam" columnName="id" remarks="主键id"/>
+        <setColumnRemarks tableName="tbl_dam" columnName="name" remarks="大坝名称"/>
     </changeSet>
 </databaseChangeLog>

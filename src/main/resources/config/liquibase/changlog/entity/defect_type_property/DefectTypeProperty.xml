@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20191127223151" author="YangHaiYong" context="dev, test, prod">
+        <createTable tableName="tbl_defect_type_property">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}" remarks="缺陷类型属性id">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)" remarks="缺陷类型属性名称">
+                <constraints unique="true" nullable="false" uniqueConstraintName="ux_defect_type_property_name"/>
+            </column>
+            <column name="field_type" type="varchar(255)" remarks="字段类型">
+                <constraints unique="false" nullable="false"/>
+            </column>
+            <column name="required_field" type="varchar(255)" remarks="必填项">
+                <constraints unique="false" nullable="false"/>
+            </column>
+            <column name="max_value" type="varchar(255)" remarks="最大值">
+                <constraints unique="false" nullable="false"/>
+            </column>
+            <column name="min_value" type="varchar(255)" remarks="最小值">
+                <constraints unique="false" nullable="false"/>
+            </column>
+            <column name="default_value" type="varchar(255)" remarks="默认值">
+                <constraints unique="false" nullable="false"/>
+            </column>
+            <column name="value" type="varchar(255)" remarks="测量值">
+                <constraints unique="false" nullable="false"/>
+            </column>
+            <column name="unit" type="varchar(255)" remarks="单位">
+                <constraints unique="false" nullable="false"/>
+            </column>
+            <column name="defect_type_id" type="varchar(255)" remarks="缺陷类型">
+                <constraints unique="false" nullable="false"/>
+            </column>
+            <column name="region" type="varchar(255)" remarks="值所在区间">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
