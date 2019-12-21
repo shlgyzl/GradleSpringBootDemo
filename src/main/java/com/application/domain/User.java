@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,11 +17,10 @@ import java.util.Set;
  * A user.
  */
 @Entity
-//@Document(collection = "user")
 @Table(name = "tbl_user")
 @Data
 @ApiModel(value = "User", description = "用户")
-@EqualsAndHashCode(exclude = {"dams"},callSuper = true)
+@EqualsAndHashCode(exclude = {"dams"}, callSuper = true)
 @ToString(exclude = {"dams"})
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -35,28 +33,28 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "账号不能为空")
     @NonNull
-    @Size(min = 1, max = 50)
-    @Column(length = 50, unique = true, nullable = false)
-    @ApiModelProperty(value = "账号")
+    @Size(min = 1, max = 20, message = "用户名不能为空或超过20个字符")
+    @Column(length = 20, unique = true, nullable = false)
+    @ApiModelProperty(name = "login", value = "账号", dataType = "String")
     private String login;
 
-    @NotNull
+    //@NotNull(message = "密码不能为空")
     @NonNull
-    @Size(min = 60, max = 60)
-    @Column(name = "password_hash", length = 60, nullable = false)
+    //@Size(min = 6, max = 15, message = "密码不能小于6个字符,不能超过15个字符")//不能与JsonIgnore同时使用
+    @Column(name = "password_hash", length = 15, nullable = false)
+    @ApiModelProperty(name = "password", value = "密码", dataType = "String")
     @JsonIgnore
-    @ApiModelProperty(value = "密码")
-    private String password;
+    private String password = (int) ((Math.random() * 9 + 1) * 100000) + "";
 
-    @ManyToMany(cascade = {CascadeType.PERSIST})
+
     @JoinTable(
             name = "tbl_user_dam",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "dam_id", referencedColumnName = "id")})
     @BatchSize(size = 20)
-    @DBRef
+    @ManyToMany(cascade = {CascadeType.PERSIST})
     private Set<Dam> dams = new HashSet<>();
 
     @NotNull
@@ -64,5 +62,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @ApiModelProperty(name = "version", value = "用户版本锁", dataType = "Long", required = true)
     @Column
     @Version
-    private Long version;
+    @JsonIgnore
+    private Long version = 0L;
 }

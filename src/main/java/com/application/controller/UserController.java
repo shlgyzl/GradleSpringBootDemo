@@ -1,11 +1,12 @@
 package com.application.controller;
 
-import com.application.domain.Dam;
 import com.application.domain.User;
 import com.application.repository.jpa.UserRepository;
 import com.application.repository.jpa.dao.impl.UserDaoImpl;
 import com.querydsl.core.types.Predicate;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.beans.BeanMap;
@@ -19,11 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 
 @Api(value = "UserController用户控制层", tags = {"User用户信息接口"})
 @RestController
-@RequestMapping("user")
+@RequestMapping("api/user")
 @Slf4j
 public class UserController {
 
@@ -34,15 +34,18 @@ public class UserController {
     private UserRepository userRepository;
 
     @ApiOperation(value = "查询大坝下所属用户", notes = "条件限制")
-    @GetMapping("/findByDamName")
-    public ResponseEntity<List<User>> findByDamName(Dam dam) {
-        return ResponseEntity.ok(userRepository.findByDamsName(dam.getName()));
+    @GetMapping("/findByPredicate")
+    public ResponseEntity<Iterable<User>> findByPredicate(
+            @QuerydslPredicate(root = User.class) Predicate predicate) {
+        return ResponseEntity.ok(userRepository.findAll(predicate));
     }
 
     @ApiOperation(value = "分页条件查询大坝", notes = "条件限制")
-    @GetMapping("/findByPageForSearch")
-    public ResponseEntity<Page<User>> findByPageForSearch(@QuerydslPredicate(root = User.class) Predicate predicate,
-                                                          @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "login", value = "1", type = "String")})
+    @GetMapping("/findByPageAndPredicate")
+    public ResponseEntity<Page<User>> findByPageAndPredicate(
+            @QuerydslPredicate(root = User.class, bindings = UserRepository.class) Predicate predicate,
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok().body(userRepository.findAll(predicate, pageable));
     }
 
@@ -53,12 +56,10 @@ public class UserController {
     }
 
     @ApiOperation(value = "更新用户", notes = "条件限制")
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<User> update(@Valid @RequestBody User user) {
-        int update = userRepository.updateForStatic(user.getLogin(), user.getId());
-        if (update > 0) {
-            log.debug("修改成功：{}", user);
-        }
+        User update = userRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("用户不存在"));
+        user.setVersion(update.getVersion());
         return ResponseEntity.ok().body(userRepository.save(user));
     }
 

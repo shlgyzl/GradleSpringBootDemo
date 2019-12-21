@@ -1,12 +1,12 @@
 package com.application.repository.jpa;
 
+
 import com.application.domain.QUser;
 import com.application.domain.User;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.core.types.dsl.StringPath;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,7 +19,6 @@ import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.querydsl.binding.SingleValueBinding;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.Nullable;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
 import javax.validation.constraints.NotNull;
@@ -34,6 +33,8 @@ public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslB
             "where D.name = :name ")
     List<User> findByDamsName(@Param("name") String name);
 
+    @EntityGraph(attributePaths = {"dams"})
+    Iterable<User> findAll(Predicate predicate);
 
     @Query(value = "select U from User U " +
             "where U.id in ( :ids) ")
@@ -52,7 +53,7 @@ public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslB
     default void customize(QuerydslBindings bindings, QUser user) {
         // 只要使用到了Predicate,那么此处的规则可以我们自己定义
         // 账号包含查询
-        bindings.bind(user.login).first(StringExpression::contains);
+        //bindings.bind(user.login).first(StringExpression::contains);
         bindings.bind(user.id).first(SimpleExpression::eq);
         // 其他字符串格式的忽略大小写查询
         bindings.bind(String.class)
@@ -68,7 +69,8 @@ public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslB
      */
     @EntityGraph(attributePaths = {"dams"})
     @NotNull
-    @Lock(LockModeType.READ)// 这种锁也只能在个JVM生效,针对多JVM仍然失效
+    @Lock(LockModeType.READ)
+// 这种锁也只能在个JVM生效,针对多JVM仍然失效
     Optional<User> findById(@NotNull Long id);
 
     @Query(value = "SELECT * FROM TBL_USER WHERE ID = ?1", nativeQuery = true)

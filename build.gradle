@@ -1,7 +1,6 @@
 // 插件的目的是为了引入依赖、管理依赖、打包成可执行文件等
 plugins {
     id 'java'
-    //id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id 'org.springframework.boot' version '2.2.0.RELEASE'
     id "io.spring.dependency-management" version "1.0.8.RELEASE"
     id "org.zeroturnaround.gradle.jrebel" version "1.1.9"
@@ -18,9 +17,11 @@ apply plugin: 'eclipse'
 apply from: 'liquibase.gradle'
 apply from: 'test.gradle'
 
+
 //QueryDSL
 def generatedSrcDir = 'src/main/generate-sources'
 def generatedTestDir = 'src/test/generate-sources'
+
 idea {
     module {
         sourceDirs += file(generatedSrcDir)
@@ -34,21 +35,22 @@ configurations.all() {
         // 遇到冲突则停止构建
         configuration.resolutionStrategy.failOnVersionConflict()
         configuration.resolutionStrategy.force(['org.javassist:javassist:3.24.0-GA'])
-        //configuration.resolutionStrategy.force(['org.springframework.plugin:spring-plugin-core:2.0.0.RELEASE'])
         configuration.resolutionStrategy.force(['com.google.guava:guava:26.0-jre'])
         configuration.resolutionStrategy.force(['com.google.code.findbugs:jsr305:3.0.2'])
-        //compile.exclude module: 'spring-plugin-core'
         //或者这样写
         //resolutionStrategy.setForcedModules(['org.slf4j:slf4j-api:1.6.1'])
 }
 compileJava {
-    println "运行JAVA"
+    println "运行JAVA,$buildDir->"
     file(generatedSrcDir).mkdirs()
-    options.compilerArgs << '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor,lombok.launch.AnnotationProcessorHider$AnnotationProcessor' << '-s' << file(generatedSrcDir).absolutePath
+    //options.compilerArgs << '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor,lombok.launch.AnnotationProcessorHider$AnnotationProcessor,com.querydsl.apt.morphia.MorphiaAnnotationProcessor,org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor' << '-s' << file(generatedSrcDir).absolutePath
 }
 compileTestJava {
     file(generatedTestDir).mkdirs()
-    options.compilerArgs << '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor' << '-s' << file(generatedTestDir).absolutePath
+    options.compilerArgs << '-processor' <<
+            'com.querydsl.apt.jpa.JPAAnnotationProcessor,' +
+            'lombok.launch.AnnotationProcessorHider$AnnotationProcessor,' +
+            'com.querydsl.apt.morphia.MorphiaAnnotationProcessor' << '-s' << file(generatedTestDir).absolutePath
 }
 
 clean {
@@ -84,9 +86,10 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-data-mongodb"
     compile "org.springframework.boot:spring-boot-starter-data-redis"
-    /*compile('org.springframework.boot:spring-boot-starter-hateoas:2.2.0.RELEASE'){
-        //exclude group: 'org.springframework.plugin'
-    }*/
+    compile "org.springframework.boot:spring-boot-starter-activemq"
+    compile "org.springframework.boot:spring-boot-starter-amqp"
+    compile "org.springframework.boot:spring-boot-starter-test"
+    //compile "org.springframework.boot:spring-boot-starter-hateoas"
     //compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-starter-websocket"
     // 引入号称最快的数据库连接池HikariCP
@@ -100,8 +103,7 @@ dependencies {
     // 引入druid数据源,自定义第三方数据源并配置
     compile group: 'com.alibaba', name: 'druid', version: '1.1.20'
     // 引入API接口文档UI用于网页展示
-    compile(group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2') {
-    }
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     // 引入API接口文档用于传输API信息
     compile(group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2') {
         exclude group: 'io.swagger', module: 'swagger-annotations'
@@ -110,15 +112,14 @@ dependencies {
     // 用于解决访问swagger2静态页面失败问题
     compile("io.swagger:swagger-annotations:1.5.21")
     compile("io.swagger:swagger-models:1.5.21")
-
+    // 引入mongodb实体注解配合queryDSL(google扫描)
+    compile group: 'com.google.code', name: 'morphia', version: '0.91'
     // 用于LocalDateTime转Instant类型或反转
     compile group: 'org.joda', name: 'joda-convert', version: '2.2.1'
     // 加入时间工具类
     compile group: 'joda-time', name: 'joda-time', version: '2.10.5'
-
     // 引入时间前端展示转换器
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.1'
-
     // 引入hsqldb驱动
     compile group: 'org.hsqldb', name: 'hsqldb', version: '2.5.0'
     // 解决静态页面访问问题
@@ -127,20 +128,34 @@ dependencies {
     compile group: 'org.liquibase', name: 'liquibase-core', version: '3.8.0'
     // 引入H2database数据库方便开发测试
     compile group: 'com.h2database', name: 'h2', version: '1.4.200'
-    // 引入Lombok注解
-    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    //compile group: 'org.springframework.plugin', name: 'spring-plugin-core', version: '2.0.0.RELEASE'
-    //compile group: 'org.springframework.plugin', name: 'spring-plugin-metadata', version: '1.2.0.RELEASE'
-    // 引入QueryDsl注解执行器
-    compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.2.1'
+    // 引入Sql格式化工具
+    compile group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
+
+    compile group: 'com.google.code.morphia', name: 'morphia', version: '0.104'
+    // 引入mongodb注解驱动
+    compile group: 'org.mongodb.morphia', name: 'morphia', version: '1.3.2'
+    annotationProcessor 'org.mongodb.morphia:morphia:1.3.2'
+
+    // 引入Lombok注解驱动器
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+    // 引入QueryDsl注解驱动器
+    compileOnly group: 'com.querydsl', name: 'querydsl-apt', version: '4.2.1'
+    annotationProcessor 'com.querydsl:querydsl-apt:4.2.1'
+
+    // 引入JPA注解驱动器
+    //compileOnly group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
+    //annotationProcessor 'javax.annotation:javax.annotation-api:1.3.2'
+
     compile(group: 'com.querydsl', name: 'querydsl-jpa', version: '4.2.1') {
         exclude module: 'javassist'
     }
     compile group: 'com.querydsl', name: 'querydsl-mongodb', version: '4.2.1'
-    // 引入Sql格式化工具
-    compile group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
+
     // 引入嵌入式容器Tomcat
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
     testCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
     // 引入测试单元
     testCompile group: 'junit', name: 'junit', version: '4.12'
@@ -148,18 +163,21 @@ dependencies {
     testCompile 'org.projectlombok:lombok:1.18.10'
 
     // 引入编译注解执行器,不引入注解执行器那么将会出现无法解析注解的问题
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
-    annotationProcessor 'com.querydsl:querydsl-apt:4.2.1'
-    annotationProcessor 'com.querydsl:querydsl-jpa:4.2.1'
-    annotationProcessor 'javax.annotation:javax.annotation-api:1.3.2'
+
+
+    //annotationProcessor 'com.querydsl:querydsl-jpa:4.2.1'
+
     annotationProcessor 'org.springframework.boot:spring-boot-starter-data-jpa:2.2.0.RELEASE'
+    annotationProcessor 'org.springframework.boot:spring-boot-starter-data-mongodb:2.2.0.RELEASE'
 
     // 引入测试注解执行器
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
     testAnnotationProcessor 'com.querydsl:querydsl-apt:4.2.1'
     testAnnotationProcessor 'com.querydsl:querydsl-jpa:4.2.1'
+    testAnnotationProcessor 'org.mongodb.morphia:morphia:1.3.2'
     testAnnotationProcessor 'javax.annotation:javax.annotation-api:1.3.2'
     testAnnotationProcessor 'org.springframework.boot:spring-boot-starter-data-jpa:2.2.0.RELEASE'
+
 
     liquibaseRuntime 'org.liquibase:liquibase-core:3.8.0'
     liquibaseRuntime sourceSets.main.compileClasspath

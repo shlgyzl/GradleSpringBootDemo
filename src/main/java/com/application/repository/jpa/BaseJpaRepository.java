@@ -6,5 +6,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 
 @NoRepositoryBean
-public interface BaseJpaRepository<T, ID> extends JpaRepository<T, ID>, QuerydslPredicateExecutor<T>, QueryByExampleExecutor<T> {
+public interface BaseJpaRepository<T, ID> extends JpaRepository<T, ID>,
+        QuerydslPredicateExecutor<T>, QueryByExampleExecutor<T> {
 }

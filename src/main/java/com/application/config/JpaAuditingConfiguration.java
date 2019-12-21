@@ -15,11 +15,11 @@ import java.util.Optional;
 public class JpaAuditingConfiguration {
 
     @Bean
-    public AuditorAware<Long> auditorProvider() {
+    public AuditorAware<String> auditorProvider() {
         //使用jpa审计功能，保存数据时自动插入创建人id和更新人id
         return () -> {
             // 从session中获取当前用户
-            return Optional.of(1L);
+            return Optional.of("系统管理员");
         };
     }
 }

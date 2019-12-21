@@ -1,12 +1,17 @@
 package com.application;
 
 import com.application.domain.User;
+import com.application.domain.mongodb.UserMD;
 import com.application.repository.jpa.UserRepository;
 import com.application.repository.jpa.dao.impl.UserDaoImpl;
 import com.application.repository.mongodb.UserMongoDBRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -36,6 +41,9 @@ public class Main {
     private UserRepository userRepository;
 
     @Resource
+    private AmqpTemplate rabbitmqTemplate;
+
+    @Resource
     private UserDaoImpl userDao;
 
     @Resource
@@ -54,10 +62,10 @@ public class Main {
 
     @GetMapping("/index")
     public ResponseEntity<Void> index() {
-        System.out.println(232);
-        userMongoDBRepository.save(userRepository.findById(1L).get());
-        Optional<User> user = userMongoDBRepository.findById(1L);
-        log.debug("查询的集合: {}", user.toString());
+        UserMD save = userMongoDBRepository.save(new UserMD());
+        //Optional<UserMD> md = userMongoDBRepository.findById(save.getId());
+        userMongoDBRepository.deleteAll();
+        //log.debug("查询的集合: {}", user.toString());
         //userMongoDBRepository.delete(user.orElse(new User()));
         return ResponseEntity.ok().build();
     }
@@ -98,5 +106,14 @@ public class Main {
         redisTemplate.opsForValue().set("user", "123");
         System.out.println(redisTemplate.boundHashOps("user_redis").get("user"));
         return ResponseEntity.ok().body(user);
+    }
+
+    @GetMapping("/rabbit")
+    public ResponseEntity<Void> rabbit() {
+        String msg = "测试RabbitMQ";
+        //发送消息
+        rabbitmqTemplate.convertAndSend("executeTask", msg);
+        log.info("消息：{},已发送", msg);
+        return ResponseEntity.ok().build();
     }
 }

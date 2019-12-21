@@ -3,6 +3,7 @@ package com.application.controller;
 import com.application.domain.DefectType;
 import com.application.repository.jpa.DefectTypePropertyRepository;
 import com.application.repository.jpa.DefectTypeRepository;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,8 +13,9 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.Optional;
 
+@Api(value = "DefectTypeController缺陷类型控制层", tags = {"DetectType缺陷类型接口"})
 @RestController
-@RequestMapping("detectType")
+@RequestMapping("api/detectType")
 public class DefectTypeController {
     @Resource
     private DefectTypeRepository defectTypeRepository;
@@ -44,7 +46,7 @@ public class DefectTypeController {
 
     @ApiOperation(value = "更新接口", notes = "更新缺陷类型")
     @PutMapping("/update")
-    public ResponseEntity<DefectType> update(@RequestBody DefectType defectType) {
+    public ResponseEntity<DefectType> update(@Valid @RequestBody DefectType defectType) {
         DefectType save = defectTypeRepository.save(defectType);
         return ResponseEntity.ok().body(save);
     }

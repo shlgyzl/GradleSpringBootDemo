@@ -1,8 +1,7 @@
 package com.application.repository.mongodb;
 
-import com.application.domain.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import com.application.domain.mongodb.UserMD;
 
-public interface UserMongoDBRepository extends MongoRepository<User, Long> {
+public interface UserMongoDBRepository extends BaseMongoDBRepository<UserMD, Long> {
 
 }

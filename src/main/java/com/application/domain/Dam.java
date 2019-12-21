@@ -1,5 +1,6 @@
 package com.application.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -9,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-//@Document(collection = "dam")
 @Table(name = "tbl_dam")
 @Data
 @ApiModel(value = "Dam", description = "大坝")
@@ -25,7 +25,7 @@ public class Dam implements Serializable {
     @ApiModelProperty(name = "id", value = "大坝id", dataType = "Long", required = true, notes = "大坝id必须存在")
     private Long id;
 
-    @NotNull
+    @NotNull(message = "大坝名称不能为空")
     @NonNull
     @ApiModelProperty(name = "name", value = "大坝名称", dataType = "String", required = true)
     @Column(nullable = false)
@@ -33,8 +33,9 @@ public class Dam implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "大坝版本锁", dataType = "Long", required = true)
+    @ApiModelProperty(name = "version", value = "大坝版本锁", dataType = "Long", required = true, hidden = true)
     @Column
     @Version
-    private Long version;
+    @JsonIgnore
+    private Long version = 0L;
 }

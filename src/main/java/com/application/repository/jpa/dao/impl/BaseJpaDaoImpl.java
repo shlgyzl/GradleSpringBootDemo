@@ -13,6 +13,7 @@ import java.util.List;
 
 @Slf4j
 public abstract class BaseJpaDaoImpl<T, ID> implements IBaseJpaDao<T, ID> {
+    // 作用就是实体共用一个EntityManager
     @PersistenceContext
     private EntityManager entityManager;
     private Class<T> clazz;
@@ -21,10 +22,6 @@ public abstract class BaseJpaDaoImpl<T, ID> implements IBaseJpaDao<T, ID> {
         ParameterizedType pt = (ParameterizedType) this.getClass().getGenericSuperclass();
         //noinspection unchecked
         this.clazz = (Class<T>) pt.getActualTypeArguments()[0];
-    }
-
-    Session getSession() {
-        return (Session) entityManager.getDelegate();
     }
 
     @Override

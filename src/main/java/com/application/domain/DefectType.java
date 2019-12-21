@@ -1,5 +1,6 @@
 package com.application.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -29,14 +30,14 @@ public class DefectType implements Serializable {
     private Long id;
 
 
-    @NotNull
+    @NotNull(message = "缺陷类型名称不能为空")
     @NonNull
     @ApiModelProperty(name = "name", value = "缺陷类型名称", dataType = "String", required = true)
     @Column(nullable = false)
     private String name;
 
 
-    @NotNull
+    @NotNull(message = "缺陷类型编号不能为空")
     @NonNull
     @ApiModelProperty(name = "code", value = "缺陷类型编号", dataType = "String", required = true)
     @Column(nullable = false)
@@ -54,14 +55,15 @@ public class DefectType implements Serializable {
      * REFRESH:表示在操作数据之前会先查询一次该集合的最新数据,防止多人操作实体及其关系但是没有及时更新到本次操作中
      * DETACH:表示该实体会撤销集合元素上的外键管理,(此操作需要删除才能生效,不明确)
      */
-    @OneToMany(mappedBy = "defectType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.DETACH})
+    @OneToMany(mappedBy = "defectType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @ApiModelProperty(name = "defectTypeProperties", value = "缺陷类型属性集合", dataType = "String")
+    @JsonIgnoreProperties(value = {"defectType"})
     private Set<DefectTypeProperty> defectTypeProperties = new HashSet<>();
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "缺陷类型版本锁", dataType = "Long", required = true)
+    @ApiModelProperty(name = "version", value = "缺陷类型版本锁", dataType = "Long", required = true, hidden = true)
     @Column
     @Version
-    private Long version;
+    private Long version = 0L;
 }

@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
 
-    <changeSet id="20191127224818" author="YangHaiYong" context="dev, test, prod">
+    <changeSet id="20191127224818" author="YangHaiYong" context="dev, test, prod" runOnChange="true">
         <!-- 加载初始化数据 -->
         <loadData tableName="tbl_user_dam" separator=";" file="config/liquibase/data/user_dam.csv"
                   relativeToChangelogFile="false"/>

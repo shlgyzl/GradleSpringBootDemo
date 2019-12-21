@@ -2,18 +2,17 @@ package com.application.controller;
 
 import com.application.domain.Dam;
 import com.application.repository.jpa.DamRepository;
+import com.querydsl.core.types.Predicate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author yanghaiyong 2019年11月5日 23:51:35
@@ -21,7 +20,7 @@ import java.util.stream.Stream;
 
 @Api(value = "DamController大坝控制层", tags = {"Dam大坝接口"})
 @RestController
-@RequestMapping("dam")
+@RequestMapping("api/dam")
 public class DamController {
 
     @Resource
@@ -30,33 +29,32 @@ public class DamController {
     @ApiOperation(value = "查询所有大坝", notes = "无任何条件限制")
     @GetMapping("/findAll")
     public ResponseEntity<List<Dam>> findAll() {
-        return ResponseEntity.ok().body(new ArrayList<>());
+        return ResponseEntity.ok().body(damRepository.findAll());
     }
 
     @ApiOperation(value = "查询所有大坝", notes = "条件限制")
-    @GetMapping("/findDamByCondition")
+    @GetMapping("/findAllByPredicate")
     @Transactional(value = "jpaTransactionManager")
-    public ResponseEntity<List<Dam>> findDamByCondition(Dam dam) {
-        Stream<Dam> stream = damRepository.findAllByIdIsNotNull();
-        List<Dam> collect = stream.limit(10).collect(Collectors.toList());
-        return ResponseEntity.ok().body(collect);
+    public ResponseEntity<Iterable<Dam>> findDamByCondition(@QuerydslPredicate(root = Dam.class) Predicate predicate) {
+        return ResponseEntity.ok().body(damRepository.findAll(predicate));
     }
 
     @ApiOperation(value = "新增大坝", notes = "POST请求")
-    @PostMapping("/createDam")
-    public ResponseEntity<Void> createDam(@RequestBody Dam dam) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    @PostMapping("/save")
+    public ResponseEntity<Dam> save(@RequestBody Dam dam) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(damRepository.save(dam));
     }
 
     @ApiOperation(value = "修改大坝", notes = "PUT请求")
-    @PutMapping("/updateDam")
-    public ResponseEntity<Void> updateDam(@RequestBody Dam dam) {
-        return ResponseEntity.ok().build();
+    @PutMapping("/update")
+    public ResponseEntity<Dam> update(@RequestBody Dam dam) {
+        return ResponseEntity.ok(damRepository.save(dam));
     }
 
     @ApiOperation(value = "删除大坝", notes = "DELETE请求")
-    @DeleteMapping("/deleteDam/{id}")
-    public ResponseEntity<Void> deleteDam(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        damRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

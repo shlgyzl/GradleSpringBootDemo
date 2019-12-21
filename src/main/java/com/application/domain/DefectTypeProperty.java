@@ -78,9 +78,9 @@ public class DefectTypeProperty implements Serializable {
     private String unit;
 
 
-    @ApiModelProperty(name = "defectType", value = "缺陷类型", dataType = "DefectType")
+    @ApiModelProperty(name = "defectType", value = "缺陷类型", dataType = "DefectType", hidden = true)
     @ManyToOne
-    @JsonIgnoreProperties("defectTypeProperties")
+    @JsonIgnoreProperties(value = {"defectTypeProperties"})
     private DefectType defectType;
 
 
@@ -91,8 +91,8 @@ public class DefectTypeProperty implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "缺陷类型属性版本锁", dataType = "Long", required = true)
+    @ApiModelProperty(name = "version", value = "缺陷类型属性版本锁", dataType = "Long", required = true, hidden = true)
     @Column
     @Version
-    private Long version;
+    private Long version = 0L;
 }
