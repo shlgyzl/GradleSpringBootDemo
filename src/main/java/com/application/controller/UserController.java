@@ -1,6 +1,6 @@
 package com.application.controller;
 
-import com.application.domain.User;
+import com.application.domain.jpa.User;
 import com.application.repository.jpa.UserRepository;
 import com.application.repository.jpa.dao.impl.UserDaoImpl;
 import com.querydsl.core.types.Predicate;
@@ -44,7 +44,7 @@ public class UserController {
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "login", value = "1", type = "String")})
     @GetMapping("/findByPageAndPredicate")
     public ResponseEntity<Page<User>> findByPageAndPredicate(
-            @QuerydslPredicate(root = User.class, bindings = UserRepository.class) Predicate predicate,
+            @QuerydslPredicate(root = User.class) Predicate predicate,
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok().body(userRepository.findAll(predicate, pageable));
     }

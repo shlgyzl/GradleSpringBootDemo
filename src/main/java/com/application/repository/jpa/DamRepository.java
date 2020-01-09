@@ -1,7 +1,6 @@
 package com.application.repository.jpa;
 
-import com.application.domain.Dam;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.application.domain.jpa.Dam;
 
 import java.util.stream.Stream;
 

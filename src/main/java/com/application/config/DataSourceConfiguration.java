@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
@@ -32,12 +33,14 @@ public class DataSourceConfiguration {
         dataSourceBuilder.type(dataSourceProperties.getType());
     }
 
-    //@Bean(name = "hikariDataSource")// 配置HikariDataSource数据源
+    @Bean(name = "hikariDataSource")// 配置HikariDataSource数据源
+    @Primary
     public DataSource hikariDataSource() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dataSourceProperties.getUrl()); //数据源
         config.setUsername(dataSourceProperties.getUsername()); //用户名
         config.setPassword(dataSourceProperties.getPassword()); //密码
+        config.setDriverClassName(dataSourceProperties.getDriverClassName());
         config.addDataSourceProperty("cachePrepStmts", "true"); //是否自定义配置，为true时下面两个参数才生效
         config.addDataSourceProperty("prepStmtCacheSize", "250"); //连接池大小默认25，官方推荐250-500
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048"); //单条语句最大长度默认256，官方推荐2048
@@ -49,10 +52,11 @@ public class DataSourceConfiguration {
         config.addDataSourceProperty("cacheServerConfiguration", "true");
         config.addDataSourceProperty("elideSetAutoCommits", "true");
         config.addDataSourceProperty("maintainTimeStats", "false");
+        config.setInitializationFailTimeout(10000);
+        config.setConnectionInitSql("select 1");
         return new HikariDataSource(config);
     }
 
-    @ConfigurationProperties(prefix = "spring.datasource")
     @Bean(name = "druidDataSource")// 自定义DruidDataSource数据源
     public DataSource druidDataSource() {
         DruidDataSource druidDataSource = new DruidDataSource();

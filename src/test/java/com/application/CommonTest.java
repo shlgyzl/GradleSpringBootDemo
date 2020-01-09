@@ -1,10 +1,11 @@
 package com.application;
 
+import com.application.domain.jpa.DefectType;
 import org.junit.Test;
 
-import java.time.Instant;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +45,12 @@ public class CommonTest {
         System.out.println(ZoneId.systemDefault());
     }
 
+    @Test
+    public void test04() {
+        Set<DefectType> defectTypes = new HashSet<>(10);
+        System.out.println(defectTypes.getClass().getSimpleName());
+    }
+
 }
 
 class Service {
@@ -70,5 +77,19 @@ class Service {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+}
+
+class OuterClass{
+    private static int a = 6;
+    private static class InnerClass{
+        private static int a = 5;
+    }
+    public void print(){
+        System.out.println(a);
+        System.out.println(InnerClass.a);
+    }
+    public static void main(String[] args) {
+        new OuterClass().print();
     }
 }

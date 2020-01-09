@@ -1,8 +1,8 @@
 package com.application.repository.jpa;
 
 
-import com.application.domain.QUser;
-import com.application.domain.User;
+import com.application.domain.jpa.QUser;
+import com.application.domain.jpa.User;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringExpression;
@@ -69,8 +69,8 @@ public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslB
      */
     @EntityGraph(attributePaths = {"dams"})
     @NotNull
+    // 这种锁也只能在个JVM生效,针对多JVM仍然失效
     @Lock(LockModeType.READ)
-// 这种锁也只能在个JVM生效,针对多JVM仍然失效
     Optional<User> findById(@NotNull Long id);
 
     @Query(value = "SELECT * FROM TBL_USER WHERE ID = ?1", nativeQuery = true)

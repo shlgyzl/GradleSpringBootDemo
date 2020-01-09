@@ -1,6 +1,6 @@
 package com.application.controller;
 
-import com.application.domain.DefectTypeProperty;
+import com.application.domain.jpa.DefectTypeProperty;
 import com.application.repository.jpa.DefectTypePropertyRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

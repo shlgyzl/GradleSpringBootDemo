@@ -1,6 +1,6 @@
 package com.application.listener;
 
-import com.application.domain.Automatic;
+import com.application.domain.mongodb.Automatic;
 import com.mongodb.lang.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

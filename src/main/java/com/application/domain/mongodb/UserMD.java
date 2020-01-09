@@ -1,9 +1,10 @@
 package com.application.domain.mongodb;
 
-import com.application.domain.User;
+import com.application.domain.jpa.User;
 import lombok.Data;
 import org.mongodb.morphia.annotations.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 
 @Document(collection = "user")
@@ -14,5 +15,6 @@ public class UserMD {
     @Id
     private Long id;
 
-    private User user;
+    @Field
+    private String userId;
 }

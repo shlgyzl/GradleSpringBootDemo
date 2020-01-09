@@ -1,10 +1,13 @@
-package com.application.domain;
+package com.application.domain.jpa;
 
+import com.application.domain.abstracts.AbstractAuditingEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -24,6 +27,8 @@ import java.util.Set;
 @ToString(exclude = {"dams"})
 @NoArgsConstructor
 @RequiredArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 public class User extends AbstractAuditingEntity implements Serializable {
 
 

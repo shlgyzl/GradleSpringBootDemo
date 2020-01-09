@@ -1,6 +1,6 @@
 package com.application.controller;
 
-import com.application.domain.Dam;
+import com.application.domain.jpa.Dam;
 import com.application.repository.jpa.DamRepository;
 import com.querydsl.core.types.Predicate;
 import io.swagger.annotations.Api;

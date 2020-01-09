@@ -1,11 +1,14 @@
-package com.application.domain;
+package com.application.domain.jpa;
 
 import com.application.domain.enumeration.FieldType;
 import com.application.domain.enumeration.Region;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -23,6 +26,8 @@ import java.io.Serializable;
 @ToString(exclude = {"defectType"})
 @NoArgsConstructor
 @RequiredArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 public class DefectTypeProperty implements Serializable {
 
     private static final long serialVersionUID = 5939254100740949152L;
@@ -32,21 +37,21 @@ public class DefectTypeProperty implements Serializable {
     private Long id;
 
 
-    @NotNull
+    @NotNull(message = "缺陷类型属性名称不能为空")
     @NonNull
     @ApiModelProperty(name = "name", value = "缺陷类型属性名称", dataType = "String", required = true)
     @Column(nullable = false)
     private String name;
 
 
-    @NotNull
+    @NotNull(message = "字段类型不能为空")
     @NonNull
     @ApiModelProperty(name = "fieldType", value = "字段类型", dataType = "String", required = true)
     @Enumerated(EnumType.STRING)
     @Column(name = "field_type")
     private FieldType fieldType;
 
-    @NotNull
+    @NotNull(message = "必填项不能为空")
     @NonNull
     @ApiModelProperty(name = "requiredField", value = "必填项", dataType = "Boolean")
     @Column(name = "required_field")
@@ -54,17 +59,17 @@ public class DefectTypeProperty implements Serializable {
 
 
     @ApiModelProperty(name = "maxValue", value = "最大值", dataType = "String")
-    @Column
+    @Column(name = "max_value")
     private String maxValue;
 
 
     @ApiModelProperty(name = "minValue", value = "最小值", dataType = "String")
-    @Column
+    @Column(name = "min_value")
     private String minValue;
 
 
     @ApiModelProperty(name = "defaultValue", value = "默认值", dataType = "String")
-    @Column
+    @Column(name = "default_value")
     private String defaultValue;
 
 
@@ -79,20 +84,21 @@ public class DefectTypeProperty implements Serializable {
 
 
     @ApiModelProperty(name = "defectType", value = "缺陷类型", dataType = "DefectType", hidden = true)
-    @ManyToOne
     @JsonIgnoreProperties(value = {"defectTypeProperties"})
+    @ManyToOne
+    @JoinColumn(name = "defect_type_id")
     private DefectType defectType;
-
 
     @ApiModelProperty(name = "region", value = "值所在区间", dataType = "String")
     @Enumerated(EnumType.STRING)
     @Column
-    private Region Region;
+    private Region region;
 
     @NotNull
     @NonNull
     @ApiModelProperty(name = "version", value = "缺陷类型属性版本锁", dataType = "Long", required = true, hidden = true)
     @Column
     @Version
+    @JsonIgnore
     private Long version = 0L;
 }

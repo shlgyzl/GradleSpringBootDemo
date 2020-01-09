@@ -1,4 +1,4 @@
-package com.application.domain;
+package com.application.domain.mongodb;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;

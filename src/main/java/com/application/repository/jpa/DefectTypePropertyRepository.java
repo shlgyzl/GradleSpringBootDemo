@@ -1,8 +1,7 @@
 package com.application.repository.jpa;
 
-import com.application.domain.DefectType;
-import com.application.domain.DefectTypeProperty;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.application.domain.jpa.DefectType;
+import com.application.domain.jpa.DefectTypeProperty;
 
 import java.util.Set;
 

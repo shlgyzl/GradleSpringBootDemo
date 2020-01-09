@@ -40,5 +40,8 @@ public class MainTest {
         //发送消息
         rabbitmqTemplate.convertAndSend("executeTask", msg);
         log.info("消息：{},已发送", msg);
+
+        long a = 1;
+        System.out.println(a);
     }
 }

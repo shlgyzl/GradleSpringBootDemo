@@ -1,4 +1,4 @@
-package com.application.domain;
+package com.application.domain.abstracts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

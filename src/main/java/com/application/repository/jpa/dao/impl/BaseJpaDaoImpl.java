@@ -3,14 +3,17 @@ package com.application.repository.jpa.dao.impl;
 import com.application.repository.jpa.dao.IBaseJpaDao;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.data.domain.Page;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+@SuppressWarnings({"unchecked", "unused"})
 @Slf4j
 public abstract class BaseJpaDaoImpl<T, ID> implements IBaseJpaDao<T, ID> {
     // 作用就是实体共用一个EntityManager
@@ -18,9 +21,20 @@ public abstract class BaseJpaDaoImpl<T, ID> implements IBaseJpaDao<T, ID> {
     private EntityManager entityManager;
     private Class<T> clazz;
 
+    public CriteriaBuilder getCriteriaBuilder() {
+        return entityManager.getCriteriaBuilder();
+    }
+
+    public Session getSession() {
+        return entityManager.unwrap(SessionFactory.class).openSession();
+    }
+
+    public EntityManager getEntityManager(){
+        return entityManager;
+    }
+
     public BaseJpaDaoImpl() {
         ParameterizedType pt = (ParameterizedType) this.getClass().getGenericSuperclass();
-        //noinspection unchecked
         this.clazz = (Class<T>) pt.getActualTypeArguments()[0];
     }
 
@@ -56,7 +70,6 @@ public abstract class BaseJpaDaoImpl<T, ID> implements IBaseJpaDao<T, ID> {
     public T load(String jPQL, Object... obj) {
         try {
             Query query = getQuery(jPQL, obj);
-            //noinspection unchecked
             return (T) query.getSingleResult();
         } catch (Exception e) {
             return null;
