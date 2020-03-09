@@ -27,9 +27,13 @@
     <include file="config/liquibase/changlog/entity/user/User.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/defect_type/DefectType.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/defect_type_property/DefectTypeProperty.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/role/Role.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/authority/Authority.xml" relativeToChangelogFile="false"/>
 
     <!-- 关系表 -->
     <include file="config/liquibase/changlog/relation/UserDam.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/relation/RoleAuthority.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/relation/UserRole.xml" relativeToChangelogFile="false"/>
 
     <!-- 实体更新 -->
     <include file="config/liquibase/changlog/entity/dam/Dam20191127220432.xml" relativeToChangelogFile="false"/>
@@ -42,12 +46,16 @@
     <include file="config/liquibase/changlog/entity/user/User20191201135318.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/user/User20191201142011.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/defect_type_property/DefectTypeProperty20200109224049.xml" relativeToChangelogFile="false"/>
-
+    <include file="config/liquibase/changlog/entity/user/User20200309225630.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/persistent_token/persistent_token.xml" relativeToChangelogFile="false"/>
 
     <!-- 约束更新 -->
-    <include file="config/liquibase/changlog/entity/defect_type/DefectTypeConstraint.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changlog/entity/defect_type_property/DefectTypePropertyConstraint.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changlog/relation/UserDamConstraint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/constraint/DefectTypeConstraint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/constraint/DefectTypePropertyConstraint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/constraint/UserDamConstraint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/constraint/RoleAuthorityConstraint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/constraint/UserRoleConstraint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/constraint/PersistentTokenUserConstraint.xml" relativeToChangelogFile="false"/>
 
     <!-- 初始化数据及更新 -->
     <include file="config/liquibase/changlog/init/Init.xml" relativeToChangelogFile="false"/>

@@ -1,6 +1,6 @@
 package com.application.domain.jpa;
 
-import com.application.security.Authority;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -47,4 +47,12 @@ public class Role implements Serializable {
     @BatchSize(size = 20)
     @ManyToMany(cascade = {CascadeType.PERSIST})
     private Set<Authority> authorities = new HashSet<>();
+
+    @NotNull
+    @NonNull
+    @ApiModelProperty(name = "version", value = "角色版本锁", dataType = "Long", required = true)
+    @Column
+    @Version
+    @JsonIgnore
+    private Long version = 0L;
 }

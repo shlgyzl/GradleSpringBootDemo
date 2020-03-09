@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A user.
@@ -51,14 +52,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "password_hash", length = 15, nullable = false)
     @ApiModelProperty(name = "password", value = "密码", dataType = "String")
     @JsonIgnore
-    private String password = (int) ((Math.random() * 9 + 1) * 100000) + "";
+    private String password = ((ThreadLocalRandom.current().nextInt() * 9 + 1) * 100000) + "";
 
 
     @NotNull
     @NonNull
     @ApiModelProperty(name = "activated", value = "是否启用", dataType = "Boolean")
-    @Column(name = "activated", nullable = false)
-    private Boolean activated = false;
+    @Column(name = "activated")
+    private Boolean activated;
 
     @ApiModelProperty(name = "imageUrl", value = "头像", dataType = "String")
     @Column(name = "image_url")

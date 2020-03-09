@@ -1,4 +1,4 @@
-id;login;password_hash;version
-1;YangHaiYong;123456;0
-2;Admin;Admin;0
-3;User;User;0
+id;login;password_hash;activated;image_url;version
+1;YangHaiYong;123456;false;null;0
+2;Admin;Admin;false;null;0
+3;User;User;false;null;0

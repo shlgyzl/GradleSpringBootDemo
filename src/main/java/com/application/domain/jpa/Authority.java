@@ -1,5 +1,6 @@
-package com.application.security;
+package com.application.domain.jpa;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,4 +35,12 @@ public class Authority implements Serializable {
     @Column(length = 20, unique = true, nullable = false)
     @ApiModelProperty(name = "name", value = "权限名", dataType = "String")
     private String name;
+
+    @NotNull
+    @NonNull
+    @ApiModelProperty(name = "version", value = "权限版本锁", dataType = "Long", required = true)
+    @Column
+    @Version
+    @JsonIgnore
+    private Long version = 0L;
 }

@@ -15,7 +15,7 @@
             <column name="field_type" type="varchar(255)" remarks="字段类型">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="required_field" type="varchar(255)" remarks="必填项">
+            <column name="required_field" type="boolean" defaultValueBoolean="false" remarks="必填项">
                 <constraints unique="false" nullable="false"/>
             </column>
             <column name="max_value" type="varchar(255)" remarks="最大值">

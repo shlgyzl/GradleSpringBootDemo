@@ -48,7 +48,7 @@ public class AsyncExecutorConfiguration implements AsyncConfigurer {
         // 表示该次请求之后保留该链接60s,超过则断掉该链接否则复用该链接
         executor.setKeepAliveSeconds(60);
         // 设置线程池中的线程的名称前缀
-        executor.setThreadNamePrefix("async-service-");
+        executor.setThreadNamePrefix("gradle-spring-boot-");
         // 是否允许线程超时,默认false
         executor.setAllowCoreThreadTimeOut(false);
         // 设置队列的初始容量,任何正值使用LinkedBlockingQueue阻塞队列,其他值则启动SynchronousQueue异步队列

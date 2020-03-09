@@ -85,7 +85,7 @@ public class CommonTest {
 
     }
 
-    @Test
+    /*@Test
     public void test06() throws IOException {
         Runtime runtime = Runtime.getRuntime();
         Process process = runtime.exec("notepad.exe");
@@ -102,7 +102,7 @@ public class CommonTest {
 
         CompletableFuture<ProcessHandle> processHandleCompletableFuture = processHandle.onExit();
         processHandleCompletableFuture.thenAcceptAsync(n -> System.out.println("程序结束"));
-    }
+    }*/
 
     @Test
     public void test07() throws Throwable {

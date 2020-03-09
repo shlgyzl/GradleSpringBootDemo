@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20200310001245" author="YangHaiYong" context="dev, test, prod" runOnChange="true">
+        <!-- 外键约束 -->
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="tbl_persistent_token"
+                                 constraintName="FK_C72E50A7ADE843488ED5684D9D0E7765"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tbl_user"/>
+    </changeSet>
+</databaseChangeLog>
