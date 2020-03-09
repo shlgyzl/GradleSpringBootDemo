@@ -2,6 +2,7 @@ package com.application.domain.abstracts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -12,7 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -20,10 +20,11 @@ import java.time.ZoneId;
  * Base abstract class for entities which will hold definitions for created, last modified by and created,
  * last modified by date.
  */
+@EqualsAndHashCode(callSuper = false)
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Data
-public abstract class AbstractAuditingEntity implements Serializable {
+public abstract class AbstractAuditingEntity<ID> extends AbstractEntity<ID> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

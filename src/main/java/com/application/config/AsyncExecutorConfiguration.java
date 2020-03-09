@@ -1,8 +1,9 @@
 package com.application.config;
 
+import io.github.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
+import io.github.jhipster.config.JHipsterProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
-import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
@@ -21,6 +22,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class AsyncExecutorConfiguration implements AsyncConfigurer {
     // 获取本系统的每个CPU的线程数
     private final static int num = Runtime.getRuntime().availableProcessors();
+    private final JHipsterProperties jHipsterProperties;
+
+    public AsyncExecutorConfiguration(JHipsterProperties jHipsterProperties) {
+        this.jHipsterProperties = jHipsterProperties;
+    }
 
     /**
      * 创建线程池,同时开启异步线程功能,当然也可以直接创建线程池Bean对象
@@ -33,9 +39,12 @@ public class AsyncExecutorConfiguration implements AsyncConfigurer {
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         // 设置核心线程数
-        executor.setCorePoolSize(num / 2);
+        // executor.setCorePoolSize(num/2);
+        int corePoolSize = jHipsterProperties.getAsync().getCorePoolSize();
+        executor.setCorePoolSize(corePoolSize > num ? num : corePoolSize);
         // 设置最大线程数
-        executor.setMaxPoolSize(num);
+        // executor.setMaxPoolSize(num);
+        executor.setMaxPoolSize(jHipsterProperties.getAsync().getMaxPoolSize());
         // 表示该次请求之后保留该链接60s,超过则断掉该链接否则复用该链接
         executor.setKeepAliveSeconds(60);
         // 设置线程池中的线程的名称前缀
@@ -43,7 +52,8 @@ public class AsyncExecutorConfiguration implements AsyncConfigurer {
         // 是否允许线程超时,默认false
         executor.setAllowCoreThreadTimeOut(false);
         // 设置队列的初始容量,任何正值使用LinkedBlockingQueue阻塞队列,其他值则启动SynchronousQueue异步队列
-        executor.setQueueCapacity(Integer.MAX_VALUE);
+        // executor.setQueueCapacity(Integer.MAX_VALUE);
+        executor.setQueueCapacity(jHipsterProperties.getAsync().getQueueCapacity());
         // 设置所有线程池中的线程为守护线程
         executor.setDaemon(true);
         // 处理任务的优先级为：核心线程corePoolSize、任务队列workQueue、最大线程maximumPoolSize，
@@ -55,11 +65,12 @@ public class AsyncExecutorConfiguration implements AsyncConfigurer {
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         executor.initialize();
         log.info("配置异步默认任务线程池Executor----------{}", executor);
-        return executor;
+        return new ExceptionHandlingAsyncTaskExecutor(executor);
     }
 
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return (ex, method, params) -> log.warn("调用异步方法出现异常----------ex->{},method->{},params->", ex.getMessage(), method.getName(), params);
+        return (ex, method, params) -> log.warn("调用异步方法出现异常----------ex->{},method->{},params->",
+                ex.getMessage(), method.getName(), params);
     }
 }

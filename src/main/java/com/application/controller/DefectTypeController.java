@@ -45,6 +45,7 @@ public class DefectTypeController {
 
     @ApiOperation(value = "查询接口", notes = "查询缺陷类型")
     @GetMapping("/find/{id}")
+    @Transactional
     public ResponseEntity<DefectType> find(@PathVariable Long id) {
         Optional<DefectType> optional = defectTypeRepository.findByIdNoLazy(id);
         return ResponseUtil.wrapOrNotFound(optional);

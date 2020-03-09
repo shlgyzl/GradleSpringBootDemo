@@ -1,0 +1,8 @@
+version: '2'
+services:
+  demo-redis:
+    image: redis:5.0.7
+    ports:
+      - '6379:6379'
+    volumes:
+      - ~/volumes/jhipster/demo/redis/:/data/db/

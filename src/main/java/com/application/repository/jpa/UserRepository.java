@@ -119,4 +119,6 @@ public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslB
     @SuppressWarnings("SpringDataRepositoryMethodReturnTypeInspection")
     @Query("select U.id, LENGTH(U.login) as fn_len from User U where U.login like ?1%")
     List<Object[]> findByAsArrayAndSort(String login, Sort sort);
+
+    Optional<User> findByLogin(String login);
 }

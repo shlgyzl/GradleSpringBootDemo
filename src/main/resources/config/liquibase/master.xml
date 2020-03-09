@@ -7,7 +7,20 @@
     <!-- 定义全局变量 -->
     <property name="now" value="now()" dbms="h2" global="true"/>
     <property name="now" value="now()" dbms="mysql" global="true"/>
+
     <property name="autoIncrement" value="true" global="true"/>
+
+    <property name="uuid_type" value="uuid" dbms="postgresql" global="true"/>
+    <property name="uuid_type" value="uniqueidentifier" dbms="mssql" global="true"/>
+    <property name="uuid_type" value="RAW(16)" dbms="oracle" global="true"/>
+    <property name="uuid_type" value="uuid_type" dbms="mysql" global="true"/>
+    <property name="uuid_type" value="uuid_type" dbms="h2" global="true"/>
+
+    <property name="uuid_function" value="uid.uuid_generate_v4()" dbms="postgresql" global="true"/>
+    <property name="uuid_function" value="NEWID()" dbms="mssql" global="true"/>
+    <property name="uuid_function" value="sys_guid()" dbms="oracle" global="true"/>
+    <property name="uuid_function" value="uuid()" dbms="mysql" global="true"/>
+    <property name="uuid_function" value="uuid()" dbms="h2" global="true"/>
 
     <!-- 实体 -->
     <include file="config/liquibase/changlog/entity/dam/Dam.xml" relativeToChangelogFile="false"/>
@@ -28,6 +41,13 @@
     <include file="config/liquibase/changlog/entity/defect_type_property/DefectTypeProperty20191201135123.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/user/User20191201135318.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/user/User20191201142011.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/defect_type_property/DefectTypeProperty20200109224049.xml" relativeToChangelogFile="false"/>
+
+
+    <!-- 约束更新 -->
+    <include file="config/liquibase/changlog/entity/defect_type/DefectTypeConstraint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/defect_type_property/DefectTypePropertyConstraint.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/relation/UserDamConstraint.xml" relativeToChangelogFile="false"/>
 
     <!-- 初始化数据及更新 -->
     <include file="config/liquibase/changlog/init/Init.xml" relativeToChangelogFile="false"/>

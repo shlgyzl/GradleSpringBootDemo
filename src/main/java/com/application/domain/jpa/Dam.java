@@ -1,5 +1,6 @@
 package com.application.domain.jpa;
 
+import com.application.domain.abstracts.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,11 +18,11 @@ import java.io.Serializable;
 @ApiModel(value = "Dam", description = "大坝")
 @NoArgsConstructor
 @RequiredArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @ToString
 @DynamicInsert
 @DynamicUpdate
-public class Dam implements Serializable {
+public class Dam extends AbstractEntity<Long> implements Serializable {
     private static final long serialVersionUID = -4772373087949409931L;
 
     @Id

@@ -1,6 +1,6 @@
 package com.application.listener;
 
-import com.application.domain.mongodb.Automatic;
+import com.application.domain.abstracts.Automatic;
 import com.mongodb.lang.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +33,11 @@ public class MongoDBAutomaticEventListener extends AbstractMongoEventListener<Ob
 
     @Override
     public void onBeforeConvert(@NonNull BeforeConvertEvent<Object> event) {
-        log.debug("转换集合之前：{}", event.getCollectionName());
+        log.debug("新增Mongodb实体：{}", event.getCollectionName());
         final Object source = event.getSource();
         ReflectionUtils.doWithFields(source.getClass(), field -> {
             ReflectionUtils.makeAccessible(field);
-            if (field.isAnnotationPresent(Id.class) && field.get(source) == null) {
+            if (field.isAnnotationPresent(javax.persistence.Id.class) && field.get(source) == null) {
                 field.set(source, getId(event.getCollectionName()));
             }
         });
@@ -47,6 +47,7 @@ public class MongoDBAutomaticEventListener extends AbstractMongoEventListener<Ob
         Query query = new Query(Criteria.where("collectionName").is(collName));
         Update update = new Update();
         update.inc("seqId", 1);
+        // 原子操作 查询修改
         FindAndModifyOptions options = new FindAndModifyOptions();
         options.upsert(true);
         options.returnNew(true);

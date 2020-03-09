@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2020109215436" author="YangHaiYong" context="dev, test, prod" runOnChange="true">
+        <!-- 外键约束 -->
+        <addForeignKeyConstraint baseColumnNames="defect_type_id"
+                                 baseTableName="tbl_defect_type_property"
+                                 constraintName="FK_C72E50A7ADE843488ED5684D9D0E776G"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tbl_defect_type"/>
+    </changeSet>
+</databaseChangeLog>

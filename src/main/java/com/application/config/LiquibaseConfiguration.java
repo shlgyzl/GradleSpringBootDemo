@@ -8,9 +8,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.core.task.TaskExecutor;
 
 import javax.sql.DataSource;
+import java.util.concurrent.Executor;
 
 @Configuration
 @EnableConfigurationProperties(LiquibaseProperties.class)
@@ -23,18 +23,20 @@ public class LiquibaseConfiguration {
 
     @Bean
     public SpringLiquibase liquibase(
-            @Qualifier(value = "druidDataSource") DataSource dataSource,
-            @Qualifier("taskExecutor") TaskExecutor taskExecutor,
+            @Qualifier(value = "druidDataSource") DataSource druidDataSource,
+            @Qualifier("taskExecutor") Executor taskExecutor,
             LiquibaseProperties liquibaseProperties) {
 
-        SpringLiquibase liquibase = new AsyncSpringLiquibase(taskExecutor, env);
-        liquibase.setDataSource(dataSource);
+        AsyncSpringLiquibase liquibase = new AsyncSpringLiquibase(taskExecutor, env);
+        liquibase.setDataSource(druidDataSource);
         liquibase.setChangeLog("classpath:config/liquibase/master.xml");
         liquibase.setContexts(liquibaseProperties.getContexts());
         liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
         liquibase.setDropFirst(liquibaseProperties.isDropFirst());
         liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
         liquibase.setShouldRun(true);
+        // 不关闭数据源,否则会出现异常
+        liquibase.setCloseDataSourceOnceMigrated(false);
         return liquibase;
     }
 }

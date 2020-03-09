@@ -1,6 +1,7 @@
 package com.application;
 
 import com.application.domain.jpa.User;
+import com.application.domain.mongodb.QUserMD;
 import com.application.domain.mongodb.UserMD;
 import com.application.repository.jpa.UserRepository;
 import com.application.repository.jpa.dao.impl.UserDaoImpl;
@@ -25,10 +26,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-@SpringBootApplication(exclude = {
-        DataSourceAutoConfiguration.class,
-        DataSourceTransactionManagerAutoConfiguration.class,
-        LiquibaseAutoConfiguration.class})
+@SpringBootApplication
 @EnableSpringDataWebSupport// 开启Web支持
 @RestController
 @Slf4j

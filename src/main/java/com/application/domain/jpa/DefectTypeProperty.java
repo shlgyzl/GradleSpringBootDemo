@@ -1,5 +1,6 @@
 package com.application.domain.jpa;
 
+import com.application.domain.abstracts.AbstractEntity;
 import com.application.domain.enumeration.FieldType;
 import com.application.domain.enumeration.Region;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,13 +23,13 @@ import java.io.Serializable;
 @Table(name = "tbl_defect_type_property")
 @Entity
 @ApiModel(value = "DefectType", description = "缺陷类型属性")
-@EqualsAndHashCode(exclude = {"defectType"})
+@EqualsAndHashCode(exclude = {"defectType"}, callSuper = false)
 @ToString(exclude = {"defectType"})
 @NoArgsConstructor
 @RequiredArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class DefectTypeProperty implements Serializable {
+public class DefectTypeProperty extends AbstractEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 5939254100740949152L;
     @Id

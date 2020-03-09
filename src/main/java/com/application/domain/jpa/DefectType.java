@@ -1,5 +1,6 @@
 package com.application.domain.jpa;
 
+import com.application.domain.abstracts.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,13 +21,13 @@ import java.util.Set;
 @Table(name = "tbl_defect_type")
 @Entity
 @ApiModel(value = "DefectType", description = "缺陷类型")
-@EqualsAndHashCode(exclude = {"defectTypeProperties"})
+@EqualsAndHashCode(exclude = {"defectTypeProperties"}, callSuper = false)
 @ToString(exclude = {"defectTypeProperties"})
 @NoArgsConstructor
 @RequiredArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class DefectType implements Serializable {
+public class DefectType extends AbstractEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1584568401007494606L;
     @Id
@@ -47,9 +48,9 @@ public class DefectType implements Serializable {
     @Column(nullable = false)
     private String code;
 
-    @ElementCollection
     @ManyToOne
     @ApiModelProperty(name = "name", value = "大坝", dataType = "String")
+    @JoinColumn(name = "dam_id")
     private Dam dam;
 
     /**

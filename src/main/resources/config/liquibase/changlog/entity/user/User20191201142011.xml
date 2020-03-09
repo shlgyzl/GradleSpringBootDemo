@@ -6,7 +6,7 @@
     <!-- 实体修改 -->
     <changeSet id="20191201142107" author="YangHaiYong" context="dev, test, prod" runOnChange="true">
         <addColumn tableName="tbl_user">
-            <column name="create_by" type="varchar(255)" remarks="第一次创建人">
+            <column name="created_by" type="varchar(255)" remarks="第一次创建人">
                 <constraints nullable="true"/>
             </column>
             <column name="created_date" type="timestamp" defaultValueDate="${now}" remarks="第一次创建时间">

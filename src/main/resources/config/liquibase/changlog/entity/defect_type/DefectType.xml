@@ -15,7 +15,7 @@
             <column name="code" type="varchar(255)" remarks="缺陷类型编号">
                 <constraints unique="true" nullable="false" uniqueConstraintName="ux_defect_type_code"/>
             </column>
-            <column name="dam_id" type="varchar(255)" remarks="大坝">
+            <column name="dam_id" type="bigint" remarks="大坝id">
                 <constraints unique="false" nullable="true"/>
             </column>
         </createTable>

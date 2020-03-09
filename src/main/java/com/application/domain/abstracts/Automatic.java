@@ -1,4 +1,4 @@
-package com.application.domain.mongodb;
+package com.application.domain.abstracts;
 
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;

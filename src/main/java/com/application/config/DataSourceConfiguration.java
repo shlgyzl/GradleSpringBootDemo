@@ -33,8 +33,7 @@ public class DataSourceConfiguration {
         dataSourceBuilder.type(dataSourceProperties.getType());
     }
 
-    @Bean(name = "hikariDataSource")// 配置HikariDataSource数据源
-    @Primary
+    //@Bean(name = "hikariDataSource")// 配置HikariDataSource数据源
     public DataSource hikariDataSource() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dataSourceProperties.getUrl()); //数据源

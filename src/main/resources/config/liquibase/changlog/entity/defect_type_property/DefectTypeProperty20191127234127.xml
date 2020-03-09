@@ -11,7 +11,7 @@
         <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="default_value" columnDataType="varchar(255)"/>
         <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="value" columnDataType="varchar(255)"/>
         <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="unit" columnDataType="varchar(255)"/>
-        <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="defect_type_id" columnDataType="bigint"/>
+        <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="defect_type_id" columnDataType="varchar(255)"/>
         <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="region" columnDataType="varchar(255)"/>
 
     </changeSet>

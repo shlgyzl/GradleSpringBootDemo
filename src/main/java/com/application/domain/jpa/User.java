@@ -54,6 +54,16 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String password = (int) ((Math.random() * 9 + 1) * 100000) + "";
 
 
+    @NotNull
+    @NonNull
+    @ApiModelProperty(name = "activated", value = "是否启用", dataType = "Boolean")
+    @Column(name = "activated", nullable = false)
+    private Boolean activated = false;
+
+    @ApiModelProperty(name = "imageUrl", value = "头像", dataType = "String")
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @JoinTable(
             name = "tbl_user_dam",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -61,6 +71,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     @ManyToMany(cascade = {CascadeType.PERSIST})
     private Set<Dam> dams = new HashSet<>();
+
+    @JoinTable(
+            name = "tbl_user_role",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    @BatchSize(size = 20)
+    @ManyToMany(cascade = {CascadeType.PERSIST})
+    private Set<Role> roles = new HashSet<>();
 
     @NotNull
     @NonNull
