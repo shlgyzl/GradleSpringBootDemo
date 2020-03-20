@@ -38,18 +38,18 @@ public class DomainUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating {}", login);
-        String lowercaseLogin = login.toLowerCase(Locale.CHINA);
+        //String lowercaseLogin = login.toLowerCase(Locale.CHINA);
         // 返回的用户信息包含了角色,权限,用户名
-        return userRepository.findByLogin(lowercaseLogin)
-                .map(user -> createSpringSecurityUser(lowercaseLogin, user))
-                .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not found in the database"));
+        return userRepository.findByLogin(login)
+                .map(user -> createSpringSecurityUser(login, user))
+                .orElseThrow(() -> new UsernameNotFoundException("User " + login + " was not found in the database"));
 
     }
 
     private SecurityUser createSpringSecurityUser(String lowercaseLogin, User user) {
-        /*if (!user.getIsActivate()) {
+        if (!user.getActivated()) {
             throw new RuntimeException("User " + lowercaseLogin + " was not activated");
-        }*/
+        }
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         for (Role role : user.getRoles()) {
             grantedAuthorities.addAll(role.getAuthorities().stream().map(authority -> new SimpleGrantedAuthority(authority.getName()))

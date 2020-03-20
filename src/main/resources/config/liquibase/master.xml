@@ -34,6 +34,9 @@
     <include file="config/liquibase/changlog/relation/UserDam.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/relation/RoleAuthority.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/relation/UserRole.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/user_role/UserRole20200320003004.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/user_dam/UserDam20200320002833.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/role_authority/RoleAuthority20200320003109.xml" relativeToChangelogFile="false"/>
 
     <!-- 实体更新 -->
     <include file="config/liquibase/changlog/entity/dam/Dam20191127220432.xml" relativeToChangelogFile="false"/>
@@ -61,4 +64,6 @@
     <include file="config/liquibase/changlog/init/Init.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/init/init20191127224750.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/init/init20191130112229.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/init/init20200320005834.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>

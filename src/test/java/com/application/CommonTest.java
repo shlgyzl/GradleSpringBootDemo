@@ -3,6 +3,7 @@ package com.application;
 import com.application.domain.jpa.DefectType;
 import org.assertj.core.util.Files;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,7 +19,6 @@ import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -70,7 +70,7 @@ public class CommonTest {
         Runtime.getRuntime().runFinalization();
         String java_home = System.getenv("JAVA_HOME");
         System.out.println(Math.nextUp(1.2));
-        System.out.println(1%0.2);
+        System.out.println(1 % 0.2);
 
     }
 
@@ -112,6 +112,13 @@ public class CommonTest {
         Object invoke = handle.invoke(new CommonTest());
         String lowercaseLogin = "yanghaiyong".toLowerCase(Locale.CHINA);
         System.out.println(lowercaseLogin);
+    }
+
+    @Test
+    public void test08() throws Throwable {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String admin = bCryptPasswordEncoder.encode("123456");
+        System.out.println(admin);
     }
 }
 

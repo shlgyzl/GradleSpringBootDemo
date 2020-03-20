@@ -68,6 +68,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+    mavenLocal()
     // 使用阿里巴巴仓库
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     maven { url 'https://mirrors.huaweicloud.com/repository/maven/' }

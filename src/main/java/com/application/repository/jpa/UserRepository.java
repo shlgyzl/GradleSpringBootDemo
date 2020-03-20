@@ -33,7 +33,7 @@ public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslB
             "where D.name = :name ")
     List<User> findByDamsName(@Param("name") String name);
 
-    @EntityGraph(attributePaths = {"dams"})
+    @EntityGraph(attributePaths = {"dams", "roles","roles.authorities"})
     Iterable<User> findAll(Predicate predicate);
 
     @Query(value = "select U from User U " +

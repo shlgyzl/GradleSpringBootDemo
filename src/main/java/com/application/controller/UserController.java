@@ -32,7 +32,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -44,18 +43,23 @@ import java.util.Objects;
 @Slf4j
 public class UserController {
 
-    private TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Resource
-    private UserDaoImpl userDao;
+    private final UserDaoImpl userDao;
 
-    @Resource
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Resource
-    private UserMongoDBRepository userMongoDBRepository;
+    private final UserMongoDBRepository userMongoDBRepository;
+
+    public UserController(TokenProvider tokenProvider, AuthenticationManager authenticationManager, UserDaoImpl userDao, UserRepository userRepository, UserMongoDBRepository userMongoDBRepository) {
+        this.tokenProvider = tokenProvider;
+        this.authenticationManager = authenticationManager;
+        this.userDao = userDao;
+        this.userRepository = userRepository;
+        this.userMongoDBRepository = userMongoDBRepository;
+    }
 
     @ApiOperation(value = "查询大坝下所属用户", notes = "条件限制")
     @GetMapping("/find/predicate")

@@ -1,14 +1,18 @@
 package com.application.config;
 
 import com.application.filter.CachingHttpHeadersFilter;
+import io.github.jhipster.config.JHipsterProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.WebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -17,15 +21,16 @@ import java.sql.SQLException;
 import java.util.EnumSet;
 
 import static com.application.helper.H2ServerStartHelper.createTcpServer;
-import static com.application.helper.H2ServerStartHelper.initH2Console;
 
 @Configuration
 public class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
     private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
     private final Environment env;
+    private final JHipsterProperties jHipsterProperties;
 
-    public WebConfigurer(Environment env) {
+    public WebConfigurer(Environment env, JHipsterProperties jHipsterProperties) {
         this.env = env;
+        this.jHipsterProperties = jHipsterProperties;
     }
 
     @Override
@@ -65,5 +70,18 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         cachingHttpHeadersFilter.addMappingForUrlPatterns(dispatcherTypes, true, "/content/*");
         cachingHttpHeadersFilter.addMappingForUrlPatterns(dispatcherTypes, true, "/app/*");
         cachingHttpHeadersFilter.setAsyncSupported(true);
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = jHipsterProperties.getCors();
+        if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
+            log.debug("Registering CORS filter");
+            source.registerCorsConfiguration("/api/**", config);
+            source.registerCorsConfiguration("/management/**", config);
+            source.registerCorsConfiguration("/v2/api-docs", config);
+        }
+        return new CorsFilter(source);
     }
 }
