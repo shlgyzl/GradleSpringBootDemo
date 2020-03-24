@@ -3,6 +3,10 @@ package com.application.filter;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,7 +18,7 @@ public class CachingHttpHeadersFilter implements Filter {
     public static final long DEFAULT_SECONDS_TO_LIVE = TimeUnit.DAYS.toMillis(DEFAULT_DAYS_TO_LIVE);
 
     // We consider the last modified date is the start up time of the server
-    public final static long LAST_MODIFIED = System.currentTimeMillis();
+    public final static long LAST_MODIFIED = LocalDateTime.now(ZoneId.systemDefault()).toEpochSecond(OffsetDateTime.now(ZoneId.systemDefault()).getOffset());
 
     private long cacheTimeToLive = DEFAULT_SECONDS_TO_LIVE;
 
@@ -38,10 +42,10 @@ public class CachingHttpHeadersFilter implements Filter {
         httpResponse.setHeader("Pragma", "cache");
 
         // Setting Expires header, for proxy caching
-        httpResponse.setDateHeader("Expires", cacheTimeToLive + System.currentTimeMillis());
+        //httpResponse.setDateHeader("Expires", cacheTimeToLive + System.currentTimeMillis());
 
         // Setting the Last-Modified header, for browser caching
-        httpResponse.setDateHeader("Last-Modified", LAST_MODIFIED);
+        //httpResponse.setDateHeader("Last-Modified", LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
 
         chain.doFilter(request, response);
     }

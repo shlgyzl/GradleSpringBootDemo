@@ -41,7 +41,7 @@ spring:
     active: docker
   liquibase:
     contexts: dev
-    drop-first: true
+    #drop-first: true
     enabled: true
   data:
     mongodb:

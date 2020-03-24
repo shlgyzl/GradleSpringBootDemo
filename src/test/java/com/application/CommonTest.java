@@ -15,6 +15,9 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Locale;
@@ -119,6 +122,11 @@ public class CommonTest {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String admin = bCryptPasswordEncoder.encode("123456");
         System.out.println(admin);
+
+        System.out.println(LocalDateTime.now().toEpochSecond(Instant.now().atZone(ZoneId.systemDefault()).getOffset()));
+        LocalDateTime.now(ZoneId.systemDefault()).toEpochSecond(OffsetDateTime.now(ZoneId.systemDefault()).getOffset());
+        System.out.println();
+
     }
 }
 
