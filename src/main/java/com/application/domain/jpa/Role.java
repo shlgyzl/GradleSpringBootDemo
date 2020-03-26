@@ -3,25 +3,25 @@ package com.application.domain.jpa;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "tbl_role")
 @Data
 @ApiModel(value = "Role", description = "角色")
+@ToString(exclude = {"authorities"})
 @NoArgsConstructor
 @RequiredArgsConstructor
 @DynamicInsert
@@ -45,8 +45,8 @@ public class Role implements Serializable {
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
     @BatchSize(size = 20)
-    @ManyToMany(cascade = {CascadeType.PERSIST})
-    private Set<Authority> authorities = new HashSet<>();
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private Set<Authority> authorities = new LinkedHashSet<>();
 
     @NotNull
     @NonNull

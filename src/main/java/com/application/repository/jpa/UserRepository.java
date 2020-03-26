@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("NullableProblems")
 public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslBinderCustomizer<QUser> {
 
     @Query(value = "select U from User U " +
@@ -33,22 +34,19 @@ public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslB
             "where D.name = :name ")
     List<User> findByDamsName(@Param("name") String name);
 
-    @EntityGraph(attributePaths = {"dams", "roles","roles.authorities"})
+    @EntityGraph(attributePaths = {"dams", "roles", "roles.authorities"})
     Iterable<User> findAll(Predicate predicate);
 
     @Query(value = "select U from User U " +
             "where U.id in ( :ids) ")
     List<User> findByIds(@Param("ids") Collection<Long> ids);
 
-    @SuppressWarnings("NullableProblems")
     @EntityGraph(attributePaths = {"dams"})
     Page<User> findAll(@Nullable Predicate predicate, @Nullable Pageable pageable);
 
-    @SuppressWarnings("NullableProblems")
     @EntityGraph(attributePaths = {"dams"})
     Page<User> findAll(Pageable pageable);
 
-    @SuppressWarnings("NullableProblems")
     @Override
     default void customize(QuerydslBindings bindings, QUser user) {
         // 只要使用到了Predicate,那么此处的规则可以我们自己定义

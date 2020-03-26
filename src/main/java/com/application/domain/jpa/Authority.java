@@ -3,22 +3,24 @@ package com.application.domain.jpa;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tbl_authority")
 @Data
 @ApiModel(value = "Authority", description = "权限")
+@ToString(exclude = {"roles"})
 @NoArgsConstructor
 @RequiredArgsConstructor
 @DynamicInsert
@@ -36,6 +38,10 @@ public class Authority implements Serializable {
     @ApiModelProperty(name = "name", value = "权限名", dataType = "String")
     private String name;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @BatchSize(size = 20)
+    private Set<Role> roles = new LinkedHashSet<>(10);
+
     @NotNull
     @NonNull
     @ApiModelProperty(name = "version", value = "权限版本锁", dataType = "Long", required = true)
@@ -43,4 +49,12 @@ public class Authority implements Serializable {
     @Version
     @JsonIgnore
     private Long version = 0L;
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 }

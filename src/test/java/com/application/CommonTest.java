@@ -1,6 +1,9 @@
 package com.application;
 
+import com.application.controller.util.DomainUtil;
+import com.application.domain.jpa.Authority;
 import com.application.domain.jpa.DefectType;
+import com.application.domain.jpa.Role;
 import org.assertj.core.util.Files;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -127,6 +130,27 @@ public class CommonTest {
         LocalDateTime.now(ZoneId.systemDefault()).toEpochSecond(OffsetDateTime.now(ZoneId.systemDefault()).getOffset());
         System.out.println();
 
+    }
+
+    @Test
+    public void test09(){
+        Role role = new Role();
+        Authority authority = new Authority();
+        role.setName("管理员");
+        role.setId(1L);
+        authority.setId(2L);
+        authority.setName("后台管理");
+        role.getAuthorities().add(authority);
+
+        Role role2 = new Role();
+        role2.setName("普通角色");
+        role2.setId(2L);
+        Authority authority_= new Authority();
+        authority_.setId(1L);
+        authority_.setName("后台管理");
+        role2.getAuthorities().add(authority_);
+        DomainUtil.copy(role,role2);
+        System.out.println(role2);
     }
 }
 
