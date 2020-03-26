@@ -24,7 +24,7 @@ import java.time.ZoneId;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Data
-public abstract class AbstractAuditingEntity<ID> extends AbstractEntity<ID> implements Serializable {
+public abstract class AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

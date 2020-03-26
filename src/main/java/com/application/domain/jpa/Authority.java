@@ -1,13 +1,12 @@
 package com.application.domain.jpa;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,6 +18,7 @@ import java.util.Set;
 @Entity
 @Table(name = "tbl_authority")
 @Data
+@EqualsAndHashCode(exclude = {"roles"})
 @ApiModel(value = "Authority", description = "权限")
 @ToString(exclude = {"roles"})
 @NoArgsConstructor
@@ -38,8 +38,10 @@ public class Authority implements Serializable {
     @ApiModelProperty(name = "name", value = "权限名", dataType = "String")
     private String name;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "authorities", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @BatchSize(size = 20)
+    @JsonIgnoreProperties({"authorities"})
+    @OrderBy("id asc")
     private Set<Role> roles = new LinkedHashSet<>(10);
 
     @NotNull
@@ -47,14 +49,5 @@ public class Authority implements Serializable {
     @ApiModelProperty(name = "version", value = "权限版本锁", dataType = "Long", required = true)
     @Column
     @Version
-    @JsonIgnore
     private Long version = 0L;
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 }

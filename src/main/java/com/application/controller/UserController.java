@@ -86,8 +86,6 @@ public class UserController {
     @ApiOperation(value = "更新用户", notes = "条件限制")
     @PutMapping("/update")
     public ResponseEntity<User> update(@Valid @RequestBody User user) {
-        User update = userRepository.findById(Objects.requireNonNull(user.getId())).orElseThrow(() -> new RuntimeException("用户不存在"));
-        user.setVersion(update.getVersion());
         return ResponseEntity.ok().body(userRepository.save(user));
     }
 

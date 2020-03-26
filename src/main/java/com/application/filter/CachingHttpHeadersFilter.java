@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,7 +22,7 @@ public class CachingHttpHeadersFilter implements Filter {
     private long cacheTimeToLive = DEFAULT_SECONDS_TO_LIVE;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
 
@@ -38,14 +37,14 @@ public class CachingHttpHeadersFilter implements Filter {
 
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         // 设置最大有效期
-        httpResponse.setHeader("Cache-Control", "max-age=" + cacheTimeToLive + ", public");
-        httpResponse.setHeader("Pragma", "cache");
+        // httpResponse.setHeader("Cache-Control", "max-age=" + cacheTimeToLive + ", public");
+        // httpResponse.setHeader("Pragma", "cache");
 
         // Setting Expires header, for proxy caching
         //httpResponse.setDateHeader("Expires", cacheTimeToLive + System.currentTimeMillis());
 
         // Setting the Last-Modified header, for browser caching
-        //httpResponse.setDateHeader("Last-Modified", LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
+        httpResponse.setDateHeader("Last-Modified", LAST_MODIFIED);
 
         chain.doFilter(request, response);
     }

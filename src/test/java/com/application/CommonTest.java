@@ -149,7 +149,7 @@ public class CommonTest {
         authority_.setId(1L);
         authority_.setName("后台管理");
         role2.getAuthorities().add(authority_);
-        DomainUtil.copy(role,role2);
+        DomainUtil.copyDeep(role,role2);
         System.out.println(role2);
     }
 }

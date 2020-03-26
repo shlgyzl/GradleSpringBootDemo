@@ -3,6 +3,7 @@ package com.application.controller;
 
 import com.application.controller.util.DomainUtil;
 import com.application.domain.jpa.Role;
+import com.application.repository.jpa.AuthorityRepository;
 import com.application.repository.jpa.RoleRepository;
 import com.querydsl.core.types.Predicate;
 import io.swagger.annotations.Api;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 @Api(value = "RoleController角色控制层", tags = {"Role角色信息接口"})
 @RestController
@@ -28,9 +28,11 @@ import java.util.Optional;
 public class RoleController {
 
     private final RoleRepository roleRepository;
+    private final AuthorityRepository authorityRepository;
 
-    public RoleController(RoleRepository roleRepository) {
+    public RoleController(RoleRepository roleRepository, AuthorityRepository authorityRepository) {
         this.roleRepository = roleRepository;
+        this.authorityRepository = authorityRepository;
     }
 
     /**
@@ -75,9 +77,11 @@ public class RoleController {
     @PutMapping
     public ResponseEntity<Role> update(@Valid @RequestBody Role role) throws URISyntaxException {
         log.debug("REST to request update a Role");
-        Optional<Role> optional = roleRepository.findById(role.getId());
-        Role copy = DomainUtil.copy(role, optional.get());
-        return ResponseEntity.created(new URI("/api/role/index" + copy.getId())).body(copy);
+        //Role elseThrow = roleRepository.findById(role.getId()).orElseThrow(() -> new RuntimeException("数据不存在"));
+        //Role deep = DomainUtil.copyDeep(role, elseThrow);
+        role.getAuthorities().forEach(n -> n.setVersion(authorityRepository.findVersion(n.getId())));
+        @Valid Role save = roleRepository.save(role);
+        return ResponseEntity.created(new URI("/api/role/index" + save.getId())).body(save);
     }
 
 }

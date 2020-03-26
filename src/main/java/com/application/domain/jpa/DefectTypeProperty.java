@@ -100,6 +100,5 @@ public class DefectTypeProperty extends AbstractEntity<Long> implements Serializ
     @ApiModelProperty(name = "version", value = "缺陷类型属性版本锁", dataType = "Long", required = true, hidden = true)
     @Column
     @Version
-    @JsonIgnore
     private Long version = 0L;
 }

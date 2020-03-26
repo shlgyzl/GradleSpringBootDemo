@@ -41,6 +41,5 @@ public class Dam extends AbstractEntity<Long> implements Serializable {
     @ApiModelProperty(name = "version", value = "大坝版本锁", dataType = "Long", required = true, hidden = true)
     @Column
     @Version
-    @JsonIgnore
     private Long version = 0L;
 }

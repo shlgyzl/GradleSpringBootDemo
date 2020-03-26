@@ -72,6 +72,5 @@ public class DefectType extends AbstractEntity<Long> implements Serializable {
     @ApiModelProperty(name = "version", value = "缺陷类型版本锁", dataType = "Long", required = true, hidden = true)
     @Column
     @Version
-    @JsonIgnore
     private Long version = 0L;
 }

@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -71,21 +72,22 @@ public class User extends AbstractAuditingEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "dam_id", referencedColumnName = "id")})
     @BatchSize(size = 20)
     @ManyToMany(cascade = {CascadeType.PERSIST})
-    private Set<Dam> dams = new HashSet<>();
+    @OrderBy("id asc")
+    private Set<Dam> dams = new LinkedHashSet<>(5);
 
     @JoinTable(
             name = "tbl_user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     @BatchSize(size = 20)
-    @ManyToMany(cascade = {CascadeType.PERSIST})
-    private Set<Role> roles = new HashSet<>();
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OrderBy("id asc")
+    private Set<Role> roles = new LinkedHashSet<>(5);
 
     @NotNull
     @NonNull
     @ApiModelProperty(name = "version", value = "用户版本锁", dataType = "Long", required = true)
     @Column
     @Version
-    @JsonIgnore
     private Long version = 0L;
 }

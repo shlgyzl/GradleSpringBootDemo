@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "tbl_persistent_token")
 @Data
+@EqualsAndHashCode
 @ApiModel(value = "PersistentToken", description = "持久化Token")
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -66,6 +67,5 @@ public class PersistentToken implements Serializable {
     @ApiModelProperty(name = "version", value = "持久化Token版本锁", dataType = "Long", required = true)
     @Column
     @Version
-    @JsonIgnore
     private Long version = 0L;
 }
