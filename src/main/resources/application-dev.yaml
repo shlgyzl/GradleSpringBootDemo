@@ -23,14 +23,13 @@ spring:
       naming:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-    show-sql: true
-    generate-ddl: true
+    show-sql: false
+    generate-ddl: false
     properties:
       hibernate:
-        format-sql: true
-        show_sql: true
-        format_sql: true
-        use_sql_comments: true
+        show_sql: false
+        format_sql: false
+        use_sql_comments: false
     database-platform: org.hibernate.dialect.H2Dialect
     #database-platform: org.hibernate.dialect.MySQL5Dialect
 
@@ -97,13 +96,4 @@ jhipster:
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
-logging:
-  level:
-    root: INFO
-    org.hibernate: INFO
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.hibernate.type.descriptor.sql.BasicExtractor: TRACE
-    org.springframework.data.mongodb.core: DEBUG
-    com.itmuch: DEBUG
-    com.application: TRACE
 
