@@ -8,7 +8,7 @@
         <!-- 外键约束 -->
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="tbl_persistent_token"
-                                 constraintName="FK_C72E50A7ADE843488ED5684D9D0E7765"
+                                 constraintName="FK_C72E50A7ADE843488ED5674D9D0E7765"
                                  referencedColumnNames="id"
                                  referencedTableName="tbl_user"/>
     </changeSet>

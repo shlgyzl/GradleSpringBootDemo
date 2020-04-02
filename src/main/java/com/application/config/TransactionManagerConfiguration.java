@@ -24,22 +24,8 @@ import javax.sql.DataSource;
 public class TransactionManagerConfiguration {
 
     @Bean(name = "dataSourceTransactionManager")
-    public PlatformTransactionManager dataSourceTransactionManager(@Qualifier("druidDataSource") DataSource druidDataSource) {
-        return new DataSourceTransactionManager(druidDataSource);
-    }
-
-    //@Bean
-    public PlatformTransactionManager hibernateTransactionManager(SessionFactory sessionFactory) {
-        return new HibernateTransactionManager(sessionFactory);
-    }
-
-    //@Bean
-    public LocalSessionFactoryBean sessionFactory(@Qualifier("druidDataSource") DataSource druidDataSource) {
-        LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
-        sessionFactoryBean.setConfigLocation(new ClassPathResource("classpath:config/hibernate/hibernate.cfg.xml"));
-        sessionFactoryBean.setDataSource(druidDataSource);
-        sessionFactoryBean.setPackagesToScan("com.application.domain");
-        return sessionFactoryBean;
+    public PlatformTransactionManager dataSourceTransactionManager(@Qualifier("hikariDataSource") DataSource hikariDataSource) {
+        return new DataSourceTransactionManager(hikariDataSource);
     }
 
     @Bean(name = "transactionManager")
@@ -49,13 +35,12 @@ public class TransactionManagerConfiguration {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("druidDataSource") DataSource druidDataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("hikariDataSource") DataSource hikariDataSource) {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setGenerateDdl(true);
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
         factory.setPackagesToScan("com.application.domain");
-        factory.setDataSource(druidDataSource);
+        factory.setDataSource(hikariDataSource);
         return factory;
     }
 }

@@ -23,12 +23,12 @@ public class LiquibaseConfiguration {
 
     @Bean
     public SpringLiquibase liquibase(
-            @Qualifier(value = "druidDataSource") DataSource druidDataSource,
+            @Qualifier(value = "hikariDataSource") DataSource hikariDataSource,
             @Qualifier("taskExecutor") Executor taskExecutor,
             LiquibaseProperties liquibaseProperties) {
 
         AsyncSpringLiquibase liquibase = new AsyncSpringLiquibase(taskExecutor, env);
-        liquibase.setDataSource(druidDataSource);
+        liquibase.setDataSource(hikariDataSource);
         liquibase.setChangeLog("classpath:config/liquibase/master.xml");
         liquibase.setContexts(liquibaseProperties.getContexts());
         liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
@@ -36,7 +36,7 @@ public class LiquibaseConfiguration {
         liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
         liquibase.setShouldRun(true);
         // 不关闭数据源,否则会出现异常
-        liquibase.setCloseDataSourceOnceMigrated(false);
+        liquibase.setCloseDataSourceOnceMigrated(true);
         return liquibase;
     }
 }

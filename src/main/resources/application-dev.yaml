@@ -2,21 +2,21 @@ server:
   port: 8080
 spring:
   datasource:
-    #url: jdbc:log4jdbc:mysql://192.168.17.128:3306/jpa?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
-    #url: jdbc:h2:file:./datasource/h2/jpa;AUTO_SERVER=TRUE
-    #url: jdbc:log4jdbc:h2:file:./datasource/h2/jpa
-    url: jdbc:log4jdbc:h2:tcp://localhost/./datasource/h2/jpa;AUTO_SERVER=TRUE
-    username: sa
-    password:
-    #driver-class-name: org.h2.Driver
-    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    #driver-class-name: com.mysql.jdbc.Driver
-    type: com.alibaba.druid.pool.DruidDataSource
-    #type: org.apache.tomcat.jdbc.pool.DataSource
-    #type: com.zaxxer.hikari.HikariDataSource
-    #type: org.apache.commons.dbcp.BasicDataSource
-    #type: org.apache.commons.dbcp2.BasicDataSource
-
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://47.105.46.4:3306/jpa?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      auto-commit: true
+      idle-timeout: 600000
+      allow-pool-suspension: false
+      connection-timeout: 30000
+      initialization-fail-timeout: 1
+      maximum-pool-size: 10
+      minimum-idle: 1
+      login-timeout: 1800000
+      max-lifetime: 1000
   jpa:
     hibernate:
       ddl-auto: none
@@ -30,9 +30,7 @@ spring:
         show_sql: false
         format_sql: false
         use_sql_comments: false
-    database-platform: org.hibernate.dialect.H2Dialect
-    #database-platform: org.hibernate.dialect.MySQL5Dialect
-
+    database-platform: org.hibernate.dialect.MySQL57Dialect
     open-in-view: false # 禁用在视图层仍然可以获取懒加载数据,默认SpringMVC是开启状态,会影响性能.
   main:
     allow-bean-definition-overriding: true
@@ -41,18 +39,13 @@ spring:
   liquibase:
     contexts: dev
     drop-first: false
-    enabled: true
   data:
     mongodb:
-      #uri: mongodb://192.168.17.128:27017/jpa
       database: jpa
-      host: 192.168.17.128
+      host: 47.105.46.4
       port: 27017
-      username: admin
-      password: admin
     redis:
       repositories:
-        #禁用redis作为Jpa的缓存数据库,后面考虑redis使用Spring框架提供的缓存管理器
         enabled: false
   redis:
     lettuce:
@@ -62,18 +55,16 @@ spring:
         min-idle: 0
         max-idle: 4
       shutdown-timeout: 100
-    host: 192.168.17.128
+    host: 47.105.46.4
     port: 6379
-    password: 123456
     database: 0
   rabbitmq:
-    host: 192.168.17.128
+    host: 47.105.46.4
     port: 5672
-    username: guest
-    password: guest
+    username: admin
+    password: admin
     virtual-host: /
 jhipster:
-  # CORS is only enabled by default with the "dev" profile, so BrowserSync can access the API
   cors:
     allowed-origins: "*"
     allowed-methods: "*"
@@ -87,13 +78,10 @@ jhipster:
     queue-capacity: 10000
   security:
     remember-me:
-      # security key (this key should be unique for your application, and kept secret)
       key: 4e431fe0f41cec2457ba464d1fa53d2e287a54e5e92c9dca30c68d95af40e1bbc2cc4d3d25f0f61049dc3934466e6586a8eb
     authentication:
       jwt:
-        # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
         base64-secret: RFE2Y1NNTlRsRDNDLzJiblVQRnZMYUZ4WXVjV1huWWVYa1luY0NNT3hlTVU1QmI2ZVZ3N2pkVFBISjBHS08zSEV1NWNYMGVGSXh0S3ZTQURjSkdzWWJsRE5sTjg3cVpjdDUwSkxhQnR6WXlhOUdTNHc5YjBkazlmbnk1WXd4MFowT3hZYnZFUUU2dVVyWW1ET0IwbUtNeGNCbmlCc1dYOTFqSnhmNy9VTlc4JTNE
-        # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
 

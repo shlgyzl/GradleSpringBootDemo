@@ -1,9 +1,0 @@
-task hello {
-    doLast {
-        println 'Hello world!'
-    }
-}
-
-test {
-    systemProperties 'property': 'value'
-}

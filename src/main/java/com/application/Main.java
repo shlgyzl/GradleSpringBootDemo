@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,7 +28,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {LiquibaseAutoConfiguration.class})
 @EnableSpringDataWebSupport// 开启Web支持
 @RestController
 @Slf4j

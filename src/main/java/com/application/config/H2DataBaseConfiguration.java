@@ -13,7 +13,7 @@ import org.springframework.core.env.Environment;
 import java.sql.SQLException;
 import java.util.Objects;
 
-@Configuration
+//@Configuration
 public class H2DataBaseConfiguration {
     private final Logger log = LoggerFactory.getLogger(H2DataBaseConfiguration.class);
     private final Environment env;

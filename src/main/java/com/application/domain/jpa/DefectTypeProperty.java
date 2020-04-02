@@ -3,7 +3,6 @@ package com.application.domain.jpa;
 import com.application.domain.abstracts.AbstractEntity;
 import com.application.domain.enumeration.FieldType;
 import com.application.domain.enumeration.Region;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

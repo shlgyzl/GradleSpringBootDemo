@@ -103,10 +103,6 @@
     <logger name="jdbc.sqlonly" level="OFF" additivity="false"/>
     <logger name="jdbc.sqltiming" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="log4jdbc_insert"/>
-        <appender-ref ref="log4jdbc_delete"/>
-        <appender-ref ref="log4jdbc_update"/>
-        <appender-ref ref="log4jdbc_select"/>
     </logger>
     <logger name="org.hibernate.SQL" additivity="false" level="WARN">
         <level value="WARN" />

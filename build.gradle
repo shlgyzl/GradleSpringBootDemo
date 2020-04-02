@@ -1,4 +1,25 @@
-// 插件的目的是为了引入依赖、管理依赖、打包成可执行文件等
+buildscript {
+    repositories {
+        mavenLocal()
+        // 使用阿里巴巴仓库
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://mirrors.huaweicloud.com/repository/maven/' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://maven.aliyun.com/repository/spring'}
+        maven { url 'https://maven.aliyun.com/repository/spring-plugin'}
+        maven { url 'https://maven.aliyun.com/repository/public'}
+        maven { url 'https://maven.aliyun.com/repository/releases'}
+        maven { url 'https://maven.aliyun.com/repository/snapshots'}
+        maven { url 'https://maven.aliyun.com/repository/grails-core'}
+        maven { url 'https://maven.aliyun.com/repository/mapr-public'}
+    }
+    dependencies {
+        
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.2.0.RELEASE'
@@ -13,9 +34,6 @@ apply plugin: 'idea'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.zeroturnaround.gradle.jrebel'
 apply plugin: 'eclipse'
-// 以外部文件的方式引入插件
-apply from: 'liquibase.gradle'
-apply from: 'test.gradle'
 
 
 //QueryDSL
@@ -72,11 +90,16 @@ repositories {
     // 使用阿里巴巴仓库
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     maven { url 'https://mirrors.huaweicloud.com/repository/maven/' }
-    maven { url 'https://repo.spring.io/milestone' }
-    maven { url 'https://repo.spring.io/snapshot' }
-    maven { url "https://plugins.gradle.org/m2/" }
-    gradlePluginPortal()
-    mavenCentral()
+    maven { url 'https://maven.aliyun.com/repository/google' }
+    maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+    maven { url 'https://maven.aliyun.com/repository/jcenter' }
+    maven { url 'https://maven.aliyun.com/repository/spring'}
+    maven { url 'https://maven.aliyun.com/repository/spring-plugin'}
+    maven { url 'https://maven.aliyun.com/repository/public'}
+    maven { url 'https://maven.aliyun.com/repository/releases'}
+    maven { url 'https://maven.aliyun.com/repository/snapshots'}
+    maven { url 'https://maven.aliyun.com/repository/grails-core'}
+    maven { url 'https://maven.aliyun.com/repository/mapr-public'}
 }
 
 dependencies {
@@ -135,7 +158,7 @@ dependencies {
     // 引入Sql格式化工具
     compile group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
     // 引入MySQL驱动
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.47'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.38'
     compile group: 'com.google.code.morphia', name: 'morphia', version: '0.104'
     // 引入mongodb注解驱动
     compileOnly group: 'org.mongodb.morphia', name: 'morphia', version: '1.3.2'
@@ -182,8 +205,8 @@ dependencies {
     testAnnotationProcessor 'org.springframework.boot:spring-boot-starter-data-jpa:2.2.0.RELEASE'
     testAnnotationProcessor 'org.springframework.boot:spring-boot-starter-data-mongodb:2.2.0.RELEASE'
 
-    liquibaseRuntime 'org.liquibase:liquibase-core:3.8.0'
-    liquibaseRuntime sourceSets.main.compileClasspath
+    //liquibaseRuntime 'org.liquibase:liquibase-core:3.8.0'
+    //liquibaseRuntime sourceSets.main.compileClasspath
     liquibaseRuntime 'com.h2database:h2:1.4.200'
 }
 

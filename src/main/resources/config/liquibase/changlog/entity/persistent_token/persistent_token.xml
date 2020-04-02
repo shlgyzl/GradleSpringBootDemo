@@ -22,7 +22,7 @@
             <column name="user_agent" type="varchar(255)" remarks="用户代理">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="varchar(255)" remarks="用户id">
+            <column name="user_id" type="bigint" remarks="用户id">
                 <constraints nullable="false"/>
             </column>
             <column name="version" type="bigint" defaultValue="0" remarks="持久化token版本锁">
