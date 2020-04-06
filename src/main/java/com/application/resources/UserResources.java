@@ -17,6 +17,9 @@ import com.querydsl.core.types.Predicate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.*;
@@ -44,6 +47,8 @@ import java.util.Set;
 @Slf4j
 public class UserResources {
 
+    private final CacheManager cacheManager;
+
     private final ApplicationEventPublisher applicationEventPublisher;
 
     private final TokenProvider tokenProvider;
@@ -56,7 +61,8 @@ public class UserResources {
 
     private final UserMongoDBRepository userMongoDBRepository;
 
-    public UserResources(ApplicationEventPublisher applicationEventPublisher, TokenProvider tokenProvider, AuthenticationManager authenticationManager, UserDaoImpl userDao, UserRepository userRepository, UserMongoDBRepository userMongoDBRepository) {
+    public UserResources(CacheManager cacheManager, ApplicationEventPublisher applicationEventPublisher, TokenProvider tokenProvider, AuthenticationManager authenticationManager, UserDaoImpl userDao, UserRepository userRepository, UserMongoDBRepository userMongoDBRepository) {
+        this.cacheManager = cacheManager;
         this.applicationEventPublisher = applicationEventPublisher;
         this.tokenProvider = tokenProvider;
         this.authenticationManager = authenticationManager;
@@ -179,7 +185,11 @@ public class UserResources {
     @ApiOperation(value = "查询所有用户", notes = "条件限制(简单查询)")
     @GetMapping(value = "/find/simple", params = "login")
     @Transactional
+    @Cacheable(cacheNames = "userList", key = "#login", cacheManager = "cacheManager")
     public ResponseEntity<Set<UserDTO>> findBySimple(String login) {
+        Cache managerCache = cacheManager.getCache("default");
+        Cache.ValueWrapper valueWrapper = managerCache.get(login);
+        System.out.println(valueWrapper);
         return ResponseEntity.ok().body(userRepository.findAllByLogin(login));
     }
 

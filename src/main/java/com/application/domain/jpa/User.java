@@ -1,8 +1,8 @@
 package com.application.domain.jpa;
 
 import com.application.domain.abstracts.AbstractAuditingEntity;
+import com.application.listener.UserAuditListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -31,6 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequiredArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@EntityListeners(UserAuditListener.class)
 public class User extends AbstractAuditingEntity implements Serializable {
 
 

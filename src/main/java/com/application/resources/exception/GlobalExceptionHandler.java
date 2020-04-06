@@ -3,6 +3,7 @@ package com.application.resources.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +44,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body("空指针异常了");
     }
 
+    /**
+     * 锁机制异常
+     *
+     * @param e 异常
+     * @return String
+     */
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<String> objectOptimisticLockingFailureException(ObjectOptimisticLockingFailureException e) {
+        log.error("并发修改异常,已加锁,{}", e.getMessage());
+        return ResponseEntity.badRequest().body("并发修改异常了");
+    }
 
     /**
      * 业务异常
