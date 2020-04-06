@@ -1,4 +1,4 @@
-package com.application.controller.util;
+package com.application.resources.util;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;

@@ -1,4 +1,4 @@
-package com.application.controller.vm;
+package com.application.resources.vm;
 
 import lombok.Data;
 

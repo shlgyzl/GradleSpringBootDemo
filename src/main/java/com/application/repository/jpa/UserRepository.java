@@ -3,6 +3,7 @@ package com.application.repository.jpa;
 
 import com.application.domain.jpa.QUser;
 import com.application.domain.jpa.User;
+import com.application.dto.UserDTO;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringExpression;
@@ -23,6 +24,7 @@ import org.springframework.lang.Nullable;
 import javax.persistence.LockModeType;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,6 +87,14 @@ public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslB
             countQuery = "SELECT count(*) FROM TBL_USER WHERE LOGIN LIKE %?1% ",
             nativeQuery = true)
     Page<User> findByLogin(String login, Pageable pageable);
+
+    /**
+     * DTO返回格式
+     *
+     * @param login 登录名
+     * @return LinkedHashSet
+     */
+    LinkedHashSet<UserDTO> findAllByLogin(String login);
 
     /**
      * 排序查询

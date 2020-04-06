@@ -1,4 +1,4 @@
-package com.application.controller.util;
+package com.application.resources.util;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

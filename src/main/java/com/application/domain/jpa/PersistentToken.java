@@ -64,7 +64,7 @@ public class PersistentToken implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "持久化Token版本锁", dataType = "Long", required = true)
+    @ApiModelProperty(name = "version", value = "持久化Token版本锁",example = "0L", dataType = "Long", required = true)
     @Column
     @Version
     private Long version = 0L;

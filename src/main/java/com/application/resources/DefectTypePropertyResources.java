@@ -1,4 +1,4 @@
-package com.application.controller;
+package com.application.resources;
 
 import com.application.domain.jpa.DefectTypeProperty;
 import com.application.repository.jpa.DefectTypePropertyRepository;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-@Api(value = "DefectTypePropertyController缺陷类型控制层", tags = {"DefectTypeProperty缺陷类型接口"})
+@Api(value = "DefectTypePropertyResources缺陷类型控制层", tags = {"DefectTypeProperty缺陷类型接口"})
 @RestController
 @RequestMapping("api/defectTypeProperty")
-public class DefectTypePropertyController {
+public class DefectTypePropertyResources {
     @Resource
     private DefectTypePropertyRepository defectTypePropertyRepository;
 

@@ -1,7 +1,7 @@
-package com.application.controller;
+package com.application.resources;
 
-import com.application.controller.util.DomainUtil;
-import com.application.controller.util.ResponseUtil;
+import com.application.resources.util.DomainUtil;
+import com.application.resources.util.ResponseUtil;
 import com.application.domain.jpa.DefectType;
 import com.application.repository.jpa.DefectTypePropertyRepository;
 import com.application.repository.jpa.DefectTypeRepository;
@@ -16,15 +16,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
-@Api(value = "DefectTypeController缺陷类型控制层", tags = {"DetectType缺陷类型接口"})
+@Api(value = "DefectTypeResources缺陷类型控制层", tags = {"DetectType缺陷类型接口"})
 @RestController
 @RequestMapping("api/detectType")
-public class DefectTypeController {
+public class DefectTypeResources {
     private final DefectTypeRepository defectTypeRepository;
     private final DefectTypePropertyRepository defectTypePropertyRepository;
 
-    public DefectTypeController(DefectTypeRepository defectTypeRepository,
-                                DefectTypePropertyRepository defectTypePropertyRepository) {
+    public DefectTypeResources(DefectTypeRepository defectTypeRepository,
+                               DefectTypePropertyRepository defectTypePropertyRepository) {
         this.defectTypeRepository = defectTypeRepository;
         this.defectTypePropertyRepository = defectTypePropertyRepository;
     }

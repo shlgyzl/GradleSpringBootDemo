@@ -1,4 +1,4 @@
-package com.application.controller;
+package com.application.resources;
 
 import com.application.domain.jpa.Dam;
 import com.application.repository.jpa.DamRepository;
@@ -18,10 +18,10 @@ import java.util.List;
  * @author yanghaiyong 2019年11月5日 23:51:35
  */
 
-@Api(value = "DamController大坝控制层", tags = {"Dam大坝接口"})
+@Api(value = "DamResources大坝控制层", tags = {"Dam大坝接口"})
 @RestController
 @RequestMapping("api/dam")
-public class DamController {
+public class DamResources {
 
     @Resource
     private DamRepository damRepository;

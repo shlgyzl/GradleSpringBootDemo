@@ -1,19 +1,13 @@
 package com.application;
 
-import com.application.controller.util.DomainUtil;
+import com.application.resources.util.DomainUtil;
 import com.application.domain.jpa.Authority;
 import com.application.domain.jpa.DefectType;
 import com.application.domain.jpa.Role;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.assertj.core.util.Files;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -159,12 +153,12 @@ public class CommonTest {
         System.out.println(role2);
     }
 
-    @Test
+    /*@Test
     public void test10() {
         String inputFoler = "C:\\Users\\yanghaiyong\\Downloads\\女生 白色衬衫 耳机 房间 书桌 4k动漫壁纸_彼岸图网.jpg";
-        /* 这儿填写你存放要缩小图片的文件夹全地址 */
+        *//* 这儿填写你存放要缩小图片的文件夹全地址 *//*
         String outputFolder = "C:\\Users\\yanghaiyong\\Downloads\\女生 白色衬衫 耳机 房间 书桌 4k动漫壁纸_彼岸图网2.jpg";
-        /* 这儿填写你转化后的图片存放的文件夹 */
+        *//* 这儿填写你转化后的图片存放的文件夹 *//*
         writeHighQuality(zoomImage(inputFoler), outputFolder);
     }
 
@@ -180,18 +174,18 @@ public class CommonTest {
             }
             BufferedImage im = ImageIO.read(srcfile);
 
-            /* 原始图像的宽度和高度 */
+            *//* 原始图像的宽度和高度 *//*
             int width = im.getWidth();
             int height = im.getHeight();
 
             // 压缩计算
-            float resizeTimes = 0.3f; /* 这个参数是要转化成的倍数,如果是1就是转化成1倍 */
+            float resizeTimes = 0.3f; *//* 这个参数是要转化成的倍数,如果是1就是转化成1倍 *//*
 
-            /* 调整后的图片的宽度和高度 */
+     *//* 调整后的图片的宽度和高度 *//*
             int toWidth = (int) (width * resizeTimes);
             int toHeight = (int) (height * resizeTimes);
 
-            /* 新生成结果图片 */
+            *//* 新生成结果图片 *//*
             result = new BufferedImage(toWidth, toHeight, BufferedImage.TYPE_INT_RGB);
 
             result.getGraphics().drawImage(im.getScaledInstance(toWidth, toHeight, java.awt.Image.SCALE_SMOOTH), 0, 0,
@@ -207,21 +201,21 @@ public class CommonTest {
 
     public boolean writeHighQuality(BufferedImage im, String fileFullPath) {
         try {
-            /* 输出到文件流 */
+            *//* 输出到文件流 *//*
             FileOutputStream newimage = new FileOutputStream(fileFullPath);
             JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(newimage);
             JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(im);
-            /* 压缩质量 */
+            *//* 压缩质量 *//*
             jep.setQuality(0.9f, true);
             encoder.encode(im, jep);
-            /* 近JPEG编码 */
+            *//* 近JPEG编码 *//*
             newimage.close();
             return true;
         } catch (Exception e) {
             return false;
         } finally {
             // 压缩完毕后，删除原文件
-            /*File file = new File(fileFullPath);
+            *//*File file = new File(fileFullPath);
             // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
             if (file.exists() && file.isFile()) {
                 if (file.delete()) {
@@ -231,9 +225,9 @@ public class CommonTest {
                 }
             } else {
                 System.out.println("删除文件失败：" + fileFullPath + "不存在！");
-            }*/
+            }*//*
         }
-    }
+    }*/
 }
 
 class Service {

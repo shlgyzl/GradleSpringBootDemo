@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_PATTERN" value="%date{yyyy年MM月dd日 E HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+    <property name="FILE_PATH" value="D:/logs/course03/demo.%d{yyyy-MM-dd}.%i.log"/>
+</configuration>

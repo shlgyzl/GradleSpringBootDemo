@@ -8,9 +8,9 @@ import com.application.repository.mongodb.UserMongoDBRepository;
 import io.github.jhipster.config.DefaultProfileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -19,16 +19,15 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-@SpringBootApplication(exclude = {LiquibaseAutoConfiguration.class})
+@SpringBootApplication(exclude = {LiquibaseAutoConfiguration.class, RabbitAutoConfiguration.class})
 @EnableSpringDataWebSupport// 开启Web支持
 @RestController
 @Slf4j
@@ -42,8 +41,9 @@ public class Main {
     @Resource
     private UserRepository userRepository;
 
-    @Resource
-    private AmqpTemplate rabbitmqTemplate;
+    /*@Resource
+    private AmqpTemplate rabbitmqTemplate;*/
+
 
     @Resource
     private UserDaoImpl userDao;
@@ -92,7 +92,6 @@ public class Main {
 
     @GetMapping("/")
     public ResponseEntity<Void> index2() {
-        System.out.println(Thread.currentThread().getName());
         return ResponseEntity.ok().build();
     }
 
@@ -148,8 +147,20 @@ public class Main {
     public ResponseEntity<Void> rabbit() {
         String msg = "测试RabbitMQ";
         //发送消息
-        rabbitmqTemplate.convertAndSend("executeTask", msg);
+        //rabbitmqTemplate.convertAndSend("executeTask", msg);
         log.info("消息：{},已发送", msg);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/map")
+    public Map<String, Object> getMap(@RequestBody User user) {
+        Map<String, Object> map = new HashMap<>(3);
+        user.setLogin("");
+        map.put("作者信息", user);
+        map.put("博客地址", "http://blog.itcodai.com");
+        map.put("CSDN地址", null);
+        map.put("粉丝数量", 4153);
+        map.put("日期", new Date());
+        return map;
     }
 }

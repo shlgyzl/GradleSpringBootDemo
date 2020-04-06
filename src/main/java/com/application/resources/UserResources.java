@@ -1,23 +1,24 @@
-package com.application.controller;
+package com.application.resources;
 
-import com.application.controller.util.ResponseUtil;
-import com.application.controller.vm.LoginVM;
 import com.application.domain.jpa.User;
 import com.application.domain.mongodb.QUserMD;
 import com.application.domain.mongodb.UserMD;
+import com.application.dto.UserDTO;
+import com.application.event.UserEvent;
 import com.application.repository.jpa.UserRepository;
 import com.application.repository.jpa.dao.impl.UserDaoImpl;
 import com.application.repository.mongodb.UserMongoDBRepository;
+import com.application.resources.util.ResponseUtil;
+import com.application.resources.vm.LoginVM;
 import com.application.security.jwt.JWTFilter;
 import com.application.security.jwt.TokenProvider;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querydsl.core.types.Predicate;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.beans.BeanMap;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
@@ -35,13 +36,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Objects;
+import java.util.Set;
 
-@Api(value = "UserController用户控制层", tags = {"User用户信息接口"})
+@Api(value = "UserResources用户控制层", tags = {"User用户信息接口"})
 @RestController
 @RequestMapping("api/user")
 @Slf4j
-public class UserController {
+public class UserResources {
+
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final TokenProvider tokenProvider;
 
@@ -53,7 +56,8 @@ public class UserController {
 
     private final UserMongoDBRepository userMongoDBRepository;
 
-    public UserController(TokenProvider tokenProvider, AuthenticationManager authenticationManager, UserDaoImpl userDao, UserRepository userRepository, UserMongoDBRepository userMongoDBRepository) {
+    public UserResources(ApplicationEventPublisher applicationEventPublisher, TokenProvider tokenProvider, AuthenticationManager authenticationManager, UserDaoImpl userDao, UserRepository userRepository, UserMongoDBRepository userMongoDBRepository) {
+        this.applicationEventPublisher = applicationEventPublisher;
         this.tokenProvider = tokenProvider;
         this.authenticationManager = authenticationManager;
         this.userDao = userDao;
@@ -69,7 +73,6 @@ public class UserController {
     }
 
     @ApiOperation(value = "分页条件查询大坝", notes = "条件限制")
-    @ApiImplicitParams(value = {@ApiImplicitParam(name = "login", value = "1", type = "String")})
     @GetMapping("/find/page/predicate")
     public ResponseEntity<Page<User>> findByPageAndPredicate(
             @QuerydslPredicate(root = User.class) Predicate predicate,
@@ -80,7 +83,9 @@ public class UserController {
     @ApiOperation(value = "保存用户", notes = "条件限制")
     @PostMapping("/save")
     public ResponseEntity<User> save(@Valid @RequestBody User user) {
-        return ResponseEntity.ok().body(userRepository.save(user));
+        @Valid User save = userRepository.save(user);
+        applicationEventPublisher.publishEvent(new UserEvent(this, save));
+        return ResponseEntity.ok().body(save);
     }
 
     @ApiOperation(value = "更新用户", notes = "条件限制")
@@ -169,6 +174,13 @@ public class UserController {
         Iterable<UserMD> iterable = userMongoDBRepository.findAll(predicate,
                 Sort.by(Sort.Order.asc(QUserMD.userMD.id.toString())));
         return ResponseEntity.ok().body(iterable);
+    }
+
+    @ApiOperation(value = "查询所有用户", notes = "条件限制(简单查询)")
+    @GetMapping(value = "/find/simple", params = "login")
+    @Transactional
+    public ResponseEntity<Set<UserDTO>> findBySimple(String login) {
+        return ResponseEntity.ok().body(userRepository.findAllByLogin(login));
     }
 
     @ApiOperation(value = "用户登录", notes = "无条件限制")

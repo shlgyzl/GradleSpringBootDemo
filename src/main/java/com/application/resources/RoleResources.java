@@ -1,7 +1,6 @@
-package com.application.controller;
+package com.application.resources;
 
 
-import com.application.controller.util.DomainUtil;
 import com.application.domain.jpa.Role;
 import com.application.repository.jpa.AuthorityRepository;
 import com.application.repository.jpa.RoleRepository;
@@ -21,16 +20,16 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-@Api(value = "RoleController角色控制层", tags = {"Role角色信息接口"})
+@Api(value = "RoleResources角色控制层", tags = {"Role角色信息接口"})
 @RestController
 @RequestMapping("api/role")
 @Slf4j
-public class RoleController {
+public class RoleResources {
 
     private final RoleRepository roleRepository;
     private final AuthorityRepository authorityRepository;
 
-    public RoleController(RoleRepository roleRepository, AuthorityRepository authorityRepository) {
+    public RoleResources(RoleRepository roleRepository, AuthorityRepository authorityRepository) {
         this.roleRepository = roleRepository;
         this.authorityRepository = authorityRepository;
     }

@@ -2,6 +2,7 @@ package com.application.domain.jpa;
 
 import com.application.domain.abstracts.AbstractAuditingEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -33,7 +34,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class User extends AbstractAuditingEntity implements Serializable {
 
 
-    private static final long serialVersionUID = 1821697803716075855L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,7 +86,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "用户版本锁", dataType = "Long", required = true)
+    @ApiModelProperty(name = "version", value = "用户版本锁", example = "0L", dataType = "Long", required = true)
     @Column
     @Version
     private Long version = 0L;

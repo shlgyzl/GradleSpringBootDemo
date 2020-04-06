@@ -42,7 +42,7 @@ public class Swagger2Configuration {
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()// 生成构造器
-                .apis(RequestHandlerSelectors.basePackage("com.application.controller"))//为当前包路径
+                .apis(RequestHandlerSelectors.basePackage("com.application.resources"))//为当前包路径
                 .paths(paths())//设置路径选择方式
                 .build()
                 .apiInfo(apiInfo())// 文档头部构建

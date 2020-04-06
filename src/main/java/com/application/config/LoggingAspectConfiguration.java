@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 
@@ -20,6 +21,7 @@ import java.util.Arrays;
  * By default, it only runs with the "dev" profile.
  */
 @Aspect
+@Configuration
 public class LoggingAspectConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -45,7 +47,7 @@ public class LoggingAspectConfiguration {
      */
     @Pointcut("within(com.application.repository..*)" +
             " || within(com.application.config..*)" +
-            " || within(com.application.controller..*)")
+            " || within(com.application.resources..*)")
     public void applicationPackagePointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
@@ -99,13 +101,13 @@ public class LoggingAspectConfiguration {
     }
 
     private void log(JoinPoint joinPoint, long time) {
-        String className = joinPoint.getTarget().getClass().getName();
+        String className = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
         if (time > 500) {
-            log.error("耗时{},{}.{},参数：{}", time, className, methodName, args);
+            log.error("耗时:{},{}.{},参数：{}", time, className, methodName, args);
             return;
         }
-        log.error("耗时{},{}.{},参数：{}", time, className, methodName, args);
+        log.info("耗时:{},{}.{},参数：{}", time, className, methodName, args);
     }
 }

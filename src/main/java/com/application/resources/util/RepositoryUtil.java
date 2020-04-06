@@ -1,4 +1,4 @@
-package com.application.controller.util;
+package com.application.resources.util;
 
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringExpression;

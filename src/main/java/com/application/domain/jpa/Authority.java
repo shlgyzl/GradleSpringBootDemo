@@ -26,7 +26,7 @@ import java.util.Set;
 @DynamicInsert
 @DynamicUpdate
 public class Authority implements Serializable {
-    private static final long serialVersionUID = 417152214494393977L;
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,7 +38,7 @@ public class Authority implements Serializable {
     @ApiModelProperty(name = "name", value = "权限名", dataType = "String")
     private String name;
 
-    @ManyToMany(mappedBy = "authorities", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "authorities", cascade = {CascadeType.PERSIST})
     @BatchSize(size = 20)
     @JsonIgnoreProperties({"authorities"})
     @OrderBy("id asc")
@@ -46,7 +46,7 @@ public class Authority implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "权限版本锁", dataType = "Long", required = true)
+    @ApiModelProperty(name = "version", value = "权限版本锁", example = "0L", dataType = "Long", required = true)
     @Column
     @Version
     private Long version = 0L;

@@ -1,6 +1,6 @@
 package com.application.security;
 
-import com.application.controller.util.RandomUtil;
+import com.application.resources.util.RandomUtil;
 import com.application.domain.jpa.PersistentToken;
 import com.application.repository.jpa.PersistentTokenRepository;
 import com.application.repository.jpa.UserRepository;

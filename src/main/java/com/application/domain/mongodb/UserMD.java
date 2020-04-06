@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Document(collection = "user")
 @Data
 public class UserMD implements Serializable {
-    private static final long serialVersionUID = -694272422575878696L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     private Long id;

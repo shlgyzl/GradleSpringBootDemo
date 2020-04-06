@@ -28,7 +28,7 @@ import java.util.Set;
 @DynamicUpdate
 public class DefectType extends AbstractEntity<Long> implements Serializable {
 
-    private static final long serialVersionUID = 1584568401007494606L;
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -68,7 +68,7 @@ public class DefectType extends AbstractEntity<Long> implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "缺陷类型版本锁", dataType = "Long", required = true, hidden = true)
+    @ApiModelProperty(name = "version", value = "缺陷类型版本锁",example = "0L", dataType = "Long", required = true, hidden = true)
     @Column
     @Version
     private Long version = 0L;

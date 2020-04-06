@@ -22,7 +22,7 @@ import java.io.Serializable;
 @DynamicInsert
 @DynamicUpdate
 public class Dam extends AbstractEntity<Long> implements Serializable {
-    private static final long serialVersionUID = -4772373087949409931L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class Dam extends AbstractEntity<Long> implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "大坝版本锁", dataType = "Long", required = true, hidden = true)
+    @ApiModelProperty(name = "version", value = "大坝版本锁",example = "0L", dataType = "Long", required = true, hidden = true)
     @Column
     @Version
     private Long version = 0L;

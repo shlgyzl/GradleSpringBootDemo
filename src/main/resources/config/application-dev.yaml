@@ -14,7 +14,7 @@ spring:
       connection-timeout: 30000
       initialization-fail-timeout: 1
       maximum-pool-size: 10
-      minimum-idle: 1
+      minimum-idle: 2
       login-timeout: 1800000
       max-lifetime: 1000
   jpa:
@@ -23,15 +23,10 @@ spring:
       naming:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-    show-sql: false
+    show-sql: true
     generate-ddl: false
-    properties:
-      hibernate:
-        show_sql: false
-        format_sql: false
-        use_sql_comments: false
     database-platform: org.hibernate.dialect.MySQL57Dialect
-    open-in-view: false # 禁用在视图层仍然可以获取懒加载数据,默认SpringMVC是开启状态,会影响性能.
+    open-in-view: true # 禁用在视图层仍然可以获取懒加载数据,默认SpringMVC是开启状态,会影响性能.
   main:
     allow-bean-definition-overriding: true
   profiles:
@@ -64,6 +59,9 @@ spring:
     username: admin
     password: admin
     virtual-host: /
+    listener:
+      simple:
+        auto-startup: false
 jhipster:
   cors:
     allowed-origins: "*"
@@ -84,4 +82,3 @@ jhipster:
         base64-secret: RFE2Y1NNTlRsRDNDLzJiblVQRnZMYUZ4WXVjV1huWWVYa1luY0NNT3hlTVU1QmI2ZVZ3N2pkVFBISjBHS08zSEV1NWNYMGVGSXh0S3ZTQURjSkdzWWJsRE5sTjg3cVpjdDUwSkxhQnR6WXlhOUdTNHc5YjBkazlmbnk1WXd4MFowT3hZYnZFUUU2dVVyWW1ET0IwbUtNeGNCbmlCc1dYOTFqSnhmNy9VTlc4JTNE
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
-

@@ -36,7 +36,7 @@ public class LiquibaseConfiguration {
         liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
         liquibase.setShouldRun(true);
         // 不关闭数据源,否则会出现异常
-        liquibase.setCloseDataSourceOnceMigrated(true);
+        liquibase.setCloseDataSourceOnceMigrated(false);
         return liquibase;
     }
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -27,7 +26,7 @@ import java.util.Set;
 @DynamicUpdate
 public class Role implements Serializable {
 
-    private static final long serialVersionUID = -3049726724207267178L;
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,15 +42,14 @@ public class Role implements Serializable {
             name = "tbl_role_authority",
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
-    @BatchSize(size = 20)
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JsonIgnoreProperties({"roles"})
     @OrderBy("id asc")
     private Set<Authority> authorities = new LinkedHashSet<>();
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "角色版本锁", dataType = "Long", required = true)
+    @ApiModelProperty(name = "version", value = "角色版本锁", example = "0L", dataType = "Long", required = true)
     @Column
     @Version
     private Long version = 0L;
