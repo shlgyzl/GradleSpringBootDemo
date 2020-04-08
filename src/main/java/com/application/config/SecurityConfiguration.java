@@ -85,7 +85,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(corsFilter, CsrfFilter.class)
                 .exceptionHandling();
         http.authorizeRequests()
-                .antMatchers("/api/user/authenticate").permitAll()
+                .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/**").authenticated();
         http.rememberMe()
                 .rememberMeServices(rememberMeServices)

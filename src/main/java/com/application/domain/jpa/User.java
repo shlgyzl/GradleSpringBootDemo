@@ -72,7 +72,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "dam_id", referencedColumnName = "id")})
     @BatchSize(size = 20)
-    @ManyToMany(cascade = {CascadeType.PERSIST})
+    @ManyToMany
     @OrderBy("id asc")
     private Set<Dam> dams = new LinkedHashSet<>(5);
 
@@ -81,14 +81,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     @BatchSize(size = 20)
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY)
     @OrderBy("id asc")
     private Set<Role> roles = new LinkedHashSet<>(5);
 
     @NotNull
     @NonNull
     @ApiModelProperty(name = "version", value = "用户版本锁", example = "0L", dataType = "Long", required = true)
-    @Column
+    @Column(name = "version")
     @Version
     private Long version = 0L;
 }

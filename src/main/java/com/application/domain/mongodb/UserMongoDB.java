@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Document(collection = "user")
 @Data
-public class UserMD implements Serializable {
+public class UserMongoDB implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id

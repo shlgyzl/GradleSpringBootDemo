@@ -1,12 +1,15 @@
 package com.application.resources;
 
 
+import com.application.domain.enumeration.BusinessErrorType;
 import com.application.domain.jpa.Role;
-import com.application.repository.jpa.AuthorityRepository;
 import com.application.repository.jpa.RoleRepository;
+import com.application.resources.exception.BusinessErrorException;
+import com.application.resources.util.ResponseUtil;
 import com.querydsl.core.types.Predicate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,65 +27,61 @@ import java.net.URISyntaxException;
 
 @Api(value = "RoleResources角色控制层", tags = {"Role角色信息接口"})
 @RestController
-@RequestMapping("api/role")
+@RequestMapping("api")
 @Slf4j
 public class RoleResources {
 
     private final RoleRepository roleRepository;
-    private final AuthorityRepository authorityRepository;
 
-    public RoleResources(RoleRepository roleRepository, AuthorityRepository authorityRepository) {
+    public RoleResources(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
-        this.authorityRepository = authorityRepository;
     }
 
-    /**
-     * 角色列表(分页查询以及高级查询)
-     *
-     * @param pageable  分页查询
-     * @param predicate 高级条件
-     * @return Page<Role>
-     */
-    @ApiOperation(value = "角色列表", notes = "分页查询以及高级查询")
-    @GetMapping("index")
-    public ResponseEntity<Page<Role>> index(
-            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-            @QuerydslPredicate(root = Role.class) Predicate predicate) {
-        log.debug("REST to request get Role list");
+    @ApiOperation(value = "保存接口", notes = "保存角色")
+    @PostMapping("/role")
+    public ResponseEntity<Role> save(@Valid @RequestBody @ApiParam(name = "角色实体") Role role) throws URISyntaxException {
+        @Valid Role save = roleRepository.save(role);
+        return ResponseEntity.created(new URI("/api/role/" + save.getId())).body(save);
+    }
+
+    @ApiOperation(value = "更新接口", notes = "更新角色")
+    @PutMapping("/role")
+    @Transactional
+    public ResponseEntity<Role> update(@Valid @RequestBody @ApiParam(name = "角色实体") Role role) {
+        @Valid Role save = roleRepository.save(role);
+        return ResponseEntity.ok().body(save);
+    }
+
+    @ApiOperation(value = "删除接口", notes = "删除角色")
+    @DeleteMapping("/role/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        roleRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "查询接口", notes = "查询角色")
+    @GetMapping("/role/{id}")
+    @Transactional
+    public ResponseEntity<Role> find(@PathVariable Long id) {
+        if (ObjectUtils.isEmpty(id)) {
+            throw new BusinessErrorException(BusinessErrorType.PARMETER_BIG_EXCEPTION);
+        }
+        return ResponseUtil.wrapOrNotFound(roleRepository.findById(id));
+    }
+
+    @ApiOperation(value = "高级查询", notes = "条件限制")
+    @GetMapping("/roles-all")
+    @Transactional
+    public ResponseEntity<Iterable<Role>> findAllRole(@QuerydslPredicate(root = Role.class) Predicate predicate) {
+        return ResponseEntity.ok().body(roleRepository.findAll(predicate));
+    }
+
+    @ApiOperation(value = "高级分页查询", notes = "条件限制")
+    @GetMapping(value = "/roles-all", params = "page")
+    @Transactional
+    public ResponseEntity<Page<Role>> findPageAllRole(
+            @QuerydslPredicate(root = Role.class) Predicate predicate,
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok().body(roleRepository.findAll(predicate, pageable));
     }
-
-    /**
-     * 新增角色(只新增Role表和UserRole表)
-     *
-     * @param role 角色参数
-     * @return Role
-     * @throws URISyntaxException
-     */
-    @ApiOperation(value = "新增角色", notes = "只新增Role表和UserRole表")
-    @PostMapping
-    public ResponseEntity<Role> save(@Valid @RequestBody Role role) throws URISyntaxException {
-        log.debug("REST to request save a Role");
-        @Valid Role save = roleRepository.save(role);
-        return ResponseEntity.created(new URI("/api/role/index" + save.getId())).body(save);
-    }
-
-    /**
-     * 更新角色(包括权限)
-     *
-     * @param role 角色参数
-     * @return Role
-     * @throws URISyntaxException
-     */
-    @ApiOperation(value = "更新角色", notes = "条件限制(包括权限)")
-    @PutMapping
-    public ResponseEntity<Role> update(@Valid @RequestBody Role role) throws URISyntaxException {
-        log.debug("REST to request update a Role");
-        //Role elseThrow = roleRepository.findById(role.getId()).orElseThrow(() -> new RuntimeException("数据不存在"));
-        //Role deep = DomainUtil.copyDeep(role, elseThrow);
-        role.getAuthorities().forEach(n -> n.setVersion(authorityRepository.findVersion(n.getId())));
-        @Valid Role save = roleRepository.save(role);
-        return ResponseEntity.created(new URI("/api/role/index" + save.getId())).body(save);
-    }
-
 }

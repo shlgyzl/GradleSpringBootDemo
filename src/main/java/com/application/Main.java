@@ -1,7 +1,7 @@
 package com.application;
 
 import com.application.domain.jpa.User;
-import com.application.domain.mongodb.UserMD;
+import com.application.domain.mongodb.UserMongoDB;
 import com.application.repository.jpa.UserRepository;
 import com.application.repository.jpa.dao.impl.UserDaoImpl;
 import com.application.repository.mongodb.UserMongoDBRepository;
@@ -97,7 +97,7 @@ public class Main {
 
     @GetMapping("/index")
     public ResponseEntity<Void> index() {
-        UserMD save = userMongoDBRepository.save(new UserMD());
+        UserMongoDB save = userMongoDBRepository.save(new UserMongoDB());
         //Optional<UserMD> md = userMongoDBRepository.findById(save.getId());
         userMongoDBRepository.deleteAll();
         //log.debug("查询的集合: {}", user.toString());

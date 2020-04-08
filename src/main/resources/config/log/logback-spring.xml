@@ -8,11 +8,14 @@
 
     <!-- 彩色日志 -->
     <!-- 彩色日志依赖的渲染类 -->
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
-    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
-    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
     <!-- 定义彩色日志格式模板 -->
-    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy年MM月dd日 E HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy年MM月dd日 E HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -104,8 +107,7 @@
     <logger name="jdbc.sqltiming" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
-    <logger name="org.hibernate.SQL" additivity="false" level="WARN">
-        <level value="WARN" />
+    <logger name="org.hibernate.SQL" additivity="false" level="DEBUG">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILEINFO"/>
         <appender-ref ref="FILEWARN"/>
@@ -119,7 +121,8 @@
     <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG"/>
     <logger name="org.springframework.aop.framework.CglibAopProxy" level="ERROR" additivity="false"/>
     <logger name="springfox.documentation" level="ERROR" additivity="false"/>
-    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="ERROR" additivity="false"/>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="ERROR"
+            additivity="false"/>
     <logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="ERROR" additivity="false"/>
     <logger name="org.springframework.web.servlet.DispatcherServlet" level="ERROR" additivity="false"/>
     <logger name="io.undertow.servlet" level="ERROR" additivity="false"/>

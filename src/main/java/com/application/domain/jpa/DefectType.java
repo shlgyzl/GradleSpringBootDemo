@@ -1,6 +1,7 @@
 package com.application.domain.jpa;
 
 import com.application.domain.abstracts.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -26,7 +27,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class DefectType extends AbstractEntity<Long> implements Serializable {
+public class DefectType implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,7 +48,7 @@ public class DefectType extends AbstractEntity<Long> implements Serializable {
     @Column(nullable = false)
     private String code;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ApiModelProperty(name = "name", value = "大坝", dataType = "String")
     @JoinColumn(name = "dam_id")
     private Dam dam;
@@ -64,12 +65,13 @@ public class DefectType extends AbstractEntity<Long> implements Serializable {
     @OneToMany(mappedBy = "defectType", cascade = {CascadeType.ALL}, orphanRemoval = true)
     @ApiModelProperty(name = "defectTypeProperties", value = "缺陷类型属性集合", dataType = "String")
     @OrderBy(value = "id asc")
+    @JsonIgnoreProperties({"defectType"})
     private Set<DefectTypeProperty> defectTypeProperties = new HashSet<>();
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "缺陷类型版本锁",example = "0L", dataType = "Long", required = true, hidden = true)
-    @Column
+    @ApiModelProperty(name = "version", value = "缺陷类型版本锁", example = "0L", dataType = "Long", required = true, hidden = true)
+    @Column(name = "version")
     @Version
     private Long version = 0L;
 }

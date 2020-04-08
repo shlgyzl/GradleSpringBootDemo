@@ -3,6 +3,7 @@ package com.application.repository.jpa;
 
 import com.application.domain.jpa.QUser;
 import com.application.domain.jpa.User;
+import com.application.dto.AuthorityDTO;
 import com.application.dto.UserDTO;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.SimpleExpression;

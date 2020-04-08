@@ -1,5 +1,6 @@
 package com.application.domain.jpa;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,16 +39,16 @@ public class Authority implements Serializable {
     @ApiModelProperty(name = "name", value = "权限名", dataType = "String")
     private String name;
 
-    @ManyToMany(mappedBy = "authorities", cascade = {CascadeType.PERSIST})
+    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
     @BatchSize(size = 20)
-    @JsonIgnoreProperties({"authorities"})
+    @JsonIgnore
     @OrderBy("id asc")
     private Set<Role> roles = new LinkedHashSet<>(10);
 
     @NotNull
     @NonNull
     @ApiModelProperty(name = "version", value = "权限版本锁", example = "0L", dataType = "Long", required = true)
-    @Column
+    @Column(name = "version")
     @Version
     private Long version = 0L;
 }

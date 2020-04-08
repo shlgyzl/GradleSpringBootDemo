@@ -28,7 +28,7 @@ import java.io.Serializable;
 @RequiredArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class DefectTypeProperty extends AbstractEntity<Long> implements Serializable {
+public class DefectTypeProperty implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -74,30 +74,30 @@ public class DefectTypeProperty extends AbstractEntity<Long> implements Serializ
 
 
     @ApiModelProperty(name = "value", value = "测量值", dataType = "String")
-    @Column
+    @Column(name = "value")
     private String value;
 
 
     @ApiModelProperty(name = "unit", value = "单位", dataType = "String")
-    @Column
+    @Column(name = "unit")
     private String unit;
 
 
     @ApiModelProperty(name = "defectType", value = "缺陷类型", dataType = "DefectType", hidden = true)
     @JsonIgnoreProperties(value = {"defectTypeProperties"})
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "defect_type_id")
     private DefectType defectType;
 
     @ApiModelProperty(name = "region", value = "值所在区间", dataType = "String")
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(name = "region")
     private Region region;
 
     @NotNull
     @NonNull
     @ApiModelProperty(name = "version", value = "缺陷类型属性版本锁",example = "0L", dataType = "Long", required = true, hidden = true)
-    @Column
+    @Column(name = "version")
     @Version
     private Long version = 0L;
 }

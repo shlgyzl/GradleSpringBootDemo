@@ -1,5 +1,6 @@
 package com.application.domain.jpa;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,9 +18,9 @@ import java.util.Set;
 @Entity
 @Table(name = "tbl_role")
 @Data
-@EqualsAndHashCode(exclude = {"authorities"})
+@EqualsAndHashCode(exclude = {"authorities", "users"})
 @ApiModel(value = "Role", description = "角色")
-@ToString(exclude = {"authorities"})
+@ToString(exclude = {"authorities", "users"})
 @NoArgsConstructor
 @RequiredArgsConstructor
 @DynamicInsert
@@ -42,15 +43,19 @@ public class Role implements Serializable {
             name = "tbl_role_authority",
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"roles"})
     @OrderBy("id asc")
     private Set<Authority> authorities = new LinkedHashSet<>();
 
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<User> users = new LinkedHashSet<>();
+
     @NotNull
     @NonNull
     @ApiModelProperty(name = "version", value = "角色版本锁", example = "0L", dataType = "Long", required = true)
-    @Column
+    @Column(name = "version")
     @Version
     private Long version = 0L;
 }

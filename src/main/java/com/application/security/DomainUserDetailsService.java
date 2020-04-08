@@ -1,8 +1,11 @@
 package com.application.security;
 
-import com.application.domain.jpa.Role;
+import com.application.domain.jpa.Authority;
+import com.application.domain.jpa.QUser;
 import com.application.domain.jpa.User;
 import com.application.repository.jpa.UserRepository;
+import com.google.common.collect.Sets;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -39,10 +42,13 @@ public class DomainUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating {}", login);
         //String lowercaseLogin = login.toLowerCase(Locale.CHINA);
+        QUser user = QUser.user;
+        BooleanExpression expression = user.login.eq(login);
         // 返回的用户信息包含了角色,权限,用户名
-        return userRepository.findByLogin(login)
-                .map(user -> createSpringSecurityUser(login, user))
-                .orElseThrow(() -> new UsernameNotFoundException("User " + login + " was not found in the database"));
+        return Sets.newLinkedHashSet(userRepository.findAll(expression)).stream()
+                .map(n -> createSpringSecurityUser(login, n))
+                .findFirst().orElseThrow(() -> new UsernameNotFoundException("User " + login + " was not found in the database"));
+
 
     }
 
@@ -51,10 +57,8 @@ public class DomainUserDetailsService implements UserDetailsService {
             throw new RuntimeException("User " + lowercaseLogin + " was not activated");
         }
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (Role role : user.getRoles()) {
-            grantedAuthorities.addAll(role.getAuthorities().stream().map(authority -> new SimpleGrantedAuthority(authority.getName()))
-                    .collect(Collectors.toList()));
-        }
+        Set<Authority> collect = user.getRoles().stream().flatMap(n -> n.getAuthorities().stream()).collect(Collectors.toSet());
+        grantedAuthorities.addAll(collect.stream().map(n -> new SimpleGrantedAuthority(n.getName())).collect(Collectors.toSet()));
         return new SecurityUser(user.getLogin(), user.getPassword(), grantedAuthorities, user.getImageUrl());
     }
 

@@ -2,10 +2,13 @@ package com.application.repository.jpa;
 
 import com.application.domain.jpa.Authority;
 import com.application.domain.jpa.QAuthority;
+import com.application.dto.AuthorityDTO;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
+
+import java.util.List;
 
 import static com.application.resources.util.RepositoryUtil.common;
 

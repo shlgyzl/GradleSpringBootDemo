@@ -9,6 +9,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class UserDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String login;
-    private String imageUrl;
+    private final String login;
+    private final String imageUrl;
+
 }

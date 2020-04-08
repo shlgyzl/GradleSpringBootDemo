@@ -1,6 +1,5 @@
 package com.application.domain.jpa;
 
-import com.application.domain.abstracts.AbstractEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -15,13 +14,13 @@ import java.io.Serializable;
 @Table(name = "tbl_dam")
 @Data
 @ApiModel(value = "Dam", description = "大坝")
-@NoArgsConstructor
-@RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
+@NoArgsConstructor
+@RequiredArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class Dam extends AbstractEntity<Long> implements Serializable {
+public class Dam implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -37,8 +36,8 @@ public class Dam extends AbstractEntity<Long> implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "大坝版本锁",example = "0L", dataType = "Long", required = true, hidden = true)
-    @Column
+    @ApiModelProperty(name = "version", value = "大坝版本锁", example = "0L", dataType = "Long", required = true, hidden = true)
+    @Column(name = "version")
     @Version
     private Long version = 0L;
 }

@@ -27,6 +27,9 @@ spring:
     generate-ddl: false
     database-platform: org.hibernate.dialect.MySQL57Dialect
     open-in-view: true # 禁用在视图层仍然可以获取懒加载数据,默认SpringMVC是开启状态,会影响性能.
+    properties:
+      hibernate.format-sql: true
+      hibernate.show-sql: true
   main:
     allow-bean-definition-overriding: true
   profiles:
