@@ -1,6 +1,5 @@
 package com.application.domain.jpa;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,7 +31,7 @@ public class Role implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "名称不能为空")
+    @NotNull(message = "角色名称不能为空")
     @NonNull
     @Size(min = 1, max = 20, message = "角色名不能为空或超过20个字符")
     @Column(length = 20, unique = true, nullable = false)
@@ -43,13 +42,13 @@ public class Role implements Serializable {
             name = "tbl_role_authority",
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties({"roles"})
     @OrderBy("id asc")
     private Set<Authority> authorities = new LinkedHashSet<>();
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonIgnoreProperties({"roles"})
     private Set<User> users = new LinkedHashSet<>();
 
     @NotNull
@@ -58,4 +57,9 @@ public class Role implements Serializable {
     @Column(name = "version")
     @Version
     private Long version = 0L;
+
+    public void addAllAuthority(Set<Authority> authorities) {
+        this.authorities.addAll(authorities);
+        authorities.forEach(n -> n.getRoles().add(this));
+    }
 }

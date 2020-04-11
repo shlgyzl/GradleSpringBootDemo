@@ -1,9 +1,9 @@
 package com.application;
 
-import com.application.resources.util.DomainUtil;
 import com.application.domain.jpa.Authority;
 import com.application.domain.jpa.DefectType;
 import com.application.domain.jpa.Role;
+import com.application.resources.util.DomainUtil;
 import org.assertj.core.util.Files;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,9 +22,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -151,6 +149,26 @@ public class CommonTest {
         role2.getAuthorities().add(authority_);
         DomainUtil.copyDeep(role, role2);
         System.out.println(role2);
+    }
+
+    @Test
+    public void test10() {
+        List<Integer> a = new ArrayList<>(10);
+        a.add(1);
+        a.add(2);
+        a.add(3);
+        a.add(4);
+
+        List<Integer> b = new ArrayList<>(10);
+        b.add(1);
+        b.add(2);
+        b.add(6);
+
+        b.removeAll(a);
+        //b.addAll(a);
+        a.retainAll(b);
+
+        System.out.println(a);
     }
 
     /*@Test

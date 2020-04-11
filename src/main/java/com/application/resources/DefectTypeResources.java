@@ -6,9 +6,8 @@ import com.application.repository.jpa.DefectTypeRepository;
 import com.application.resources.exception.BusinessErrorException;
 import com.application.resources.util.ResponseUtil;
 import com.querydsl.core.types.Predicate;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.micrometer.core.annotation.Timed;
+import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,46 +33,74 @@ public class DefectTypeResources {
     }
 
     @ApiOperation(value = "保存接口", notes = "保存缺陷类型")
-    @PostMapping("/detectType")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "保存成功", response = DefectType.class)
+    })
+    @Timed
+    @PostMapping("/defectType")
+    @Transactional
     public ResponseEntity<DefectType> save(@Valid @RequestBody @ApiParam(name = "缺陷类型实体") DefectType defectType) throws URISyntaxException {
-        @Valid DefectType save = defectTypeRepository.save(defectType);
-        return ResponseEntity.created(new URI("/api/detectType/" + save.getId())).body(save);
+        return getDefectTypeResponseEntity(defectType);
     }
 
     @ApiOperation(value = "更新接口", notes = "更新缺陷类型")
-    @PutMapping("/detectType")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "更新成功", response = DefectType.class)
+    })
+    @Timed
+    @PutMapping("/defectType")
     @Transactional
-    public ResponseEntity<DefectType> update(@Valid @RequestBody @ApiParam(name = "缺陷类型实体") DefectType defectType) {
+    public ResponseEntity<DefectType> update(@Valid @RequestBody @ApiParam(name = "缺陷类型实体") DefectType defectType) throws URISyntaxException {
+        return getDefectTypeResponseEntity(defectType);
+    }
+
+    private ResponseEntity<DefectType> getDefectTypeResponseEntity(@ApiParam(name = "缺陷类型实体") @RequestBody @Valid DefectType defectType) throws URISyntaxException {
+        defectType.addAllDefectTypeProperty(defectType.getDefectTypeProperties());
         @Valid DefectType save = defectTypeRepository.save(defectType);
-        return ResponseEntity.ok().body(save);
+        return ResponseEntity.created(new URI("/api/defectType/" + save.getId())).body(save);
     }
 
     @ApiOperation(value = "删除接口", notes = "删除缺陷类型")
-    @DeleteMapping("/detectType/{id}")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "删除成功")
+    })
+    @Timed
+    @DeleteMapping("/defectType/{id}")
+    @Transactional
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         defectTypeRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value = "查询接口", notes = "查询缺陷类型")
-    @GetMapping("/detectType/{id}")
-    @Transactional
+    @ApiOperation(value = "查询接口", notes = "查询缺陷类型(根据id)")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "查询成功", response = DefectType.class)
+    })
+    @Timed
+    @GetMapping("/defectType/{id}")
     public ResponseEntity<DefectType> find(@PathVariable Long id) {
         if (ObjectUtils.isEmpty(id)) {
-            throw new BusinessErrorException(BusinessErrorType.PARMETER_BIG_EXCEPTION);
+            throw new BusinessErrorException(BusinessErrorType.PARAMETER_EXCEPTION);
         }
-        return ResponseUtil.wrapOrNotFound(defectTypeRepository.findByIdNoLazy(id));
+        return ResponseUtil.wrapOrNotFound(defectTypeRepository.findById(id));
     }
 
     @ApiOperation(value = "高级查询", notes = "条件限制")
-    @GetMapping("/detectTypes-all")
-    @Transactional
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "查询成功", response = DefectType.class, responseContainer = "List")
+    })
+    @Timed
+    @GetMapping("/defectTypes-all")
     public ResponseEntity<Iterable<DefectType>> findAllDefectType(@QuerydslPredicate(root = DefectType.class) Predicate predicate) {
         return ResponseEntity.ok().body(defectTypeRepository.findAll(predicate));
     }
 
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
-    @GetMapping(value = "/detectTypes-all", params = "page")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "查询成功", response = DefectType.class, responseContainer = "List")
+    })
+    @Timed
+    @GetMapping(value = "/defectTypes-all", params = "page")
     @Transactional
     public ResponseEntity<Page<DefectType>> findPageAllDefectType(
             @QuerydslPredicate(root = DefectType.class) Predicate predicate,

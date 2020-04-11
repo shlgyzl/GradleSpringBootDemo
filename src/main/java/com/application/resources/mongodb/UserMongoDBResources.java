@@ -55,7 +55,7 @@ public class UserMongoDBResources {
     @GetMapping("/mongodb-user/{id}")
     public ResponseEntity<UserMongoDB> findById(@PathVariable Long id) {
         if (ObjectUtils.isEmpty(id)) {
-            throw new BusinessErrorException(BusinessErrorType.PARMETER_EXCEPTION);
+            throw new BusinessErrorException(BusinessErrorType.PARAMETER_EXCEPTION);
         }
         return ResponseUtil.wrapOrNotFound(userMongoDBRepository.findById(id));
     }

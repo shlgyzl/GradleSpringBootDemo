@@ -16,7 +16,7 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 2
       login-timeout: 1800000
-      max-lifetime: 1000
+      max-lifetime: 28700000
   jpa:
     hibernate:
       ddl-auto: none

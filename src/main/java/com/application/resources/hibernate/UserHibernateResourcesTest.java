@@ -2,6 +2,7 @@ package com.application.resources.hibernate;
 
 import com.application.domain.jpa.User;
 import com.application.dto.UserDTO;
+import com.application.factory.SpecificationFactory;
 import com.application.repository.jpa.UserRepository;
 import com.application.repository.jpa.dao.IUserDao;
 import io.swagger.annotations.ApiOperation;
@@ -9,18 +10,17 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cglib.beans.BeanMap;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.JpaSort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.Predicate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -97,5 +97,17 @@ public class UserHibernateResourcesTest {
         Cache.ValueWrapper valueWrapper = managerCache.get(login);
         System.out.println(valueWrapper);
         return ResponseEntity.ok().body(userRepository.findAllByLogin(login));
+    }
+
+    @GetMapping("/user/specification")
+    public Page<User> find(@RequestParam("start") LocalDateTime start,
+                           @RequestParam("end") LocalDateTime end,
+                           @PageableDefault(sort = {"id", "roles.name"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        return userRepository.findAll((root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.greaterThan(root.join("roles").get("name"), "你好"));
+            predicates.add(SpecificationFactory.localDateTimeBetween("createdDate", start, end).toPredicate(root, query, cb));
+            return query.where(predicates.toArray(new Predicate[predicates.size()])).getRestriction();
+        }, pageable);
     }
 }

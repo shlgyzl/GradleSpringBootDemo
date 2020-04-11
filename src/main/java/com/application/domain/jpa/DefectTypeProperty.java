@@ -1,6 +1,5 @@
 package com.application.domain.jpa;
 
-import com.application.domain.abstracts.AbstractEntity;
 import com.application.domain.enumeration.FieldType;
 import com.application.domain.enumeration.Region;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -55,7 +54,7 @@ public class DefectTypeProperty implements Serializable {
     @NonNull
     @ApiModelProperty(name = "requiredField", value = "必填项", dataType = "Boolean")
     @Column(name = "required_field")
-    private Boolean requiredField;
+    private Boolean requiredField = false;
 
 
     @ApiModelProperty(name = "maxValue", value = "最大值", dataType = "String")
@@ -85,7 +84,7 @@ public class DefectTypeProperty implements Serializable {
 
     @ApiModelProperty(name = "defectType", value = "缺陷类型", dataType = "DefectType", hidden = true)
     @JsonIgnoreProperties(value = {"defectTypeProperties"})
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "defect_type_id")
     private DefectType defectType;
 
@@ -96,8 +95,18 @@ public class DefectTypeProperty implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "缺陷类型属性版本锁",example = "0L", dataType = "Long", required = true, hidden = true)
+    @ApiModelProperty(name = "version", value = "缺陷类型属性版本锁", example = "0L", dataType = "Long", required = true, hidden = true)
     @Column(name = "version")
     @Version
     private Long version = 0L;
+
+    public void addDefectType(DefectType defectType) {
+        this.defectType = defectType;
+        defectType.getDefectTypeProperties().add(this);
+    }
+
+    public void removeDefectType(DefectType defectType) {
+        this.defectType = null;
+        defectType.getDefectTypeProperties().remove(this);
+    }
 }

@@ -3,6 +3,7 @@ package com.application.domain.jpa;
 import com.application.domain.abstracts.AbstractAuditingEntity;
 import com.application.listener.UserAuditListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -61,7 +62,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @NonNull
     @ApiModelProperty(name = "activated", value = "是否启用", dataType = "Boolean")
     @Column(name = "activated")
-    private Boolean activated;
+    private Boolean activated = false;
 
     @ApiModelProperty(name = "imageUrl", value = "头像", dataType = "String")
     @Column(name = "image_url")
@@ -72,7 +73,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "dam_id", referencedColumnName = "id")})
     @BatchSize(size = 20)
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @OrderBy("id asc")
     private Set<Dam> dams = new LinkedHashSet<>(5);
 
@@ -81,7 +82,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     @BatchSize(size = 20)
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnoreProperties({"users"})
     @OrderBy("id asc")
     private Set<Role> roles = new LinkedHashSet<>(5);
 
@@ -91,4 +93,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "version")
     @Version
     private Long version = 0L;
+
+    public void addAllRole(Set<Role> roles) {
+        this.roles.addAll(roles);
+        roles.forEach(n -> n.getUsers().add(this));
+    }
 }

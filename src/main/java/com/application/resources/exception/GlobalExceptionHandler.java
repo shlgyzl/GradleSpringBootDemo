@@ -1,14 +1,24 @@
 package com.application.resources.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+
+import java.beans.PropertyEditorSupport;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+import static com.application.constants.DateFormatConstants.*;
 
 /**
  * 此类只能监听Controller和RestController的方法,其他运行异常需要重新处理
@@ -17,6 +27,34 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseBody
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(LocalDate.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(LocalDate.parse(text, DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)));
+            }
+        });
+        binder.registerCustomEditor(LocalDateTime.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(LocalDateTime.parse(text, DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)));
+            }
+        });
+        binder.registerCustomEditor(ZonedDateTime.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(ZonedDateTime.parse(text, DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)));
+            }
+        });
+        binder.registerCustomEditor(LocalTime.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(LocalTime.parse(text, DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)));
+            }
+        });
+    }
 
     /**
      * 参数异常处理
@@ -53,9 +91,50 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> objectOptimisticLockingFailureException(ObjectOptimisticLockingFailureException e) {
-        log.error("并发修改异常,已加锁,{}", e.getMessage());
-        return ResponseEntity.badRequest().body("并发修改异常了");
+        log.error("并发锁修改异常,已加版本锁,请确定数据版本,{}", e.getMessage());
+        return ResponseEntity.badRequest().body("并发修改异常了,请确定当前数据版本正确");
     }
+
+
+    /**
+     * 不存在的数据异常
+     *
+     * @param e 异常
+     * @return String
+     */
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<String> objectEmptyResultDataAccessException(EmptyResultDataAccessException e) {
+        log.error("操作不存在的数据异常,{}", e.getMessage());
+        return ResponseEntity.badRequest().body("不存在的数据异常");
+    }
+
+    /**
+     * 事务异常
+     *
+     * @param e 异常
+     * @return String
+     */
+    @ExceptionHandler(TransactionSystemException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<String> objectTransactionSystemException(TransactionSystemException e) {
+        log.error("操作校验失败的数据,{}", e.getMessage());
+        return ResponseEntity.badRequest().body("操作校验失败的数据");
+    }
+
+    /**
+     * 时间转换异常
+     *
+     * @param e 异常
+     * @return String
+     */
+    @ExceptionHandler(DateTimeParseException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<String> objectDateTimeParseException(DateTimeParseException e) {
+        log.error("时间参数转换异常,{}", e.getMessage());
+        return ResponseEntity.badRequest().body("你的时间丢失了");
+    }
+
 
     /**
      * 业务异常
@@ -71,7 +150,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 统一异常
+     * 系统异常
      *
      * @param e 异常
      * @return String

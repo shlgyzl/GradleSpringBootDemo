@@ -1,9 +1,9 @@
 package com.application.domain.enumeration;
 
 public enum BusinessErrorType {
-    PARMETER_EXCEPTION(102, "参数异常!"),
+    PARAMETER_EXCEPTION(102, "参数异常!"),
     SERVICE_TIME_OUT(103, "服务调用超时！"),
-    PARMETER_BIG_EXCEPTION(102, "输入的图片数量不能超过50张!"),
+    PARAMETER_BIG_EXCEPTION(102, "输入的图片数量不能超过50张!"),
     UNEXPECTED_EXCEPTION(500, "系统发生异常，请联系管理员！");
     private int code;
     private String msg;

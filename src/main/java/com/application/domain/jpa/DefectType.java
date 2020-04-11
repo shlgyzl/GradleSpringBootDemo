@@ -1,6 +1,5 @@
 package com.application.domain.jpa;
 
-import com.application.domain.abstracts.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -74,4 +74,28 @@ public class DefectType implements Serializable {
     @Column(name = "version")
     @Version
     private Long version = 0L;
+
+    public void addDefectTypeProperty(DefectTypeProperty defectTypeProperty) {
+        this.defectTypeProperties.add(defectTypeProperty);
+        defectTypeProperty.setDefectType(this);
+    }
+
+    public void addAllDefectTypeProperty(Set<DefectTypeProperty> defectTypeProperties) {
+        this.defectTypeProperties.addAll(defectTypeProperties);
+        defectTypeProperties.forEach(n -> n.setDefectType(this));
+    }
+
+    public void removeDefectTypeProperty(DefectTypeProperty defectTypeProperty) {
+        defectTypeProperty.setDefectType(null);
+        this.defectTypeProperties.remove(defectTypeProperty);
+    }
+
+    public void removeDefectTypeProperties() {
+        Iterator<DefectTypeProperty> iterator = this.defectTypeProperties.iterator();
+        while (iterator.hasNext()) {
+            DefectTypeProperty next = iterator.next();
+            next.setDefectType(null);
+            iterator.remove();
+        }
+    }
 }

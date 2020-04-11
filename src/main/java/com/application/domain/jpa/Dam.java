@@ -1,5 +1,6 @@
 package com.application.domain.jpa;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -20,6 +21,7 @@ import java.io.Serializable;
 @RequiredArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Dam implements Serializable {
     private static final long serialVersionUID = 1L;
 

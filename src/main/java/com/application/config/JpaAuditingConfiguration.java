@@ -1,5 +1,6 @@
 package com.application.config;
 
+import com.application.resources.util.SecurityUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -19,7 +20,7 @@ public class JpaAuditingConfiguration {
         //使用jpa审计功能，保存数据时自动插入创建人id和更新人id
         return () -> {
             // 从session中获取当前用户
-            return Optional.of("系统管理员");
+            return Optional.of(SecurityUtil.getCurrentUserLogin().orElse("系统默认"));
         };
     }
 }

@@ -51,7 +51,7 @@ public abstract class AbstractAuditingEntity implements Serializable {
 
     @LastModifiedDate
     //@Temporal(TemporalType.TIMESTAMP)//生成yyyy-MM-dd类型的日期
-    @JsonFormat(pattern = "yyyy-MM-dd")//出参时间格式化(这种只是局部覆盖全局)
+    //@JsonFormat(pattern = "yyyy-MM-dd")//出参时间格式化(这种只是局部覆盖全局)
     //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")//入参时，请求报文只需要传入yyyy mm dd hh mm ss字符串进来，则自动转换为Date类型数据
     @Column(name = "last_modified_date")
     //@JsonIgnore

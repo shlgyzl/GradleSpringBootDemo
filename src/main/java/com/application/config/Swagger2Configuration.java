@@ -65,13 +65,12 @@ public class Swagger2Configuration {
                 .enableUrlTemplating(true)
                 .globalOperationParameters(
                         newArrayList(new ParameterBuilder()
-                                .name("someGlobalParameter")
-                                .description("通用参数设置")
+                                .name("Authorization")
+                                .description("token串,第一次访问可以随意输入一个值")
                                 .modelRef(new ModelRef("string"))
-                                .parameterType("query")
+                                .parameterType("header")
                                 .required(true)
-                                .build()))
-                .tags(new Tag("Pet Service", "添加一个新的接口描述"));
+                                .build()));
         //.additionalModels(typeResolver.resolve(AdditionalModel.class));// 手动添加实体解析
     }
 

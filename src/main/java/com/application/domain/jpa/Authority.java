@@ -1,6 +1,5 @@
 package com.application.domain.jpa;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -39,9 +39,9 @@ public class Authority implements Serializable {
     @ApiModelProperty(name = "name", value = "权限名", dataType = "String")
     private String name;
 
-    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @BatchSize(size = 20)
-    @JsonIgnore
+    @JsonIgnoreProperties({"authorities"})
     @OrderBy("id asc")
     private Set<Role> roles = new LinkedHashSet<>(10);
 
@@ -51,4 +51,28 @@ public class Authority implements Serializable {
     @Column(name = "version")
     @Version
     private Long version = 0L;
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+        role.getAuthorities().add(this);
+    }
+
+    public void addAllRole(Set<Role> roles) {
+        this.roles.addAll(roles);
+        this.roles.forEach(n -> n.getAuthorities().add(this));
+    }
+
+    public void removeRole(Role role) {
+        role.getAuthorities().remove(role);
+        this.roles.remove(role);
+    }
+
+    public void removeRoles() {
+        Iterator<Role> iterator = this.roles.iterator();
+        while (iterator.hasNext()) {
+            Role next = iterator.next();
+            next.getAuthorities().remove(this);
+            iterator.remove();
+        }
+    }
 }

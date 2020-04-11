@@ -87,7 +87,7 @@ public final class DomainUtil {
                 if (Objects.isNull(sourceValue)) {
                     src.setPropertyValue(new PropertyValue(propertyDescriptor.getName(), destValue));
                 }
-                if(Objects.equals("version", propertyDescriptor.getDisplayName())){
+                if (Objects.equals("version", propertyDescriptor.getDisplayName())) {
                     src.setPropertyValue(new PropertyValue(propertyDescriptor.getName(), destValue));
                 }
             }
@@ -124,6 +124,9 @@ public final class DomainUtil {
      * @param target 目标实体
      */
     public static <E, T> T copy(E source, T target) {
+        if (Objects.isNull(target)) {
+            return null;
+        }
         // 建议后期将此创建放置于缓存中,如果有大量相同的对象复制一定要从缓存获取提高性能
         BeanCopier beanCopier = BeanCopier.create(source.getClass(), target.getClass(), false);
         BeanWrapper src = new BeanWrapperImpl(source);
