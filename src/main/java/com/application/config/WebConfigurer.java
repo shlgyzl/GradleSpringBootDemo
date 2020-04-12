@@ -45,11 +45,11 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         // 使用WEB则需配置访问路径
 //        initH2Console(servletContext);
         // 使用TCP则需要屏蔽WEB的JAVA配置,因为此处的TCP启动在SpringBoot之后,在使用容器部署时会出现连接超时
-        try {
+        /*try {
             createTcpServer("9092").start();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
         log.info("Web application fully configured");
     }
 

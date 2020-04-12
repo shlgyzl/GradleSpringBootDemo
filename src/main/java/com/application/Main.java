@@ -8,9 +8,9 @@ import com.application.repository.mongodb.UserMongoDBRepository;
 import io.github.jhipster.config.DefaultProfileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -27,7 +27,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
-@SpringBootApplication(exclude = {LiquibaseAutoConfiguration.class, RabbitAutoConfiguration.class})
+@SpringBootApplication(exclude = {LiquibaseAutoConfiguration.class})
 @EnableSpringDataWebSupport// 开启Web支持
 @RestController
 @Slf4j
@@ -41,8 +41,8 @@ public class Main {
     @Resource
     private UserRepository userRepository;
 
-    /*@Resource
-    private AmqpTemplate rabbitmqTemplate;*/
+    @Resource
+    private AmqpTemplate rabbitmqTemplate;
 
 
     @Resource
@@ -147,7 +147,7 @@ public class Main {
     public ResponseEntity<Void> rabbit() {
         String msg = "测试RabbitMQ";
         //发送消息
-        //rabbitmqTemplate.convertAndSend("executeTask", msg);
+        rabbitmqTemplate.convertAndSend("executeTask", msg);
         log.info("消息：{},已发送", msg);
         return ResponseEntity.ok().build();
     }

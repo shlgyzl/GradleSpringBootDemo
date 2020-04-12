@@ -64,7 +64,11 @@ spring:
     virtual-host: /
     listener:
       simple:
-        auto-startup: false
+        auto-startup: true
+  boot:
+    admin:
+      client:
+        url: http://localhost:9090
 jhipster:
   cors:
     allowed-origins: "*"
@@ -85,3 +89,17 @@ jhipster:
         base64-secret: RFE2Y1NNTlRsRDNDLzJiblVQRnZMYUZ4WXVjV1huWWVYa1luY0NNT3hlTVU1QmI2ZVZ3N2pkVFBISjBHS08zSEV1NWNYMGVGSXh0S3ZTQURjSkdzWWJsRE5sTjg3cVpjdDUwSkxhQnR6WXlhOUdTNHc5YjBkazlmbnk1WXd4MFowT3hZYnZFUUU2dVVyWW1ET0IwbUtNeGNCbmlCc1dYOTFqSnhmNy9VTlc4JTNE
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
+management:
+  endpoints:
+    enabled-by-default: true
+    jmx:
+      exposure:
+        include: '*'
+    web:
+      exposure:
+        include: '*'
+      cors:
+        allowed-methods: '*'
+  endpoint:
+    health:
+      show-details: always

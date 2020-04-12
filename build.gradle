@@ -113,7 +113,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-data-mongodb"
     compile "org.springframework.boot:spring-boot-starter-data-redis"
-    compile "org.springframework.boot:spring-boot-starter-activemq"
+    //compile "org.springframework.boot:spring-boot-starter-activemq"
     compile "org.springframework.boot:spring-boot-starter-amqp"
     compile "org.springframework.boot:spring-boot-starter-test"
     compile "org.springframework.boot:spring-boot-starter-cache"
@@ -122,6 +122,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-starter-websocket"
     compile group: 'org.springframework.security', name: 'spring-security-messaging', version: '5.3.1.RELEASE'
+    compile group: 'de.codecentric', name: 'spring-boot-admin-starter-client', version: '2.2.1'
 
     // 引入号称最快的数据库连接池HikariCP
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.4.1'

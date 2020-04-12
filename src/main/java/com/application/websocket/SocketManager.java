@@ -34,8 +34,8 @@ public class SocketManager {
 
     public static void join(Long conferenceId, String login) {
         conferenceParticipants
-            .computeIfAbsent(conferenceId, key -> Collections.synchronizedSet(new HashSet<>()))
-            .add(login);
+                .computeIfAbsent(conferenceId, key -> Collections.synchronizedSet(new HashSet<>()))
+                .add(login);
     }
 
     public static void leave(Long conferenceId, String login) {

@@ -16,11 +16,13 @@ function setConnected(connected) {
 function connect() {
     let jwt=$("#token").val();
     // let jwt = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTU4NjMzNTY5N30.gAAtzQzq9-ITSj5MOl70-gC8AWQEzsEgAsvBjDmiIZaJIQEHzSyjNvq8nbJ41SQScFjA2TmZhKOE4agQHMJWXg';
+    // 先握手
     let socket = new SockJS('http://localhost:8080/websocket/tracker?conferenceId=' + conferenceId + '&platform=' + platform + '&access_token=' + jwt);
     stompClient = Stomp.over(socket);
     let headers = {
         Authorization: jwt
     };
+    // 再发送消息
     stompClient.connect(headers, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
