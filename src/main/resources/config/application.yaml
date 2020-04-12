@@ -2,3 +2,32 @@ logging:
   level:
     org.springframework.data.mongodb.core: DEBUG
   config: classpath:config/log/logback-spring.xml
+spring:
+  cloud:
+    sentinel:
+      transport:
+        dashboard: http://47.105.46.4:8082
+      log:
+        dir: ./logs/alibaba-monitor
+      eager: true
+      enabled: true
+  application:
+    name: GradleSpringBoot
+  boot:
+    admin:
+      client:
+        url: http://47.105.46.4:8081
+management:
+  endpoints:
+    enabled-by-default: true
+    jmx:
+      exposure:
+        include: '*'
+    web:
+      exposure:
+        include: '*'
+      cors:
+        allowed-methods: '*'
+  endpoint:
+    health:
+      show-details: always

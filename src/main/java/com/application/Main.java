@@ -1,5 +1,6 @@
 package com.application;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.application.domain.jpa.User;
 import com.application.domain.mongodb.UserMongoDB;
 import com.application.repository.jpa.UserRepository;
@@ -106,6 +107,7 @@ public class Main {
     }
 
     @GetMapping("/hibernate")
+    @SentinelResource("resource")
     public ResponseEntity<User> hibernate() {
         // 小心懒加载
         log.debug("hibernate查询的集合");
@@ -153,6 +155,7 @@ public class Main {
     }
 
     @GetMapping("/map")
+    @SentinelResource("resource")
     public Map<String, Object> getMap(@RequestBody User user) {
         Map<String, Object> map = new HashMap<>(3);
         user.setLogin("");
