@@ -1,6 +1,10 @@
 package com.application.config;
 
 import com.application.constants.DateFormatConstants;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -11,8 +15,10 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.jackson.JsonComponent;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.context.annotation.Bean;
 
+import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -41,6 +47,12 @@ public class DateTimeConfiguration {
         javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_DATE_TIME_FORMAT).withZone(ZoneId.systemDefault())));
         javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_DATE_FORMAT).withZone(ZoneId.systemDefault())));
         javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_TIME_FORMAT).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addDeserializer(ZonedDateTime.class, new JsonObjectDeserializer<ZonedDateTime>() {
+            @Override
+            protected ZonedDateTime deserializeObject(JsonParser jsonParser, DeserializationContext context, ObjectCodec codec, JsonNode tree) throws IOException {
+                return ZonedDateTime.parse(jsonParser.getText(), DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_DATE_TIME_FORMAT).withZone(ZoneId.systemDefault()));
+            }
+        });
         return javaTimeModule;
     }
 }
