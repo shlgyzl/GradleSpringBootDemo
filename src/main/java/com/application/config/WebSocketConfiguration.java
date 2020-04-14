@@ -108,6 +108,8 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         return new DefaultHandshakeHandler() {
             @Override
             protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
+
+
                 // 一个消息头拦截器，用于获取用户的认证信息
                 Principal principal = request.getPrincipal();
                 if (principal == null) {
@@ -183,7 +185,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         // 调度器我们可以自己写一个，也可以自己使用默认的调度器 new DefaultManagedTaskScheduler()
 
 
-        registry.enableSimpleBroker("/topic")
+        registry.enableSimpleBroker("/topic")// 只是订阅地址的前缀
                 .setHeartbeatValue(new long[]{10000, 10000})
                 .setTaskScheduler(taskScheduler);
 
@@ -191,16 +193,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
          *  "/app" 为配置应用服务器的地址前缀，表示所有以/app 开头的客户端消息或请求
          *  都会路由到带有@MessageMapping 注解的方法中
          */
-        registry.setApplicationDestinationPrefixes("/app");
-
-        /*
-         *  1. 配置一对一消息前缀， 客户端接收一对一消息需要配置的前缀 如“'/user/'+userid + '/message'”，
-         *     是客户端订阅一对一消息的地址 stompClient.subscribe js方法调用的地址
-         *  2. 使用@SendToUser发送私信的规则不是这个参数设定，在框架内部是用UserDestinationMessageHandler处理，
-         *     而不是而不是 AnnotationMethodMessageHandler 或  SimpleBrokerMessageHandler
-         *     or StompBrokerRelayMessageHandler，是在@SendToUser的URL前加“user+sessionId"组成
-         */
-        registry.setUserDestinationPrefix("/user");
+        registry.setApplicationDestinationPrefixes("/app");// 消息发送的前缀
     }
 
     @Override

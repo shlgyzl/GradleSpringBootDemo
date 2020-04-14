@@ -26,10 +26,10 @@ function connect() {
     stompClient.connect(headers, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/user/topic/conference/im/' + conferenceId, function (greeting) {
+        stompClient.subscribe('/topic/conference/im/' + conferenceId, function (greeting) {
             showGreeting(greeting.body);
         });
-        stompClient.subscribe('/user/topic/conference/onoffline/' + conferenceId, function (greeting) {
+        stompClient.subscribe('/topic/conference/onoffline/' + conferenceId, function (greeting) {
             showGreeting(greeting.body);
         });
     }, function (error) {
@@ -46,7 +46,7 @@ function disconnect() {
 }
 
 function sendMessage() {
-    stompClient.send("/topic/im", {}, "{\"conferenceId\":\"1\",\"type\":\"TEXT\",\"content\":\"hello\",\"participantId\":\"1\"}");
+    stompClient.send("/app/topic/im", {}, "{\"conferenceId\":\"1\",\"type\":\"TEXT\",\"content\":\"hello\",\"participantId\":\"1\"}");
 }
 
 function showGreeting(message) {
