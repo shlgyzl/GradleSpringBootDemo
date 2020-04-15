@@ -87,6 +87,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/**").authenticated();
+        http.authorizeRequests().anyRequest().permitAll();
         http.rememberMe()
                 .rememberMeServices(rememberMeServices)
                 .rememberMeParameter("remember-me")

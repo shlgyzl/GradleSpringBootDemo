@@ -20,11 +20,12 @@ public class WebsocketSecurityConfiguration extends AbstractSecurityWebSocketMes
     @Override
     protected void configureInbound(MessageSecurityMetadataSourceRegistry registry) {
         registry
-                .nullDestMatcher().authenticated()
-                .simpDestMatchers("/topic/**").authenticated()
-                .simpDestMatchers("/user/topic/**").authenticated()
-                .simpDestMatchers("/app/**").authenticated()
-                .simpTypeMatchers(SimpMessageType.MESSAGE, SimpMessageType.SUBSCRIBE).denyAll()
+                .nullDestMatcher().permitAll()
+                .simpSubscribeDestMatchers("/user/queue/errors").permitAll()
+                .simpDestMatchers("/topic/**").permitAll()
+                .simpDestMatchers("/user/topic/**").permitAll()
+                .simpDestMatchers("/app/**").permitAll()
+                .simpTypeMatchers(SimpMessageType.MESSAGE, SimpMessageType.SUBSCRIBE,SimpMessageType.CONNECT, SimpMessageType.CONNECT_ACK).authenticated()
                 .anyMessage().denyAll();
     }
 

@@ -1,11 +1,9 @@
 package com.application.websocket;
 
-import com.application.websocket.service.IMService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -14,10 +12,9 @@ import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 
 import java.security.Principal;
-import java.util.Map;
 import java.util.Optional;
 
-import static com.application.config.WebSocketConfiguration.*;
+import static com.application.config.WebSocketConfiguration.PLAT_FORM;
 
 /**
  * 服务端和客户端在进行握手挥手时会被执行
@@ -25,9 +22,6 @@ import static com.application.config.WebSocketConfiguration.*;
 @Component
 @Slf4j
 public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFactory {
-
-    @Autowired
-    private IMService imService;
 
     @Override
     public WebSocketHandler decorate(WebSocketHandler handler) {
@@ -39,14 +33,9 @@ public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFacto
                 log.info("建立连接  sessionId = {}", session.getId());
                 getLoginFromWebSocketSession(session).ifPresent(login -> {
 
-                    long conferenceId = Long.parseLong(getAttribute(session, CONFERENCE_ID));
                     String platform = getAttribute(session, PLAT_FORM);
-                    log.info("user[{}] enter conference:[{}]", login, conferenceId);
-
+                    log.info("user[{}] enter platform[{}]", login, platform);
                     SocketManager.add(login, session);
-                    SocketManager.join(conferenceId, login);
-                    imService.sendToUser(conferenceId, TOPIC_ONLINE + conferenceId, new UserOnOffLine(login, platform, "ONLINE"));
-
                 });
                 super.afterConnectionEstablished(session);
             }
@@ -57,14 +46,9 @@ public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFacto
                 log.info("退出连接  sessionId = {}", session.getId());
                 getLoginFromWebSocketSession(session).ifPresent(login -> {
 
-                    long conferenceId = Long.parseLong(getAttribute(session, CONFERENCE_ID));
                     String platform = getAttribute(session, PLAT_FORM);
-                    log.info("user[{}] exit conference:[{}]", login, conferenceId);
-
+                    log.info("user[{}] enter platform[{}]", login, platform);
                     SocketManager.remove(login);
-                    SocketManager.leave(conferenceId, login);
-                    imService.sendToUser(conferenceId, TOPIC_ONLINE + conferenceId, new UserOnOffLine(login, platform, "OFFLINE"));
-
                 });
                 super.afterConnectionClosed(session, closeStatus);
             }
@@ -111,16 +95,16 @@ public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFacto
              * @param message
             public void batchSendMessage(TextMessage message) {
 
-                Set<Map.Entry<String, WebSocketBeanSpring>> setInfo =
-                        webSocketInfo.entrySet();
-                for (Map.Entry<String, WebSocketBeanSpring> entry : setInfo) {
-                    WebSocketBeanSpring bean = entry.getValue();
-                    try {
-                        bean.getSession().sendMessage(message);
-                    } catch (IOException e) {
-                        log.error(e.getMessage(), e);
-                    }
-                }
+            Set<Map.Entry<String, WebSocketBeanSpring>> setInfo =
+            webSocketInfo.entrySet();
+            for (Map.Entry<String, WebSocketBeanSpring> entry : setInfo) {
+            WebSocketBeanSpring bean = entry.getValue();
+            try {
+            bean.getSession().sendMessage(message);
+            } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            }
+            }
             }
              */
             /**
@@ -130,15 +114,15 @@ public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFacto
 
             public void sendMessage(String userId, TextMessage message)
             {
-                WebSocketBeanSpring bean = webSocketInfo.get(userId);
-                try
-                {
-                    bean.getSession().sendMessage(message);
-                }
-                catch (IOException e)
-                {
-                    log.error(e.getMessage(), e);
-                }
+            WebSocketBeanSpring bean = webSocketInfo.get(userId);
+            try
+            {
+            bean.getSession().sendMessage(message);
+            }
+            catch (IOException e)
+            {
+            log.error(e.getMessage(), e);
+            }
             }
              */
         };

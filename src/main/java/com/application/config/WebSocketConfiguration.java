@@ -188,7 +188,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         registry.enableSimpleBroker("/topic")// 只是订阅地址的前缀
                 .setHeartbeatValue(new long[]{10000, 10000})
                 .setTaskScheduler(taskScheduler);
-
+        registry.setUserDestinationPrefix("/user");
         /*
          *  "/app" 为配置应用服务器的地址前缀，表示所有以/app 开头的客户端消息或请求
          *  都会路由到带有@MessageMapping 注解的方法中

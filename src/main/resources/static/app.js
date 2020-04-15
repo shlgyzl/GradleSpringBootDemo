@@ -1,5 +1,4 @@
 let stompClient = null;
-let conferenceId = 1;
 let platform = 'pc';
 
 function setConnected(connected) {
@@ -14,10 +13,8 @@ function setConnected(connected) {
 }
 
 function connect() {
-    let jwt=$("#token").val();
-    // let jwt = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTU4NjMzNTY5N30.gAAtzQzq9-ITSj5MOl70-gC8AWQEzsEgAsvBjDmiIZaJIQEHzSyjNvq8nbJ41SQScFjA2TmZhKOE4agQHMJWXg';
-    // 先握手
-    let socket = new SockJS('http://localhost:8080/websocket/tracker?conferenceId=' + conferenceId + '&platform=' + platform + '&access_token=' + jwt);
+    let jwt = $("#token").val();
+    let socket = new SockJS('http://localhost:8080/websocket/tracker?platform=' + platform + '&access_token=' + jwt);
     stompClient = Stomp.over(socket);
     let headers = {
         Authorization: jwt
@@ -26,12 +23,12 @@ function connect() {
     stompClient.connect(headers, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/conference/im/' + conferenceId, function (greeting) {
+        stompClient.subscribe('/topic/message', function (greeting) {
             showGreeting(greeting.body);
         });
-        stompClient.subscribe('/topic/conference/onoffline/' + conferenceId, function (greeting) {
+        /*stompClient.subscribe('/topic/conference/onoffline/' + conferenceId, function (greeting) {
             showGreeting(greeting.body);
-        });
+        });*/
     }, function (error) {
         console.log(error)
     });
@@ -46,7 +43,7 @@ function disconnect() {
 }
 
 function sendMessage() {
-    stompClient.send("/app/topic/im", {}, "{\"conferenceId\":\"1\",\"type\":\"TEXT\",\"content\":\"hello\",\"participantId\":\"1\"}");
+    stompClient.send("/app/message", {}, JSON.stringify({"login": "落叶天涯"}));
 }
 
 function showGreeting(message) {
