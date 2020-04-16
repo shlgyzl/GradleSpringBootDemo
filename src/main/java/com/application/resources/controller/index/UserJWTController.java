@@ -1,6 +1,7 @@
 package com.application.resources.controller.index;
 
 import com.application.resources.vm.LoginVM;
+import com.application.security.jwt.JWTConfigurer;
 import com.application.security.jwt.JWTFilter;
 import com.application.security.jwt.TokenProvider;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -49,7 +50,7 @@ public class UserJWTController {
         boolean rememberMe = (loginVM.getRememberMe() == null) ? false : loginVM.getRememberMe();
         String jwt = tokenProvider.createToken(authentication, rememberMe);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new UserJWTController.JWTToken(jwt), httpHeaders, HttpStatus.OK);
     }
 

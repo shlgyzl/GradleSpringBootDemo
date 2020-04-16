@@ -1,5 +1,7 @@
 package com.application.config;
 
+import com.application.security.jwt.JWTConfigurer;
+import com.application.security.jwt.TokenProvider;
 import io.github.jhipster.config.JHipsterProperties;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
@@ -35,13 +37,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
 
+    private final TokenProvider tokenProvider;
+
     public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsService userDetailsService,
-                                 JHipsterProperties jHipsterProperties, RememberMeServices rememberMeServices, CorsFilter corsFilter) {
+                                 JHipsterProperties jHipsterProperties, RememberMeServices rememberMeServices, CorsFilter corsFilter, TokenProvider tokenProvider) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDetailsService = userDetailsService;
         this.jHipsterProperties = jHipsterProperties;
         this.rememberMeServices = rememberMeServices;
         this.corsFilter = corsFilter;
+        this.tokenProvider = tokenProvider;
     }
 
     @PostConstruct
@@ -91,6 +96,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .rememberMeServices(rememberMeServices)
                 .rememberMeParameter("remember-me")
                 .key(jHipsterProperties.getSecurity().getRememberMe().getKey());
-        http.headers().frameOptions().disable();
+        http.headers().frameOptions().disable().and().apply(new JWTConfigurer(tokenProvider));
     }
 }

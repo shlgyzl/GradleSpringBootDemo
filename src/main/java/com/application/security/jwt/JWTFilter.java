@@ -18,8 +18,6 @@ import java.io.IOException;
  */
 public class JWTFilter extends GenericFilterBean {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-
     private TokenProvider tokenProvider;
 
     public JWTFilter(TokenProvider tokenProvider) {
@@ -28,7 +26,7 @@ public class JWTFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String jwt = resolveToken(httpServletRequest);
         if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
@@ -38,10 +36,16 @@ public class JWTFilter extends GenericFilterBean {
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
-    private String resolveToken(HttpServletRequest request){
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+    private String resolveToken(HttpServletRequest request) {
+        // 默认情况下是从header中获取认证信息
+        String bearerToken = request.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
+        }
+        // 此处主要用于测试websocketURL 传参,生产环境还是用header
+        String parameter = request.getParameter(JWTConfigurer.AUTHORIZATION_TOKEN);
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(parameter)) {
+            return parameter;
         }
         return null;
     }

@@ -23,12 +23,12 @@ function connect() {
     stompClient.connect(headers, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/message', function (greeting) {
-            showGreeting(greeting.body);
-        });
-        /*stompClient.subscribe('/user/topic/message', function (greeting) {
+        /*stompClient.subscribe('/topic/message', function (greeting) {
             showGreeting(greeting.body);
         });*/
+        stompClient.subscribe('/user/topic/update/message', function (greeting) {
+            showGreeting(greeting.body);
+        });
     }, function (error) {
         console.log(error)
     });
@@ -43,8 +43,8 @@ function disconnect() {
 }
 
 function sendMessage() {
-    stompClient.send("/app/message", {}, JSON.stringify({"login": "落叶天涯"}));
-    stompClient.send("/app/message", {}, JSON.stringify({"login": "落叶天涯"}));
+    stompClient.send("/app/update/message", {}, JSON.stringify({"login": "落叶天涯"}));
+    //stompClient.send("/app/message", {}, JSON.stringify({"login": "落叶天涯"}));
 }
 
 function showGreeting(message) {
