@@ -24,7 +24,6 @@ import javax.annotation.PostConstruct;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-//@Import(SecurityProblemSupport.class)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
@@ -76,7 +75,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/content/**")
                 .antMatchers("/h2-console/**")
                 .antMatchers("/swagger-ui/index.html")
-                .antMatchers("/test/**");
+                .antMatchers("/test/**")
+                .antMatchers("/**.{js,html}");
     }
 
     @Override
@@ -87,7 +87,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/**").authenticated();
-        http.authorizeRequests().anyRequest().permitAll();
         http.rememberMe()
                 .rememberMeServices(rememberMeServices)
                 .rememberMeParameter("remember-me")

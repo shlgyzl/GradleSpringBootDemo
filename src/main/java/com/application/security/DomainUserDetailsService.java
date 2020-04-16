@@ -7,12 +7,8 @@ import com.application.repository.jpa.UserRepository;
 import com.google.common.collect.Sets;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,7 +37,6 @@ public class DomainUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating {}", login);
-        //String lowercaseLogin = login.toLowerCase(Locale.CHINA);
         QUser user = QUser.user;
         BooleanExpression expression = user.login.eq(login);
         // 返回的用户信息包含了角色,权限,用户名
@@ -60,14 +55,5 @@ public class DomainUserDetailsService implements UserDetailsService {
         Set<Authority> collect = user.getRoles().stream().flatMap(n -> n.getAuthorities().stream()).collect(Collectors.toSet());
         grantedAuthorities.addAll(collect.stream().map(n -> new SimpleGrantedAuthority(n.getName())).collect(Collectors.toSet()));
         return new SecurityUser(user.getLogin(), user.getPassword(), grantedAuthorities, user.getImageUrl());
-    }
-
-    public SecurityContext updateSecurityContext(String login) {
-        SecurityContext context = SecurityContextHolder.getContext();
-        UserDetails principal = loadUserByUsername(login);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                principal, principal.getPassword(), principal.getAuthorities());
-        context.setAuthentication(authentication);
-        return context;
     }
 }

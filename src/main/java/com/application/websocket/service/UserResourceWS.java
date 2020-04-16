@@ -12,7 +12,7 @@ public class UserResourceWS {
 
     @MessageMapping("/message")
     @SendTo({"/topic/message"})
-    @SendToUser(value = "/topic/message")
+    //@SendToUser(value = "/topic/message")
     public User save(@Payload User user) {
         return user;
     }

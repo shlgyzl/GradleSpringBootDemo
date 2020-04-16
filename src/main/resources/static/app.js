@@ -26,7 +26,7 @@ function connect() {
         stompClient.subscribe('/topic/message', function (greeting) {
             showGreeting(greeting.body);
         });
-        /*stompClient.subscribe('/topic/conference/onoffline/' + conferenceId, function (greeting) {
+        /*stompClient.subscribe('/user/topic/message', function (greeting) {
             showGreeting(greeting.body);
         });*/
     }, function (error) {
@@ -43,6 +43,7 @@ function disconnect() {
 }
 
 function sendMessage() {
+    stompClient.send("/app/message", {}, JSON.stringify({"login": "落叶天涯"}));
     stompClient.send("/app/message", {}, JSON.stringify({"login": "落叶天涯"}));
 }
 
