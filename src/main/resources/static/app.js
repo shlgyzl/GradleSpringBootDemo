@@ -23,9 +23,11 @@ function connect() {
     stompClient.connect(headers, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        /*stompClient.subscribe('/topic/message', function (greeting) {
+        // 广播消息
+        stompClient.subscribe('/topic/save/message', function (greeting) {
             showGreeting(greeting.body);
-        });*/
+        });
+        // 定制消息
         stompClient.subscribe('/user/topic/update/message', function (greeting) {
             showGreeting(greeting.body);
         });
@@ -43,8 +45,8 @@ function disconnect() {
 }
 
 function sendMessage() {
+    stompClient.send("/app/save/message", {}, JSON.stringify({"login": "落叶天涯"}));
     stompClient.send("/app/update/message", {}, JSON.stringify({"login": "落叶天涯"}));
-    //stompClient.send("/app/message", {}, JSON.stringify({"login": "落叶天涯"}));
 }
 
 function showGreeting(message) {
