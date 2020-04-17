@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -14,14 +15,15 @@ import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@ApiModel(value = "Role", description = "角色")
 @Entity
 @Table(name = "tbl_role")
 @Data
 @EqualsAndHashCode(exclude = {"authorities", "users"})
-@ApiModel(value = "Role", description = "角色")
 @ToString(exclude = {"authorities", "users"})
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Accessors(chain = true)
 @DynamicInsert
 @DynamicUpdate
 public class Role implements Serializable {

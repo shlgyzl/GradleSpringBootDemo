@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -24,6 +25,7 @@ import java.util.Set;
 @ToString(exclude = {"roles"})
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Accessors(chain = true)
 @DynamicInsert
 @DynamicUpdate
 public class Authority implements Serializable {

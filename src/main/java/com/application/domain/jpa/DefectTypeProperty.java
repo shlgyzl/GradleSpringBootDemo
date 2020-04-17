@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -25,6 +26,7 @@ import java.io.Serializable;
 @ToString(exclude = {"defectType"})
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Accessors(chain = true)
 @DynamicInsert
 @DynamicUpdate
 public class DefectTypeProperty implements Serializable {

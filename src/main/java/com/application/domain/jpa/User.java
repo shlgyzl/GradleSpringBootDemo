@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -22,14 +23,15 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * A user.
  */
+@ApiModel(value = "User", description = "用户")
 @Entity
 @Table(name = "tbl_user")
 @Data
-@ApiModel(value = "User", description = "用户")
 @EqualsAndHashCode(exclude = {"dams"}, callSuper = true)
 @ToString(exclude = {"dams"})
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Accessors(chain = true)
 @DynamicInsert
 @DynamicUpdate
 @EntityListeners(UserAuditListener.class)

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -13,15 +14,16 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-
+@ApiModel(value = "PersistentToken", description = "持久化Token")
 @Entity
 @Table(name = "tbl_persistent_token")
-@Data
-@EqualsAndHashCode
-@ApiModel(value = "PersistentToken", description = "持久化Token")
+@Setter
+@Getter
+@ToString(exclude = {"user"})
+@EqualsAndHashCode(exclude = {"user"})
 @NoArgsConstructor
 @RequiredArgsConstructor
-@ToString(exclude = {"user"})
+@Accessors(chain = true)
 @DynamicInsert
 @DynamicUpdate
 public class PersistentToken implements Serializable {
