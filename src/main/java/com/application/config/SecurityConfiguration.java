@@ -2,6 +2,7 @@ package com.application.config;
 
 import com.application.security.jwt.JWTConfigurer;
 import com.application.security.jwt.TokenProvider;
+import com.application.security.provider.RemoteUserNamePasswordAuthenticationProvider;
 import io.github.jhipster.config.JHipsterProperties;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
@@ -35,16 +36,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final RememberMeServices rememberMeServices;
 
+    private final RemoteUserNamePasswordAuthenticationProvider remoteUserNamePasswordAuthenticationProvider;
+
     private final CorsFilter corsFilter;
 
     private final TokenProvider tokenProvider;
 
     public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsService userDetailsService,
-                                 JHipsterProperties jHipsterProperties, RememberMeServices rememberMeServices, CorsFilter corsFilter, TokenProvider tokenProvider) {
+                                 JHipsterProperties jHipsterProperties, RememberMeServices rememberMeServices, RemoteUserNamePasswordAuthenticationProvider remoteUserNamePasswordAuthenticationProvider, CorsFilter corsFilter, TokenProvider tokenProvider) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDetailsService = userDetailsService;
         this.jHipsterProperties = jHipsterProperties;
         this.rememberMeServices = rememberMeServices;
+        this.remoteUserNamePasswordAuthenticationProvider = remoteUserNamePasswordAuthenticationProvider;
         this.corsFilter = corsFilter;
         this.tokenProvider = tokenProvider;
     }
@@ -55,6 +59,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             authenticationManagerBuilder
                     .userDetailsService(userDetailsService)
                     .passwordEncoder(passwordEncoder());
+            // 添加远程登录校验器
+            authenticationManagerBuilder.authenticationProvider(remoteUserNamePasswordAuthenticationProvider);
         } catch (Exception e) {
             throw new BeanInitializationException("Security configuration failed", e);
         }
@@ -91,6 +97,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling();
         http.authorizeRequests()
                 .antMatchers("/api/authenticate").permitAll()
+                .antMatchers("/api/authenticate/**").permitAll()
                 .antMatchers("/api/**").authenticated();
         http.rememberMe()
                 .rememberMeServices(rememberMeServices)

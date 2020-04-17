@@ -37,7 +37,7 @@ public class JacksonConfiguration {
         // 忽略无法转换的对象
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         // 序列化全局对象属性序列化：凡是不是null的属性都会进行序列化
-        objectMapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_EMPTY);
         // NULL不参与序列化
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         // PrettyPrinter 格式化输出

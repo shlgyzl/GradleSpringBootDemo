@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,17 +42,18 @@ public class DomainUserDetailsService implements UserDetailsService {
         return Sets.newLinkedHashSet(userRepository.findAll(expression)).stream()
                 .map(n -> createSpringSecurityUser(login, n))
                 .findFirst().orElseThrow(() -> new UsernameNotFoundException("User " + login + " was not found in the database"));
-
-
     }
 
     private SecurityUser createSpringSecurityUser(String lowercaseLogin, User user) {
         if (!user.getActivated()) {
             throw new RuntimeException("User " + lowercaseLogin + " was not activated");
         }
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        Set<Authority> collect = user.getRoles().stream().flatMap(n -> n.getAuthorities().stream()).collect(Collectors.toSet());
-        grantedAuthorities.addAll(collect.stream().map(n -> new SimpleGrantedAuthority(n.getName())).collect(Collectors.toSet()));
+        Set<Authority> collect = user.getRoles()
+                .stream().flatMap(n -> n.getAuthorities().stream())
+                .collect(Collectors.toSet());
+        List<GrantedAuthority> grantedAuthorities = collect
+                .stream().map(n -> new SimpleGrantedAuthority(n.getName())).distinct()
+                .collect(Collectors.toList());
         return new SecurityUser(user.getLogin(), user.getPassword(), grantedAuthorities, user.getImageUrl());
     }
 }

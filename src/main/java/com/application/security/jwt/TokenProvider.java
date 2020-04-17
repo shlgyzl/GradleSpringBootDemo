@@ -1,5 +1,7 @@
 package com.application.security.jwt;
 
+import com.application.domain.enumeration.AuthType;
+import com.application.security.token.RemoteUsernamePasswordAuthenticationToken;
 import io.github.jhipster.config.JHipsterProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -28,6 +30,7 @@ public class TokenProvider {
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String AUTH_TYPE_KEY = "auth_type";
 
     private Key key;
 
@@ -61,7 +64,7 @@ public class TokenProvider {
                         .getTokenValidityInSecondsForRememberMe();
     }
 
-    public String createToken(Authentication authentication, boolean rememberMe) {
+    public String createToken(Authentication authentication, boolean rememberMe, AuthType authType) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -73,16 +76,18 @@ public class TokenProvider {
         } else {
             validity = new Date(now + this.tokenValidityInMilliseconds);
         }
-
+        // 加密核心
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
+                .claim(AUTH_TYPE_KEY, authType)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
     }
 
     public Authentication getAuthentication(String token) {
+        // 解密核心
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -95,8 +100,17 @@ public class TokenProvider {
                         .collect(Collectors.toList());
 
         User principal = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        AuthType authType = AuthType.valueOf(claims.get(AUTH_TYPE_KEY).toString());
+        Authentication authentication = null;
+        switch (authType) {
+            case LOCAL_USERNAME:
+                authentication = new UsernamePasswordAuthenticationToken(principal, token, authorities);
+                break;
+            case REMOTE_USERNAME:
+                authentication = new RemoteUsernamePasswordAuthenticationToken(principal, token, authorities);
+                break;
+        }
+        return authentication;
     }
 
     public boolean validateToken(String authToken) {

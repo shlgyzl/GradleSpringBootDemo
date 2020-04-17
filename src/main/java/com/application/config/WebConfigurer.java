@@ -4,15 +4,19 @@ import com.application.filter.CachingHttpHeadersFilter;
 import io.github.jhipster.config.JHipsterProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.server.MimeMappings;
 import org.springframework.boot.web.server.WebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.EnumSet;
 
@@ -31,7 +35,19 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
 
     @Override
     public void customize(WebServerFactory factory) {
-        //System.out.println(env.getProperty("server.port"));
+        setMimeMappings(factory);
+    }
+
+    private void setMimeMappings(WebServerFactory server) {
+        if (server instanceof ConfigurableServletWebServerFactory) {
+            MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT);
+            // IE issue, see https://github.com/jhipster/generator-jhipster/pull/711
+            mappings.add("html", MediaType.TEXT_HTML_VALUE + ";charset=" + StandardCharsets.UTF_8.name().toLowerCase());
+            // CloudFoundry issue, see https://github.com/cloudfoundry/gorouter/issues/64
+            mappings.add("json", MediaType.TEXT_HTML_VALUE + ";charset=" + StandardCharsets.UTF_8.name().toLowerCase());
+            ConfigurableServletWebServerFactory servletWebServer = (ConfigurableServletWebServerFactory) server;
+            servletWebServer.setMimeMappings(mappings);
+        }
     }
 
     @Override

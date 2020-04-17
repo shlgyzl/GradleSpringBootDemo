@@ -13,6 +13,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,10 +29,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
+@Slf4j
 @SpringBootApplication(exclude = {LiquibaseAutoConfiguration.class})
 @EnableSpringDataWebSupport// 开启Web支持
 @RestController
-@Slf4j
 public class Main {
     @Resource
     private MongoTemplate mongoTemplate;

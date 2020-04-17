@@ -26,11 +26,11 @@ function connect() {
         // 广播消息
         stompClient.subscribe('/topic/save/message', function (greeting) {
             showGreeting(greeting.body);
-        });
+        },headers);
         // 定制消息
         stompClient.subscribe('/user/topic/update/message', function (greeting) {
             showGreeting(greeting.body);
-        });
+        },headers);
     }, function (error) {
         console.log(error)
     });

@@ -17,6 +17,37 @@ spring:
     admin:
       client:
         url: http://47.105.46.4:8081
+  quartz:
+    jdbc:
+      # fix it 初始化Quartz表结构,项目第一次启动配置程always,然后改成never 否则已生成的job会被初始化掉
+      # 生产环境改成never
+      initialize-schema: always
+      #            initialize-schema: never
+      # 这边是个坑，默认comment-prefix: --，但是org.quartz.impl.jdbcjobstore下面的mysql的sql脚本的注释前缀是#。
+      # 所以在mysql环境下建表失败但是控制台并不报错。
+      # fix it,set comment-prefix: -- when using oracle，set comment-prefix: --# when using sqlserver
+      comment-prefix: '#'
+    #设置quartz任务的数据持久化方式，默认是内存方式
+    job-store-type: jdbc
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: GradleSpringBootScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX # 单机存储,非集群
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_  #Quartz表前缀
+            isClustered: true
+            clusterCheckinInterval: 20000
+            useProperties: false
+            maxMisfiresToHandleAtATime: 1
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 2
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
 management:
   endpoints:
     enabled-by-default: true
@@ -31,3 +62,9 @@ management:
   endpoint:
     health:
       show-details: always
+third:
+  application: #第三方系统登录
+    user: # 用于登录
+      username: test_zuosl
+      password: zuo123456
+      api-base-url: http://v3.dam.com.cn/

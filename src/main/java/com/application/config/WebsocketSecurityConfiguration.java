@@ -29,13 +29,7 @@ public class WebsocketSecurityConfiguration extends AbstractSecurityWebSocketMes
                 .anyMessage().denyAll();
     }
 
-    @Override
-    public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
-        for (MessageConverter messageConverter : messageConverters) {
 
-        }
-        return super.configureMessageConverters(messageConverters);
-    }
 
     @Override
     protected boolean sameOriginDisabled() {
