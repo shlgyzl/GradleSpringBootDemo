@@ -127,6 +127,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-websocket"
     implementation group: 'org.springframework.security', name: 'spring-security-messaging', version: '5.3.1.RELEASE'
+
     // 引入SpringBootAdmin监控系统
     compile group: 'de.codecentric', name: 'spring-boot-admin-starter-client', version: '2.2.1'
     // 引入Alibaba-Sentinel监控系统

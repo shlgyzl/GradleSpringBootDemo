@@ -29,6 +29,7 @@
     <include file="config/liquibase/changlog/entity/defect_type_property/DefectTypeProperty.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/role/Role.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/authority/Authority.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/attachment/Attachment.xml" relativeToChangelogFile="false"/>
 
     <!-- 关系表 -->
     <include file="config/liquibase/changlog/relation/UserDam.xml" relativeToChangelogFile="false"/>

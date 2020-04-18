@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
 
-    <changeSet id="20200320005852" author="YangHaiYong" context="dev, test, prod" runOnChange="true">
+    <changeSet id="20200320005852" author="YangHaiYong" context="dev, test, prod" >
         <!-- 加载初始化数据 -->
         <loadData tableName="tbl_role" separator=";" file="config/liquibase/data/role.csv"
                   relativeToChangelogFile="false"/>

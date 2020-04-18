@@ -1,8 +1,17 @@
 logging:
   level:
     org.springframework.data.mongodb.core: DEBUG
+    com.application.repository: DEBUG
   config: classpath:config/log/logback-spring.xml
 spring:
+  servlet:
+    multipart:
+      #是否支持批量上传
+      enabled: true
+      #上传文件最大为 100M
+      max-file-size: 100MB
+      #上传总数据大小 200M
+      max-request-size: 1024MB
   cloud:
     sentinel:
       transport:
@@ -68,3 +77,10 @@ third:
       username: test_zuosl
       password: zuo123456
       api-base-url: http://v3.dam.com.cn/
+web:
+  application:
+    file:
+      path: /GradleSpringBoot/files/
+
+
+

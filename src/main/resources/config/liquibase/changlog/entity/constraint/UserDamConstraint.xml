@@ -4,17 +4,17 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="20200109220220" author="YangHaiYong" context="dev, test, prod" runOnChange="true">
+    <changeSet id="20200109220220" author="YangHaiYong" context="dev, test, prod" >
         <!-- 外键约束 -->
         <addForeignKeyConstraint baseColumnNames="dam_id"
                                  baseTableName="tbl_user_dam"
-                                 constraintName="FK_C72E50A7ADE843488ED5684D9D0E776H"
+                                 constraintName="FK_C72E50A7ADE843481"
                                  referencedColumnNames="id"
                                  referencedTableName="tbl_dam"/>
         <!-- 外键约束 -->
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="tbl_user_dam"
-                                 constraintName="FK_C72E50A7ADE843488ED5684D9D0E776J"
+                                 constraintName="FK_C72E50A7ADE843482"
                                  referencedColumnNames="id"
                                  referencedTableName="tbl_user"/>
     </changeSet>

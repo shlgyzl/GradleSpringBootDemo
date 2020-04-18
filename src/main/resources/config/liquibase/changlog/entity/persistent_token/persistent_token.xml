@@ -5,8 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
 
-    <changeSet id="202003010000150" author="YangHaiYong" context="dev, test, prod" runOnChange="true">
-        <createTable tableName="tbl_persistent_token">
+    <changeSet id="202003010000150" author="YangHaiYong" context="dev, test, prod" >
+        <createTable tableName="tbl_persistent_token" remarks="持久化token">
             <column name="id" type="varchar(255)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

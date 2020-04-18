@@ -5,8 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
 
-    <changeSet id="20200309230711" author="YangHaiYong" context="dev, test, prod" runOnChange="true">
-        <createTable tableName="tbl_authority">
+    <changeSet id="20200309230711" author="YangHaiYong" context="dev, test, prod" >
+        <createTable tableName="tbl_authority" remarks="权限">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

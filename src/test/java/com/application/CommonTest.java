@@ -168,7 +168,13 @@ public class CommonTest {
         //b.addAll(a);
         a.retainAll(b);
 
-        System.out.println(a);
+        //System.out.println(a);
+        //System.out.println(System.getenv());
+    }
+
+    @Test
+    public void test11() {
+        System.out.println(System.getenv());
     }
 
     /*@Test

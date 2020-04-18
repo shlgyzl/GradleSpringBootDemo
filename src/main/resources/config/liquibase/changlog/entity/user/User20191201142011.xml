@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <!-- 实体修改 -->
-    <changeSet id="20191201142107" author="YangHaiYong" context="dev, test, prod" runOnChange="true">
+    <changeSet id="20191201142107" author="YangHaiYong" context="dev, test, prod" >
         <addColumn tableName="tbl_user">
             <column name="created_by" type="varchar(255)" remarks="第一次创建人">
                 <constraints nullable="true"/>
