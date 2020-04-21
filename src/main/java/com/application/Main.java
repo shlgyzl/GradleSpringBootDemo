@@ -30,7 +30,7 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 @Slf4j
-@SpringBootApplication(exclude = {LiquibaseAutoConfiguration.class})
+@SpringBootApplication
 @EnableSpringDataWebSupport// 开启Web支持
 @RestController
 public class Main {

@@ -161,9 +161,13 @@ dependencies {
         exclude group: 'io.swagger', module: 'swagger-annotations'
         exclude group: 'io.swagger', module: 'swagger-models'
     }
+    compile group: 'io.springfox', name: 'springfox-bean-validators', version: '2.9.2'
+
     // 用于解决访问swagger2静态页面失败问题
     compile("io.swagger:swagger-annotations:1.5.21")
     compile("io.swagger:swagger-models:1.5.21")
+    compile group: 'com.github.xiaoymin', name: 'swagger-bootstrap-ui', version: '1.9.6'
+
     // 引入mongodb实体注解配合queryDSL(google扫描)
     compile group: 'com.google.code', name: 'morphia', version: '0.91'
     // 用于LocalDateTime转Instant类型或反转

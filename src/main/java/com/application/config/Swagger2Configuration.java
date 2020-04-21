@@ -1,8 +1,8 @@
 package com.application.config;
 
 import com.fasterxml.classmate.TypeResolver;
+import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import com.google.common.base.Predicate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,12 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-import springfox.documentation.swagger.web.SecurityConfiguration;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Predicates.or;
@@ -34,12 +35,22 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
  */
 @Configuration
 @EnableSwagger2
+@EnableSwaggerBootstrapUI
 public class Swagger2Configuration {
-    @Autowired
-    private TypeResolver typeResolver;
+    private final TypeResolver typeResolver;
+
+    public Swagger2Configuration(TypeResolver typeResolver) {
+        this.typeResolver = typeResolver;
+    }
+
 
     @Bean
     public Docket createRestApi() {
+        ParameterBuilder tokenPar = new ParameterBuilder();
+        List<Parameter> globalOperationParameters = new ArrayList<>();
+        tokenPar.name("Authorization").description("令牌").modelRef(new ModelRef("string")).parameterType("header").required(false).build();
+        globalOperationParameters.add(tokenPar.build());
+
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()// 生成构造器
                 .apis(RequestHandlerSelectors.basePackage("com.application.resources"))//为当前包路径
@@ -60,17 +71,10 @@ public class Swagger2Configuration {
                                 .message("500 message")
                                 .responseModel(new ModelRef("Error"))
                                 .build()))// 设置通用响应信息
-                .securitySchemes(newArrayList(apiKey()))// 设置安全认证头部
-                .securityContexts(newArrayList(securityContext()))
-                .enableUrlTemplating(true)
-                .globalOperationParameters(
-                        newArrayList(new ParameterBuilder()
-                                .name("Authorization")
-                                .description("token串,第一次访问可以随意输入一个值")
-                                .modelRef(new ModelRef("string"))
-                                .parameterType("header")
-                                .required(true)
-                                .build()));
+                .securitySchemes(securitySchemes())// 设置安全认证头部
+                .securityContexts(securityContexts())
+                .enableUrlTemplating(true);
+                //.globalOperationParameters(globalOperationParameters);
         //.additionalModels(typeResolver.resolve(AdditionalModel.class));// 手动添加实体解析
     }
 
@@ -84,24 +88,24 @@ public class Swagger2Configuration {
                 regex("/test.*"));// 选择路径匹配
     }
 
-    private ApiKey apiKey() {
-        return new ApiKey("密钥Key", "api_key", "header");
+    private List<ApiKey> securitySchemes() {
+        return newArrayList(
+                new ApiKey("Authorization", "Authorization", "header"));
     }
-
-    private SecurityContext securityContext() {
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .forPaths(regex("/anyPath.*"))
-                .build();
+    private List<SecurityContext> securityContexts() {
+        return newArrayList(
+                SecurityContext.builder()
+                        .securityReferences(defaultAuth())
+                        .forPaths(PathSelectors.regex("^(?!auth).*$"))
+                        .build()
+        );
     }
-
     List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope
-                = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return newArrayList(
-                new SecurityReference("密钥Key", authorizationScopes));
+                new SecurityReference("Authorization", authorizationScopes));
     }
 
     @Bean
