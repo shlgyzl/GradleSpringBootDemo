@@ -5,16 +5,21 @@ import com.application.domain.jpa.Attachment;
 import com.application.resources.exception.BusinessErrorException;
 import com.application.service.AttachmentService;
 import io.micrometer.core.annotation.Timed;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiOperationSupport;
+import io.swagger.annotations.ApiParam;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.application.domain.enumeration.BusinessErrorType.PARAMETER_EXCEPTION;
 
+@Api(value = "Attachment", tags = {"Attachment文件管理接口"})
 @RestController
 @RequestMapping("/api")
 public class AttachmentResources {
@@ -24,14 +29,7 @@ public class AttachmentResources {
         this.attachmentService = attachmentService;
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "fileType", value = "文件类型", dataType = "FileType", paramType = "body", dataTypeClass = FileType.class),
-            @ApiImplicitParam(name = "files", value = "文件数组", dataType = "MultipartFile", paramType = "body", dataTypeClass = MultipartFile.class)
-    })
     @ApiOperation(value = "上传文件", notes = "上传文件")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "上传文件", response = Attachment.class, responseContainer = "List")
-    })
     @PostMapping("/file/upload")
     @Timed
     public Attachment[] uploadFile(@ApiParam @RequestParam(value = "fileType", required = false) FileType fileType,
@@ -47,55 +45,39 @@ public class AttachmentResources {
         return attachments;
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "文件id", dataType = "String", paramType = "body", dataTypeClass = String.class),
-    })
-    @ApiOperation(value = "下载文件", notes = "下载文件(mongodb)")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "下载文件")
-    })
+    @ApiOperationSupport
+    @ApiOperation(value = "下载文件(mongodb)", notes = "下载文件(mongodb)")
     @GetMapping("/file/{id}/mongodb")
     @Timed
-    public void findToMongoDB(@PathVariable("id") String id, HttpServletResponse response) throws IOException {
+    public void findToMongoDB(@PathVariable("id") String id,
+                              @ApiIgnore HttpServletResponse response) throws IOException {
         attachmentService.findToMongoDB(id, response);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "url", value = "文件url", dataType = "String", paramType = "body", dataTypeClass = String.class),
-    })
-    @ApiOperation(value = "下载文件", notes = "下载文件(disk)")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "下载文件")
-    })
-    //@GetMapping("/file/{url}/disk")
+    @ApiOperationSupport
+    @ApiOperation(value = "下载文件(disk)", notes = "下载文件(disk)")
+    @GetMapping("/file/{url}/disk")
     @Timed
-    public void findToDisk(@PathVariable("url") String url, HttpServletResponse response) throws IOException {
+    public void findToDisk(@PathVariable("url") String url,
+                           @ApiIgnore HttpServletResponse response) {
         attachmentService.findToDisk(url, response);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "文件id", dataType = "String", paramType = "body", dataTypeClass = String.class),
-    })
-    @ApiOperation(value = "下载文件", notes = "下载文件(databse)")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "下载文件")
-    })
+    @ApiOperationSupport
+    @ApiOperation(value = "下载文件(database)", notes = "下载文件(database)")
     @GetMapping("/file/{id}/database")
     @Timed
-    public void findToDataBase(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+    public void findToDataBase(@PathVariable("id") Long id,
+                               @ApiIgnore HttpServletResponse response) {
         attachmentService.findToDataBase(id, response);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "文件id", dataType = "String", paramType = "body", dataTypeClass = String.class),
-    })
-    @ApiOperation(value = "下载文件", notes = "下载文件(redis)")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "下载文件")
-    })
+    @ApiOperationSupport
+    @ApiOperation(value = "下载文件(redis)", notes = "下载文件(redis)")
     @GetMapping("/file/{id}/redis")
     @Timed
-    public void findToRedis(@PathVariable("id") String id, HttpServletResponse response) throws IOException {
+    public void findToRedis(@PathVariable("id") String id,
+                            @ApiIgnore HttpServletResponse response) {
         attachmentService.findToRedis(id, response);
     }
 

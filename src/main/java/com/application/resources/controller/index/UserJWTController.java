@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiOperationSupport;
 import io.swagger.annotations.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Optional;
 
-@Api(value = "UserJWTController用户登录", tags = {"User用户登录"})
+@Api(value = "UserJWT", tags = {"UserJWT用户认证管理接口"})
 @RestController
 @RequestMapping("api")
 @Slf4j
@@ -44,22 +44,22 @@ public class UserJWTController {
         this.authenticationManager = authenticationManager;
     }
 
+    @ApiOperationSupport
     @ApiOperation(value = "用户登录", notes = "无条件限制")
-    @ApiResponse(code = 200, message = "登录成功", response = JWTToken.class)
     @PostMapping("/authenticate")
     @Timed
     public ResponseEntity<JWTToken> authorizeByLocalPassword(
-            @Valid @RequestBody @ApiParam(name = "用户登录实体") LoginVM loginVM) {
+            @Valid @RequestBody LoginVM loginVM) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
         return authorize(authenticationToken, Optional.ofNullable(loginVM.getRememberMe()).orElse(false), AuthType.LOCAL_USERNAME);
     }
 
-    @ApiOperation(value = "用户登录", notes = "条件限制(用户远程登录)")
-    @ApiResponse(code = 200, message = "登录成功", response = JWTToken.class)
+    @ApiOperationSupport
+    @ApiOperation(value = "用户登录(用户远程登录)", notes = "条件限制(用户远程登录)")
     @PostMapping("/authenticate/remote")
     @Timed
-    public ResponseEntity<JWTToken> authorizeByRemotePassword(@Valid @RequestBody @ApiParam(name = "用户登录实体") LoginVM loginVM) {
+    public ResponseEntity<JWTToken> authorizeByRemotePassword(@Valid @RequestBody LoginVM loginVM) {
         RemoteUsernamePasswordAuthenticationToken authenticationToken
                 = new RemoteUsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
         return authorize(authenticationToken, Optional.ofNullable(loginVM.getRememberMe()).orElse(false), AuthType.REMOTE_USERNAME);

@@ -21,7 +21,7 @@ import java.io.Serializable;
 @Data
 @Table(name = "tbl_defect_type_property")
 @Entity
-@ApiModel(value = "DefectType", description = "缺陷类型属性")
+//@ApiModel(value = "DefectType", description = "缺陷类型属性")
 @EqualsAndHashCode(exclude = {"defectType"}, callSuper = false)
 @ToString(exclude = {"defectType"})
 @NoArgsConstructor
@@ -84,7 +84,7 @@ public class DefectTypeProperty implements Serializable {
     private String unit;
 
 
-    @ApiModelProperty(name = "defectType", value = "缺陷类型", dataType = "DefectType", hidden = true)
+    @ApiModelProperty(name = "defectType", value = "缺陷类型", dataType = "DefectType")
     @JsonIgnoreProperties(value = {"defectTypeProperties"})
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "defect_type_id")
@@ -97,7 +97,7 @@ public class DefectTypeProperty implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "缺陷类型属性版本锁", example = "0L", dataType = "Long", required = true, hidden = true)
+    @ApiModelProperty(name = "version", value = "缺陷类型属性版本锁", example = "0L", dataType = "Long", required = true)
     @Column(name = "version")
     @Version
     private Long version = 0L;

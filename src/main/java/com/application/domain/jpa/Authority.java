@@ -21,7 +21,7 @@ import java.util.Set;
 @Table(name = "tbl_authority")
 @Data
 @EqualsAndHashCode(exclude = {"roles"})
-@ApiModel(value = "Authority", description = "权限")
+//@ApiModel(value = "Authority", description = "权限")
 @ToString(exclude = {"roles"})
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -30,21 +30,25 @@ import java.util.Set;
 @DynamicUpdate
 public class Authority implements Serializable {
     private static final long serialVersionUID = 1L;
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(name = "id", value = "主键id", dataType = "Long", required = true)
     private Long id;
 
     @NotNull(message = "名称不能为空")
     @NonNull
     @Size(min = 1, max = 20, message = "权限名不能为空或超过20个字符")
     @Column(length = 20, unique = true, nullable = false)
-    @ApiModelProperty(name = "name", value = "权限名", dataType = "String")
+    @ApiModelProperty(name = "name", value = "权限名", dataType = "String", required = true)
     private String name;
 
     @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @BatchSize(size = 20)
     @JsonIgnoreProperties({"authorities"})
     @OrderBy("id asc")
+    @ApiModelProperty(hidden = true)
     private Set<Role> roles = new LinkedHashSet<>(10);
 
     @NotNull

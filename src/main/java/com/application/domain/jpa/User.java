@@ -77,6 +77,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     @ManyToMany(fetch = FetchType.LAZY)
     @OrderBy("id asc")
+    @ApiModelProperty(hidden = true)
     private Set<Dam> dams = new LinkedHashSet<>(5);
 
     @JoinTable(

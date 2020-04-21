@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@ApiModel(value = "Role", description = "角色")
+//@ApiModel(value = "Role", description = "角色")
 @Entity
 @Table(name = "tbl_role")
 @Data

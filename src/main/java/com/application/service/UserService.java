@@ -19,15 +19,14 @@ public class UserService {
     }
 
     @Transactional
-    public User save(User user) {
-        user.addAllRole(user.getRoles());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
-
-    @Transactional
     public User job(User user) {
         log.info("QuartzJobBean执行用户真正的业务,参数:[{}]", user);
         return user;
+    }
+
+    public User saveOrUpdate(User user) {
+        user.addAllRole(user.getRoles());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 }

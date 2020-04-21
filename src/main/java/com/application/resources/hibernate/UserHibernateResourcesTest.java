@@ -5,6 +5,7 @@ import com.application.dto.UserDTO;
 import com.application.factory.SpecificationFactory;
 import com.application.repository.jpa.UserRepository;
 import com.application.repository.jpa.dao.IUserDao;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Api(value = "UserHibernate", tags = {"UserHibernate本地测试接口"})
 @RestController
 @RequestMapping("api")
 public class UserHibernateResourcesTest {

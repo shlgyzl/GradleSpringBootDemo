@@ -8,6 +8,9 @@ import org.assertj.core.util.Files;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,6 +19,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -175,6 +179,28 @@ public class CommonTest {
     @Test
     public void test11() {
         System.out.println(System.getenv());
+    }
+
+    @Test
+    public void test12() throws Exception {
+        //UserSig 计算公式，其中 secretkey 为计算 usersig 用的加密密钥
+        String secretkey = "Gu5t9xGARNpq86cd98joQYCN3EXAMPLE";
+        String userid = "123";
+        String sdkappid = "123";
+        String currtime = System.currentTimeMillis() + "";
+        String expire = System.currentTimeMillis() + 3600000 + "";
+
+        String fix = userid + sdkappid + currtime + expire;
+        byte[] hmac256 = hmac256(secretkey.getBytes(StandardCharsets.UTF_8), (fix + Base64.getEncoder().encodeToString((fix).getBytes(StandardCharsets.UTF_8))));
+
+        System.out.println(DatatypeConverter.printHexBinary(hmac256));
+    }
+
+    public byte[] hmac256(byte[] key, String msg) throws Exception {
+        Mac mac = Mac.getInstance("HmacSHA256");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key, mac.getAlgorithm());
+        mac.init(secretKeySpec);
+        return mac.doFinal(msg.getBytes(StandardCharsets.UTF_8));
     }
 
     /*@Test
