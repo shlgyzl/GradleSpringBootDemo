@@ -6,12 +6,12 @@ import com.application.repository.jpa.DefectTypeRepository;
 import com.application.resources.exception.BusinessErrorException;
 import com.application.resources.util.ResponseUtil;
 import com.application.service.DefectTypeService;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,7 +40,7 @@ public class DefectTypeResources {
         this.defectTypeService = defectTypeService;
     }
 
-    @ApiOperationSupport
+    @ApiOperationSupport(ignoreParameters = {"defectTypeProperties","defectTypeProperties.defectType"})
     @ApiOperation(value = "保存接口", notes = "保存权限类型")
     @Timed
     @PostMapping("/defectType")
@@ -49,7 +49,7 @@ public class DefectTypeResources {
         return ResponseEntity.created(new URI("/api/defectType/" + savedDefectType.getId())).body(savedDefectType);
     }
 
-    @ApiOperationSupport
+    @ApiOperationSupport(ignoreParameters = {"defectTypeProperties","defectTypeProperties.defectType"})
     @ApiOperation(value = "更新接口", notes = "更新权限类型")
     @Timed
     @PutMapping("/defectType")
@@ -58,7 +58,6 @@ public class DefectTypeResources {
         return ResponseEntity.created(new URI("/api/defectType/" + savedDefectType.getId())).body(savedDefectType);
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "删除接口", notes = "删除权限类型")
     @Timed
     @DeleteMapping("/defectType/{id}")
@@ -67,7 +66,6 @@ public class DefectTypeResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "查询接口", notes = "查询权限类型(根据id)")
     @Timed
     @GetMapping("/defectType/{id}")
@@ -78,7 +76,6 @@ public class DefectTypeResources {
         return ResponseUtil.wrapOrNotFound(defectTypeRepository.findById(id));
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
     @Timed
     @GetMapping(value = "/defectTypes")

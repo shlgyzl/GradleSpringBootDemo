@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "tbl_dam")
 @Data
-@ApiModel(value = "Dam", description = "大坝")
+//@ApiModel(value = "Dam", description = "大坝")
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @NoArgsConstructor

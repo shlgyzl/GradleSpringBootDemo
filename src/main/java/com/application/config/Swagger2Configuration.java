@@ -1,13 +1,17 @@
 package com.application.config;
 
 import com.fasterxml.classmate.TypeResolver;
-import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import com.google.common.base.Predicate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.*;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.schema.WildcardType;
@@ -19,6 +23,9 @@ import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +42,9 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
  */
 @Configuration
 @EnableSwagger2
-@EnableSwaggerBootstrapUI
+//@EnableSwaggerBootstrapUI
+@EnableKnife4j
+@Import(BeanValidatorPluginsConfiguration.class)
 public class Swagger2Configuration {
     private final TypeResolver typeResolver;
 
@@ -44,7 +53,7 @@ public class Swagger2Configuration {
     }
 
 
-    @Bean
+    @Bean(name = "defaultApi2")
     public Docket createRestApi() {
         ParameterBuilder tokenPar = new ParameterBuilder();
         List<Parameter> globalOperationParameters = new ArrayList<>();
@@ -56,6 +65,9 @@ public class Swagger2Configuration {
                 .apis(RequestHandlerSelectors.basePackage("com.application.resources"))//为当前包路径
                 .paths(paths())//设置路径选择方式
                 .build()
+                .ignoredParameterTypes(HttpServletRequest.class, HttpServletResponse.class,
+                        HttpSession.class, Pageable.class, Sort.class,
+                        com.querydsl.core.types.Predicate.class)
                 .apiInfo(apiInfo())// 文档头部构建
                 .pathMapping("/")// 为Servlet映射路径,如果存在的Servlet
                 .directModelSubstitute(LocalDateTime.class, String.class)// 将LocalDateTime转String(直接替换)
@@ -74,7 +86,7 @@ public class Swagger2Configuration {
                 .securitySchemes(securitySchemes())// 设置安全认证头部
                 .securityContexts(securityContexts())
                 .enableUrlTemplating(true);
-                //.globalOperationParameters(globalOperationParameters);
+        //.globalOperationParameters(globalOperationParameters);
         //.additionalModels(typeResolver.resolve(AdditionalModel.class));// 手动添加实体解析
     }
 
@@ -92,6 +104,7 @@ public class Swagger2Configuration {
         return newArrayList(
                 new ApiKey("Authorization", "Authorization", "header"));
     }
+
     private List<SecurityContext> securityContexts() {
         return newArrayList(
                 SecurityContext.builder()
@@ -100,6 +113,7 @@ public class Swagger2Configuration {
                         .build()
         );
     }
+
     List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];

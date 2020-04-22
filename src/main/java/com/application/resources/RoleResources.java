@@ -7,12 +7,12 @@ import com.application.repository.jpa.RoleRepository;
 import com.application.resources.exception.BusinessErrorException;
 import com.application.resources.util.ResponseUtil;
 import com.application.service.RoleService;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +44,7 @@ public class RoleResources {
         this.roleService = roleService;
     }
 
-    @ApiOperationSupport
+    @ApiOperationSupport(ignoreParameters = {"users","authorities"})
     @ApiOperation(value = "保存接口", notes = "保存角色")
     @Timed
     @PostMapping("/role")
@@ -53,7 +53,7 @@ public class RoleResources {
         return ResponseEntity.created(new URI("/api/role/" + savedRole.getId())).body(savedRole);
     }
 
-    @ApiOperationSupport
+    @ApiOperationSupport(ignoreParameters = {"users","authorities"})
     @ApiOperation(value = "更新接口", notes = "更新角色")
     @Timed
     @PutMapping("/role")
@@ -62,7 +62,6 @@ public class RoleResources {
         return ResponseEntity.created(new URI("/api/role/" + savedRole.getId())).body(savedRole);
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "删除接口", notes = "删除角色")
     @Timed
     @DeleteMapping("/role/{id}")
@@ -71,7 +70,6 @@ public class RoleResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "查询接口", notes = "查询角色(根据id)")
     @Timed
     @GetMapping("/role/{id}")
@@ -82,7 +80,6 @@ public class RoleResources {
         return ResponseUtil.wrapOrNotFound(roleRepository.findById(id));
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
     @Timed
     @GetMapping(value = "/roles")

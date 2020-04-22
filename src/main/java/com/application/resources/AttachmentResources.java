@@ -7,7 +7,6 @@ import com.application.service.AttachmentService;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import io.swagger.annotations.ApiParam;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +44,6 @@ public class AttachmentResources {
         return attachments;
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "下载文件(mongodb)", notes = "下载文件(mongodb)")
     @GetMapping("/file/{id}/mongodb")
     @Timed
@@ -54,7 +52,6 @@ public class AttachmentResources {
         attachmentService.findToMongoDB(id, response);
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "下载文件(disk)", notes = "下载文件(disk)")
     @GetMapping("/file/{url}/disk")
     @Timed
@@ -63,7 +60,6 @@ public class AttachmentResources {
         attachmentService.findToDisk(url, response);
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "下载文件(database)", notes = "下载文件(database)")
     @GetMapping("/file/{id}/database")
     @Timed
@@ -72,7 +68,6 @@ public class AttachmentResources {
         attachmentService.findToDataBase(id, response);
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "下载文件(redis)", notes = "下载文件(redis)")
     @GetMapping("/file/{id}/redis")
     @Timed

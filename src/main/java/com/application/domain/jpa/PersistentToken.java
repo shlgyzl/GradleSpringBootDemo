@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@ApiModel(value = "PersistentToken", description = "持久化Token")
+//@ApiModel(value = "PersistentToken", description = "持久化Token")
 @Entity
 @Table(name = "tbl_persistent_token")
 @Setter
@@ -48,7 +48,7 @@ public class PersistentToken implements Serializable {
 
     @NotNull(message = "ip地址不能为空")
     @NonNull
-    @Size(min = 0, max = 39)
+    @Size(max = 39)
     @ApiModelProperty(name = "ipAddress", value = "ip地址", dataType = "String")
     @Column(name = "ip_address", length = 39)
     private String ipAddress;

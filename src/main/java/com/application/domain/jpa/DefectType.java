@@ -21,7 +21,7 @@ import java.util.Set;
 @Data
 @Table(name = "tbl_defect_type")
 @Entity
-@ApiModel(value = "DefectType", description = "缺陷类型")
+//@ApiModel(value = "DefectType", description = "缺陷类型")
 @EqualsAndHashCode(exclude = {"defectTypeProperties"}, callSuper = false)
 @ToString(exclude = {"defectTypeProperties"})
 @NoArgsConstructor

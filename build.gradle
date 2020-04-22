@@ -163,12 +163,13 @@ dependencies {
     }
     compile group: 'io.springfox', name: 'springfox-bean-validators', version: '2.9.2'
     compile group: 'io.springfox', name: 'springfox-schema', version: '2.9.2'
+    compile group: 'com.github.xiaoymin', name: 'knife4j-spring-boot-starter', version: '2.0.2'
 
 
     // 用于解决访问swagger2静态页面失败问题
     compile("io.swagger:swagger-annotations:1.5.21")
     compile("io.swagger:swagger-models:1.5.21")
-    compile group: 'com.github.xiaoymin', name: 'swagger-bootstrap-ui', version: '1.9.6'
+    //compile group: 'com.github.xiaoymin', name: 'swagger-bootstrap-ui', version: '1.9.6'
 
     // 引入mongodb实体注解配合queryDSL(google扫描)
     compile group: 'com.google.code', name: 'morphia', version: '0.91'

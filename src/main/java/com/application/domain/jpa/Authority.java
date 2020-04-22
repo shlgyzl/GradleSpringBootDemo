@@ -48,7 +48,6 @@ public class Authority implements Serializable {
     @BatchSize(size = 20)
     @JsonIgnoreProperties({"authorities"})
     @OrderBy("id asc")
-    @ApiModelProperty(hidden = true)
     private Set<Role> roles = new LinkedHashSet<>(10);
 
     @NotNull

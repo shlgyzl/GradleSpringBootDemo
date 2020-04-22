@@ -10,7 +10,6 @@ import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,7 +40,6 @@ public class DamResources {
         this.damRepository = damRepository;
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "保存接口", notes = "保存大坝")
     @Timed
     @PostMapping("/dam")
@@ -50,7 +48,6 @@ public class DamResources {
         return ResponseEntity.created(new URI("/api/dam/" + save.getId())).body(save);
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "更新接口", notes = "更新大坝")
     @Timed
     @PutMapping("/dam")
@@ -59,7 +56,6 @@ public class DamResources {
         return ResponseEntity.created(new URI("/api/dam/" + save.getId())).body(save);
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "删除接口", notes = "删除大坝")
     @Timed
     @DeleteMapping("/dam/{id}")
@@ -68,7 +64,6 @@ public class DamResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "查询接口", notes = "查询大坝(根据id)")
     @Timed
     @GetMapping("/dam/{id}")
@@ -79,7 +74,6 @@ public class DamResources {
         return ResponseUtil.wrapOrNotFound(damRepository.findById(id));
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
     @Timed
     @GetMapping(value = "/dams")

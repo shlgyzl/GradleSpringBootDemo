@@ -6,12 +6,12 @@ import com.application.repository.jpa.UserRepository;
 import com.application.resources.exception.BusinessErrorException;
 import com.application.resources.util.ResponseUtil;
 import com.application.service.UserService;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +41,7 @@ public class UserResources {
         this.userService = userService;
     }
 
-    @ApiOperationSupport
+    @ApiOperationSupport(ignoreParameters = {"dams", "roles"})
     @ApiOperation(value = "保存接口", notes = "保存用户")
     @Timed
     @PostMapping("/user")
@@ -50,7 +50,7 @@ public class UserResources {
         return ResponseEntity.created(new URI("/api/user/" + savedUser.getId())).body(savedUser);
     }
 
-    @ApiOperationSupport
+    @ApiOperationSupport(ignoreParameters = {"dams", "roles"})
     @ApiOperation(value = "更新接口", notes = "更新用户")
     @Timed
     @PutMapping("/user")
@@ -59,7 +59,6 @@ public class UserResources {
         return ResponseEntity.created(new URI("/api/user/" + savedUser.getId())).body(savedUser);
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "删除接口", notes = "删除用户")
     @Timed
     @DeleteMapping("/user/{id}")
@@ -68,7 +67,6 @@ public class UserResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "查询接口", notes = "查询用户(根据id)")
     @Timed
     @GetMapping("/user/{id}")
@@ -79,7 +77,6 @@ public class UserResources {
         return ResponseUtil.wrapOrNotFound(userRepository.findById(id));
     }
 
-    @ApiOperationSupport
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
     @Timed
     @GetMapping(value = "/users")

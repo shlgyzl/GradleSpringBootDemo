@@ -6,12 +6,12 @@ import com.application.repository.jpa.AuthorityRepository;
 import com.application.resources.exception.BusinessErrorException;
 import com.application.resources.util.ResponseUtil;
 import com.application.service.AuthorityService;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSupport;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -46,6 +46,7 @@ public class AuthorityResources {
         this.authorityService = authorityService;
     }
 
+    @ApiOperationSupport(ignoreParameters = {"roles"})
     @ApiOperation(value = "保存接口", notes = "保存权限")
     @Timed
     @PostMapping("/authority")
@@ -54,6 +55,7 @@ public class AuthorityResources {
         return ResponseEntity.created(new URI("/api/authority/" + savedAuthority.getId())).body(savedAuthority);
     }
 
+    @ApiOperationSupport(ignoreParameters = {"roles"})
     @ApiOperation(value = "更新接口", notes = "更新权限")
     @Timed
     @PutMapping("/authority")

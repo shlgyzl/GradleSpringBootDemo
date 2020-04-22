@@ -18,7 +18,7 @@ import java.io.Serializable;
 /**
  * 会议文件
  */
-@ApiModel(value = "Attachment",description = "会议文件")
+//@ApiModel(value = "Attachment",description = "会议文件")
 @Entity
 @Table(name = "tbl_attachment")
 @Setter

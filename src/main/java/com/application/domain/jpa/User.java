@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * A user.
  */
-@ApiModel(value = "User", description = "用户")
+//@ApiModel(value = "User", description = "用户")
 @Entity
 @Table(name = "tbl_user")
 @Data
