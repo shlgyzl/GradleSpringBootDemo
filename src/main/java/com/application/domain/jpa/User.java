@@ -4,7 +4,6 @@ import com.application.domain.abstracts.AbstractAuditingEntity;
 import com.application.listener.UserAuditListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -26,7 +25,8 @@ import java.util.concurrent.ThreadLocalRandom;
 //@ApiModel(value = "User", description = "用户")
 @Entity
 @Table(name = "tbl_user")
-@Data
+@Setter
+@Getter
 @EqualsAndHashCode(exclude = {"dams"}, callSuper = true)
 @ToString(exclude = {"dams"})
 @NoArgsConstructor
@@ -42,31 +42,32 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(name = "id", value = "用户id", required = true, dataType = "Long", example = "1")
     private Long id;
 
     @NotNull(message = "账号不能为空")
     @NonNull
     @Size(min = 1, max = 20, message = "用户名不能为空或超过20个字符")
     @Column(length = 20, unique = true, nullable = false)
-    @ApiModelProperty(name = "login", value = "账号", dataType = "String")
+    @ApiModelProperty(name = "login", value = "账号", required = true, dataType = "String", example = "admin")
     private String login;
 
     //@NotNull(message = "密码不能为空")
     @NonNull
     //@Size(min = 6, max = 15, message = "密码不能小于6个字符,不能超过15个字符")//不能与JsonIgnore同时使用
     @Column(name = "password_hash", length = 15, nullable = false)
-    @ApiModelProperty(name = "password", value = "密码", dataType = "String")
+    @ApiModelProperty(name = "password", value = "密码", required = true, dataType = "String", example = "admin")
     @JsonIgnore
     private String password = ((ThreadLocalRandom.current().nextInt() * 9 + 1) * 100000) + "";
 
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "activated", value = "是否启用", dataType = "Boolean")
-    @Column(name = "activated")
+    @ApiModelProperty(name = "activated", value = "是否启用", required = true, dataType = "Boolean", example = "false")
+    @Column(name = "activated", nullable = false)
     private Boolean activated = false;
 
-    @ApiModelProperty(name = "imageUrl", value = "头像", dataType = "String")
+    @ApiModelProperty(name = "imageUrl", value = "头像", required = true, dataType = "String", example = "/api/file/image/jpeg/头像.jpg")
     @Column(name = "image_url")
     private String imageUrl;
 
@@ -92,13 +93,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "用户版本锁", example = "0L", dataType = "Long", required = true)
+    @ApiModelProperty(name = "version", value = "用户版本锁", required = true, dataType = "Long", example = "0")
     @Column(name = "version")
     @Version
     private Long version = 0L;
 
-    public void addAllRole(Set<Role> roles) {
+    public User addAllRole(Set<Role> roles) {
         this.roles.addAll(roles);
         roles.forEach(n -> n.getUsers().add(this));
+        return this;
     }
 }

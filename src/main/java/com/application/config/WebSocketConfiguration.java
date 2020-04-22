@@ -1,8 +1,8 @@
 package com.application.config;
 
 import com.application.security.jwt.TokenProvider;
-import com.application.websocket.WebSocketDecoratorFactory;
-import com.application.websocket.WebsocketChannelInterceptor;
+import com.application.web.websocket.WebSocketDecoratorFactory;
+import com.application.web.websocket.WebsocketChannelInterceptor;
 import io.github.jhipster.config.JHipsterProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

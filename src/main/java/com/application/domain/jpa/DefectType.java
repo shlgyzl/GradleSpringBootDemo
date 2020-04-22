@@ -1,7 +1,6 @@
 package com.application.domain.jpa;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -18,10 +17,12 @@ import java.util.Set;
 /**
  * A DefectType.
  */
-@Data
+//@ApiModel(value = "DefectType", description = "缺陷类型")
+
 @Table(name = "tbl_defect_type")
 @Entity
-//@ApiModel(value = "DefectType", description = "缺陷类型")
+@Setter
+@Getter
 @EqualsAndHashCode(exclude = {"defectTypeProperties"}, callSuper = false)
 @ToString(exclude = {"defectTypeProperties"})
 @NoArgsConstructor
@@ -34,70 +35,65 @@ public class DefectType implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(name = "id", value = "缺陷类型id", required = true, dataType = "Long", example = "1")
     private Long id;
 
 
     @NotNull(message = "缺陷类型名称不能为空")
     @NonNull
-    @ApiModelProperty(name = "name", value = "缺陷类型名称", dataType = "String", required = true)
+    @ApiModelProperty(name = "name", value = "缺陷类型名称", required = true, dataType = "String", example = "下坡漏水")
     @Column(nullable = false)
     private String name;
 
 
     @NotNull(message = "缺陷类型编号不能为空")
     @NonNull
-    @ApiModelProperty(name = "code", value = "缺陷类型编号", dataType = "String", required = true)
+    @ApiModelProperty(name = "code", value = "缺陷类型编号", required = true, dataType = "String", example = "001")
     @Column(nullable = false)
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @ApiModelProperty(name = "name", value = "大坝", dataType = "String")
+    @ApiModelProperty(name = "dam", value = "大坝", required = true, dataType = "Dam")
     @JoinColumn(name = "dam_id")
     private Dam dam;
 
-    /**
-     * 这里对级联类型说明一下：
-     * MERGE:表示更新，也就是说如果是更新操作,大家都一起更新,如果是新增大家一起新增
-     * REMOVE:表示删除该实体的同时也会删除该集合及其关系和关系的实体
-     * REFRESH:表示在操作数据之前会先查询一次该集合的最新数据,防止多人操作实体及其关系但是没有及时更新到本次操作中
-     * DETACH:表示该实体会撤销集合元素上的外键管理,(此操作需要删除才能生效,不明确)
-     * PERSIST 与 orphanRemoval=true,当删除集合的时候会删除数据
-     * 生产环境：建议在使用集合的地方不过滤在多的一方进行过滤，针对业务考虑是否使用Remove级别
-     */
     @OneToMany(mappedBy = "defectType", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @ApiModelProperty(name = "defectTypeProperties", value = "缺陷类型属性集合", dataType = "String")
     @OrderBy(value = "id asc")
     @JsonIgnoreProperties({"defectType"})
     private Set<DefectTypeProperty> defectTypeProperties = new HashSet<>();
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "缺陷类型版本锁", example = "0L", dataType = "Long", required = true, hidden = true)
+    @ApiModelProperty(name = "version", value = "缺陷类型版本锁", required = true, dataType = "Long", example = "0")
     @Column(name = "version")
     @Version
     private Long version = 0L;
 
-    public void addDefectTypeProperty(DefectTypeProperty defectTypeProperty) {
+    public DefectType addDefectTypeProperty(DefectTypeProperty defectTypeProperty) {
         this.defectTypeProperties.add(defectTypeProperty);
         defectTypeProperty.setDefectType(this);
+        return this;
     }
 
-    public void addAllDefectTypeProperty(Set<DefectTypeProperty> defectTypeProperties) {
+    public DefectType addAllDefectTypeProperty(Set<DefectTypeProperty> defectTypeProperties) {
         this.defectTypeProperties.addAll(defectTypeProperties);
         defectTypeProperties.forEach(n -> n.setDefectType(this));
+        return this;
     }
 
-    public void removeDefectTypeProperty(DefectTypeProperty defectTypeProperty) {
+    public DefectType removeDefectTypeProperty(DefectTypeProperty defectTypeProperty) {
         defectTypeProperty.setDefectType(null);
         this.defectTypeProperties.remove(defectTypeProperty);
+        return this;
     }
 
-    public void removeDefectTypeProperties() {
+    public DefectType removeDefectTypeProperties() {
         Iterator<DefectTypeProperty> iterator = this.defectTypeProperties.iterator();
         while (iterator.hasNext()) {
             DefectTypeProperty next = iterator.next();
             next.setDefectType(null);
             iterator.remove();
         }
+        return this;
     }
 }

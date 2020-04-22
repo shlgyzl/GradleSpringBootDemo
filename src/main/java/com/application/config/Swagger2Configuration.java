@@ -62,7 +62,7 @@ public class Swagger2Configuration {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()// 生成构造器
-                .apis(RequestHandlerSelectors.basePackage("com.application.resources"))//为当前包路径
+                .apis(RequestHandlerSelectors.basePackage("com.application.web.resources"))//为当前包路径
                 .paths(paths())//设置路径选择方式
                 .build()
                 .ignoredParameterTypes(HttpServletRequest.class, HttpServletResponse.class,
@@ -80,7 +80,7 @@ public class Swagger2Configuration {
                 .globalResponseMessage(RequestMethod.GET,
                         newArrayList(new ResponseMessageBuilder()
                                 .code(500)
-                                .message("500 message")
+                                .message("500 服务器异常")
                                 .responseModel(new ModelRef("Error"))
                                 .build()))// 设置通用响应信息
                 .securitySchemes(securitySchemes())// 设置安全认证头部
@@ -135,7 +135,7 @@ public class Swagger2Configuration {
                 .build();
     }
 
-    @Bean
+    /*@Bean
     UiConfiguration uiConfig() {
         return UiConfigurationBuilder.builder()
                 .deepLinking(true)
@@ -153,7 +153,7 @@ public class Swagger2Configuration {
                 .supportedSubmitMethods(UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS)
                 .validatorUrl(null)
                 .build();
-    }
+    }*/
 
     //构建 api文档的详细信息函数,注意这里的注解引用的是哪个
     private ApiInfo apiInfo() {

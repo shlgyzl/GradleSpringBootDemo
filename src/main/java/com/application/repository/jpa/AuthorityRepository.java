@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 
-import static com.application.resources.util.RepositoryUtil.common;
+import static com.application.web.resources.util.RepositoryUtil.common;
 
 @SuppressWarnings("NullableProblems")
 public interface AuthorityRepository extends BaseJpaRepository<Authority, Long>, QuerydslBinderCustomizer<QAuthority> {

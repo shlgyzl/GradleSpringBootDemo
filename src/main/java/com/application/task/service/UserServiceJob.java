@@ -1,7 +1,7 @@
 package com.application.task.service;
 
 import com.application.domain.jpa.User;
-import com.application.resources.util.SpringContextUtil;
+import com.application.web.resources.util.SpringContextUtil;
 import com.application.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;

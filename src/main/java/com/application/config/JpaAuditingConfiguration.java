@@ -1,6 +1,6 @@
 package com.application.config;
 
-import com.application.resources.util.SecurityUtil;
+import com.application.web.resources.util.SecurityUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;

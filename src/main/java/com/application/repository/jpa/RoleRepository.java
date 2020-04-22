@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 
-import static com.application.resources.util.RepositoryUtil.common;
+import static com.application.web.resources.util.RepositoryUtil.common;
 
 @SuppressWarnings("NullableProblems")
 public interface RoleRepository extends BaseJpaRepository<Role, Long>, QuerydslBinderCustomizer<QRole> {

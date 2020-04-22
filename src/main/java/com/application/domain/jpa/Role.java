@@ -1,7 +1,6 @@
 package com.application.domain.jpa;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -18,7 +17,8 @@ import java.util.Set;
 //@ApiModel(value = "Role", description = "角色")
 @Entity
 @Table(name = "tbl_role")
-@Data
+@Setter
+@Getter
 @EqualsAndHashCode(exclude = {"authorities", "users"})
 @ToString(exclude = {"authorities", "users"})
 @NoArgsConstructor
@@ -31,13 +31,14 @@ public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(name = "id", value = "角色id", required = true, dataType = "Long", example = "1")
     private Long id;
 
     @NotNull(message = "角色名称不能为空")
     @NonNull
     @Size(min = 1, max = 20, message = "角色名不能为空或超过20个字符")
     @Column(length = 20, unique = true, nullable = false)
-    @ApiModelProperty(name = "name", value = "角色名", dataType = "String")
+    @ApiModelProperty(name = "name", value = "角色名", required = true, dataType = "String", example = "超级管理员")
     private String name;
 
     @JoinTable(
@@ -55,13 +56,14 @@ public class Role implements Serializable {
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "角色版本锁", example = "0L", dataType = "Long", required = true)
+    @ApiModelProperty(name = "version", value = "角色版本锁", required = true, dataType = "Long", example = "0")
     @Column(name = "version")
     @Version
     private Long version = 0L;
 
-    public void addAllAuthority(Set<Authority> authorities) {
+    public Role addAllAuthority(Set<Authority> authorities) {
         this.authorities.addAll(authorities);
         authorities.forEach(n -> n.getRoles().add(this));
+        return this;
     }
 }

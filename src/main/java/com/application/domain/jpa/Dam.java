@@ -1,7 +1,6 @@
 package com.application.domain.jpa;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -12,10 +11,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+//@ApiModel(value = "Dam", description = "大坝")
 @Entity
 @Table(name = "tbl_dam")
-@Data
-//@ApiModel(value = "Dam", description = "大坝")
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @NoArgsConstructor
@@ -29,18 +29,18 @@ public class Dam implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ApiModelProperty(name = "id", value = "大坝id", dataType = "Long", required = true, notes = "大坝id必须存在")
+    @ApiModelProperty(name = "id", value = "大坝id", required = true, dataType = "Long", example = "1", notes = "大坝id必须存在")
     private Long id;
 
     @NotNull(message = "大坝名称不能为空")
     @NonNull
-    @ApiModelProperty(name = "name", value = "大坝名称", dataType = "String", required = true)
+    @ApiModelProperty(name = "name", value = "大坝名称", required = true, dataType = "String", example = "三峡大坝")
     @Column(nullable = false)
     private String name;
 
     @NotNull
     @NonNull
-    @ApiModelProperty(name = "version", value = "大坝版本锁", example = "0L", dataType = "Long", required = true, hidden = true)
+    @ApiModelProperty(name = "version", value = "大坝版本锁", required = true, dataType = "Long", example = "0")
     @Column(name = "version")
     @Version
     private Long version = 0L;

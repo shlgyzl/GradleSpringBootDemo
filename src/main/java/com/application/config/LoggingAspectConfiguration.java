@@ -47,7 +47,7 @@ public class LoggingAspectConfiguration {
      */
     @Pointcut("within(com.application.repository..*)" +
             " || within(com.application.config..*)" +
-            " || within(com.application.resources..*)")
+            " || within(com.application.web.resources..*)")
     public void applicationPackagePointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }

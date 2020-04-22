@@ -3,7 +3,7 @@ package com.application;
 import com.application.domain.jpa.Authority;
 import com.application.domain.jpa.DefectType;
 import com.application.domain.jpa.Role;
-import com.application.resources.util.DomainUtil;
+import com.application.web.resources.util.DomainUtil;
 import org.assertj.core.util.Files;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -201,6 +201,14 @@ public class CommonTest {
         SecretKeySpec secretKeySpec = new SecretKeySpec(key, mac.getAlgorithm());
         mac.init(secretKeySpec);
         return mac.doFinal(msg.getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    public void test13() {
+        Integer a = 1;
+        Integer b = a == 1 ? 3 : ++a;
+        System.out.println(b);
+        System.out.println(a);
     }
 
     /*@Test
