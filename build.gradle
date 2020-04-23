@@ -53,12 +53,16 @@ configurations.all() {
         // 遇到冲突则停止构建
         configuration.resolutionStrategy.failOnVersionConflict()
         configuration.resolutionStrategy.force(['org.javassist:javassist:3.24.0-GA'])
-        configuration.resolutionStrategy.force(['com.google.guava:guava:26.0-jre'])
+        configuration.resolutionStrategy.force(['com.google.guava:guava:29.0-jre'])
         configuration.resolutionStrategy.force(['com.google.code.findbugs:jsr305:3.0.2'])
         configuration.resolutionStrategy.force(['org.hdrhistogram:HdrHistogram:2.1.1'])
         configuration.resolutionStrategy.force(['com.netflix.archaius:archaius-core:0.7.6'])
         configuration.resolutionStrategy.force(['io.github.openfeign:feign-core:10.4.0'])
         configuration.resolutionStrategy.force(['commons-logging:commons-logging:1.2'])
+        configuration.resolutionStrategy.force(['org.checkerframework:checker-qual:2.11.1'])
+        configuration.resolutionStrategy.force(['com.google.errorprone:error_prone_annotations:2.3.4'])
+        configuration.resolutionStrategy.force(['org.objenesis:objenesis:2.6'])
+
 
         //或者这样写
         //resolutionStrategy.setForcedModules(['org.slf4j:slf4j-api:1.6.1'])
@@ -164,7 +168,14 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-bean-validators', version: '2.9.2'
     compile group: 'io.springfox', name: 'springfox-schema', version: '2.9.2'
     compile group: 'com.github.xiaoymin', name: 'knife4j-spring-boot-starter', version: '2.0.2'
-
+    // 引入cache核心
+    compile group: 'org.ehcache', name: 'ehcache', version: '3.8.1'
+    // 引入Ehcache
+    compile group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
+    // 引入Jcache
+    compile group: 'javax.cache', name: 'cache-api', version: '1.1.1'
+    // 引入alibaba封装的cache框架
+    compile group: 'com.alicp.jetcache', name: 'jetcache-starter-redis', version: '2.6.0'
 
     // 用于解决访问swagger2静态页面失败问题
     compile("io.swagger:swagger-annotations:1.5.21")
@@ -182,7 +193,7 @@ dependencies {
     // 引入hsqldb驱动
     compile group: 'org.hsqldb', name: 'hsqldb', version: '2.5.0'
     // 解决静态页面访问问题
-    compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
+    compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
     // 引入liquibase数据库版本和迁移工具
     compile group: 'org.liquibase', name: 'liquibase-core', version: '3.8.0'
     // 引入H2database数据库方便开发测试

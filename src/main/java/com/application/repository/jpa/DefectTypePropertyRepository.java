@@ -5,6 +5,7 @@ import com.application.domain.jpa.DefectTypeProperty;
 
 import java.util.Set;
 
+
 public interface DefectTypePropertyRepository extends BaseJpaRepository<DefectTypeProperty, Long> {
     Integer deleteByDefectType(DefectType defectType);
 

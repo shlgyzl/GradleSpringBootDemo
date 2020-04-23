@@ -56,7 +56,7 @@ public class UserResources {
         return ResponseEntity.created(new URI("/api/user/" + savedUser.getId())).body(savedUser);
     }
 
-    @ApiParam(name = "id", value = "用户id", example = "1")
+    @ApiParam(name = "id", value = "用户id", required = true, defaultValue = "1", example = "1")
     @ApiOperation(value = "删除接口", notes = "删除用户")
     @Timed
     @DeleteMapping("/user/{id}")
@@ -65,7 +65,7 @@ public class UserResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiParam(name = "id", value = "用户id", example = "1")
+    @ApiParam(name = "id", value = "用户id", required = true, defaultValue = "1", example = "1")
     @ApiOperation(value = "查询接口", notes = "查询用户(根据id)")
     @Timed
     @GetMapping("/user/{id}")

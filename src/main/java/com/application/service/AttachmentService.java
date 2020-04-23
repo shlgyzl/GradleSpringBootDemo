@@ -162,7 +162,7 @@ public class AttachmentService {
     }
 
     public String getSystemPath() {
-        return System.getProperty("user.home") + fileApplicationProperties.getPath();
+        return System.getProperty("user.dir") + fileApplicationProperties.getPath();
     }
 
     private String getUrl(Attachment attachment) {

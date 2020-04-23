@@ -57,7 +57,7 @@ public class DefectTypeResources {
         return ResponseEntity.created(new URI("/api/defectType/" + savedDefectType.getId())).body(savedDefectType);
     }
 
-    @ApiParam(name = "id", value = "缺陷类型id", example = "1")
+    @ApiParam(name = "id", value = "缺陷类型id", required = true, defaultValue = "1", example = "1")
     @ApiOperation(value = "删除接口", notes = "删除缺陷类型")
     @Timed
     @DeleteMapping("/defectType/{id}")
@@ -66,7 +66,7 @@ public class DefectTypeResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiParam(name = "id", value = "缺陷类型id", example = "1")
+    @ApiParam(name = "id", value = "缺陷类型id", required = true, defaultValue = "1", example = "1")
     @ApiOperation(value = "查询接口", notes = "查询缺陷类型(根据id)")
     @Timed
     @GetMapping("/defectType/{id}")

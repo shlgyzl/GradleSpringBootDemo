@@ -80,7 +80,50 @@ third:
 web:
   application:
     file:
-      path: /GradleSpringBoot/files/
-
-
+      path: /files/
+jhipster:
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    exposed-headers: "Authorization,Link,X-Total-Count"
+    allow-credentials: true
+    max-age: 1800
+  async:
+    core-pool-size: 2
+    max-pool-size: 50
+    queue-capacity: 10000
+  security:
+    remember-me:
+      key: 4e431fe0f41cec2457ba464d1fa53d2e287a54e5e92c9dca30c68d95af40e1bbc2cc4d3d25f0f61049dc3934466e6586a8eb
+    authentication:
+      jwt:
+        base64-secret: RFE2Y1NNTlRsRDNDLzJiblVQRnZMYUZ4WXVjV1huWWVYa1luY0NNT3hlTVU1QmI2ZVZ3N2pkVFBISjBHS08zSEV1NWNYMGVGSXh0S3ZTQURjSkdzWWJsRE5sTjg3cVpjdDUwSkxhQnR6WXlhOUdTNHc5YjBkazlmbnk1WXd4MFowT3hZYnZFUUU2dVVyWW1ET0IwbUtNeGNCbmlCc1dYOTFqSnhmNy9VTlc4JTNE
+        token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 2592000
+  cache: # ehcache使用
+    ehcache:
+      max-entries: 10000
+      time-to-live-seconds: 3600
+jetcache: #开启阿里巴巴封装的jetCache缓存框架
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  hiddenPackages: true
+  local:
+    default:
+      type: linkedhashmap
+      keyConvertor: fastjson
+      limit: 100
+  remote:
+    default:
+      type: redis
+      keyConvertor: fastjson
+      valueEncoder: java
+      valueDecoder: java
+      poolConfig:
+        minIdle: 5
+        maxIdle: 20
+        maxTotal: 50
+      host: 47.105.46.4
+      port: 6379
 

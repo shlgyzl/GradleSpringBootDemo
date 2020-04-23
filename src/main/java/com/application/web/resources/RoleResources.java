@@ -58,7 +58,7 @@ public class RoleResources {
         return ResponseEntity.created(new URI("/api/role/" + savedRole.getId())).body(savedRole);
     }
 
-    @ApiParam(name = "id", value = "角色id", example = "1")
+    @ApiParam(name = "id", value = "角色id", required = true, defaultValue = "1", example = "1")
     @ApiOperation(value = "删除接口", notes = "删除角色")
     @Timed
     @DeleteMapping("/role/{id}")
@@ -67,7 +67,7 @@ public class RoleResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiParam(name = "id", value = "角色id", example = "1")
+    @ApiParam(name = "id", value = "角色id", required = true, defaultValue = "1", example = "1")
     @ApiOperation(value = "查询接口", notes = "查询角色(根据id)")
     @Timed
     @GetMapping("/role/{id}")

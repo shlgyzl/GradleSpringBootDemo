@@ -88,7 +88,7 @@ public class UserHibernateResourcesTest {
     @ApiOperation(value = "查询所有用户", notes = "条件限制(简单查询)")
     @GetMapping(value = "/find/simple", params = "login")
     @Transactional
-    @Cacheable(cacheNames = "UserList", key = "#login", cacheManager = "cacheManager")
+    @Cacheable(cacheNames = "UserList", key = "#login", cacheManager = "simpleCacheManager")
     public ResponseEntity<Set<UserDTO>> findBySimple(String login) {
         Cache managerCache = cacheManager.getCache("default");
         Cache.ValueWrapper valueWrapper = managerCache.get(login);
