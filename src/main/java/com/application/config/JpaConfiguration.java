@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.application.repository.jpa")
+@EnableJpaRepositories(basePackages = "com.application.repository")
 @EntityScan(basePackages = {
         "com.application.domain.jpa",
         "com.application.domain.mongodb",

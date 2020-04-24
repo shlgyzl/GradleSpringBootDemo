@@ -18,7 +18,7 @@ import java.io.Serializable;
 
 @Configuration
 @AutoConfigureAfter(RedisAutoConfiguration.class)
-@EnableRedisRepositories(basePackages = "com.application.domain.redis")
+@EnableRedisRepositories(basePackages = "com.application.repository.redis")
 public class RedisConfiguration {
     @Bean
     public RedisTemplate<String, Serializable> redisCacheTemplate(LettuceConnectionFactory redisConnectionFactory) {
