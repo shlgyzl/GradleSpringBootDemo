@@ -82,7 +82,7 @@ public class UserResources {
     public ResponseEntity<Page<User>> findAllUser(
             @QuerydslPredicate(root = User.class) Predicate predicate,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        predicate = JPAUtils.mergePredicate(predicate, new BooleanBuilder());
+
         return ResponseEntity.ok().body(userRepository.findAll(predicate, pageable));
     }
 }

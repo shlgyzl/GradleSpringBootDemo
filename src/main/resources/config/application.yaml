@@ -71,16 +71,13 @@ management:
   endpoint:
     health:
       show-details: always
-third:
-  application: #第三方系统登录
-    user: # 用于登录
-      username: test_zuosl
-      password: zuo123456
-      api-base-url: http://v3.dam.com.cn/
-web:
-  application:
-    file:
-      path: /files/
+
+application: #第三方系统登录
+  remoteDam:
+    username: test_zuosl
+    password: zuo123456
+    apiBaseUrl: http://v3.dam.com.cn/
+
 jhipster:
   cors:
     allowed-origins: "*"
@@ -114,6 +111,7 @@ jetcache: #开启阿里巴巴封装的jetCache缓存框架
       type: linkedhashmap
       keyConvertor: fastjson
       limit: 100
+      defaultExpireInMillis: 20000    #全局缓存失效时间
   remote:
     default:
       type: redis
@@ -127,3 +125,4 @@ jetcache: #开启阿里巴巴封装的jetCache缓存框架
       host: 47.105.46.4
       port: 6379
       password: 123456
+      defaultExpireInMillis: 20000    #全局缓存失效时间

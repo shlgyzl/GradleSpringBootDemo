@@ -82,7 +82,7 @@ public class DefectTypePropertyResources {
     public ResponseEntity<Page<DefectTypeProperty>> findAllDefectTypeProperty(
             @QuerydslPredicate(root = DefectTypeProperty.class) Predicate predicate,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        predicate = JPAUtils.mergePredicate(predicate, new BooleanBuilder());
+
         return ResponseEntity.ok().body(defectTypePropertyService.findAll(predicate, pageable));
     }
 }

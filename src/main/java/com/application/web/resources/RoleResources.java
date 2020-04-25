@@ -84,7 +84,7 @@ public class RoleResources {
     public ResponseEntity<Page<Role>> findAllRole(
             @QuerydslPredicate(root = Role.class) Predicate predicate,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        predicate = JPAUtils.mergePredicate(predicate, new BooleanBuilder());
+
         return ResponseEntity.ok().body(roleRepository.findAll(predicate, pageable));
     }
 }

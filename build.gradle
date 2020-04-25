@@ -21,17 +21,12 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("io.franzbecker:gradle-lombok:1.11")
-        //classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.9")
-        classpath("gradle.plugin.com.wicc.querydsl.generator:querydsl-plugin:1.2.16")
-        //classpath("gradle.plugin.com.waykichain.utils.codegen:querydsl-plugin:1.2.27")
-        classpath("io.github.swagger2markup:swagger2markup-spring-restdocs-ext:1.3.3")
-        classpath("io.github.swagger2markup:swagger2markup-gradle-plugin:1.3.3")
-        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.7")
-        classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.17")
         classpath("io.spring.gradle:propdeps-plugin:0.0.10.RELEASE")
         classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2")
     }
 }
+
+
 plugins {
     id "org.springframework.boot" version "2.2.6.RELEASE"
     id "io.spring.dependency-management" version "1.0.9.RELEASE"
@@ -61,12 +56,6 @@ version "1.0-SNAPSHOT"
 sourceCompatibility = 1.8 // 编译时指定的JDK版本
 targetCompatibility = 1.8 // 生成字节码时指定的JDK版本(一般不会小于编译时,如果小于则需要使用jack工具链)
 
-idea {
-    module {
-        downloadSources = true
-        downloadJavadoc = true
-    }
-}
 
 apply plugin: "java"
 apply plugin: "idea"
@@ -74,20 +63,26 @@ apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
 apply plugin: "org.zeroturnaround.gradle.jrebel"
 apply plugin: "eclipse"
-apply plugin: "io.github.swagger2markup"
-apply plugin: "org.asciidoctor.convert"
 apply plugin: 'propdeps'
-//apply plugin: "com.ewerk.gradle.plugins.querydsl"
-apply plugin: "com.wicc.querydsl.generator"
-//apply plugin: "com.waykichain.utils.codegen"
 assert System.properties["java.specification.version"] == "1.8"// 判断开发者是否使用JDK1.8,不是则构建失败
 
 
 def generatedSrcDir = "$buildDir/generated/source/main"
 def generatedTestDir = "$buildDir/generated-test/source/main"
 
+idea {
+    module {
+        sourceDirs += file(generatedSrcDir)
+        testSourceDirs += file(generatedTestDir)
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
 defaultTasks "bootRun"
 description = "超级功能项目"
+
+subprojects { task allDepInsight(type: DependencyInsightReportTask) << {} }
 
 compileJava {
     doFirst() {
@@ -118,18 +113,11 @@ clean {
     delete generatedTestDir
 }
 
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-    configuration {
+configurations.all() {
+    configuration ->
         // 遇到冲突则停止构建
         configuration.resolutionStrategy.failOnVersionConflict()
-        configuration.resolutionStrategy.force(["org.springframework.plugin:spring-plugin-core:2.0.0.RELEASE"])
+        configuration.resolutionStrategy.force(["org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE"])
         configuration.resolutionStrategy.force(["org.javassist:javassist:3.24.0-GA"])
         configuration.resolutionStrategy.force(["com.google.guava:guava:29.0-jre"])
         configuration.resolutionStrategy.force(["com.google.code.findbugs:jsr305:3.0.2"])
@@ -140,7 +128,7 @@ configurations {
         configuration.resolutionStrategy.force(["org.checkerframework:checker-qual:2.11.1"])
         configuration.resolutionStrategy.force(["com.google.errorprone:error_prone_annotations:2.3.4"])
         configuration.resolutionStrategy.force(["org.objenesis:objenesis:2.6"])
-    }
+
 
 }
 
@@ -167,7 +155,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-websocket"
     implementation "org.springframework.boot:spring-boot-starter-tomcat"
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    implementation "org.springframework.boot:spring-boot-devtools"
     implementation "org.springframework.security:spring-security-messaging:5.3.1.RELEASE"
 
     //--------------------------监控系统---------------------//
@@ -207,8 +195,12 @@ dependencies {
         exclude group: "io.swagger", module: "swagger-annotations"
         exclude group: "io.swagger", module: "swagger-models"
     }
-    compile group: "io.springfox", name: "springfox-bean-validators", version: "2.9.2"
-    compile group: "io.springfox", name: "springfox-schema", version: "2.9.2"
+    compile("io.springfox:springfox-bean-validators:2.9.2"){
+        exclude group: "org.springframework.plugin",module: "spring-plugin-core"
+    }
+    compile("io.springfox:springfox-schema:2.9.2") {
+        exclude group: "com.google.guava", module: "com.google.guava"
+    }
     // 用于解决访问swagger2静态页面失败问题
     compile("io.swagger:swagger-annotations:1.5.21")
     compile("io.swagger:swagger-models:1.5.21")
@@ -261,12 +253,10 @@ dependencies {
 
     //-----------------------------queryDsl相关----------------------//
     // 引入QueryDsl注解驱动器
-    compile "com.querydsl:querydsl-apt:4.3.1"
-    compile "com.querydsl:querydsl-mongodb:4.3.1"
-    // 引入编译注解执行器,不引入注解执行器那么将会出现无法解析注解的问题
-    compile("com.querydsl:querydsl-jpa:4.3.1") {
-        exclude module: 'javassist'
-    }
+    compile "com.querydsl:querydsl-apt:4.2.2"
+    compile "com.querydsl:querydsl-mongodb:4.2.2"
+    compile("com.querydsl:querydsl-jpa:4.2.2")
+
 
     //----------------------------模板引擎相关----------------------//
 
@@ -294,7 +284,7 @@ dependencies {
     //--------------------------注解处理器---------------------------//
     annotationProcessor "org.projectlombok:lombok"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen"
-    annotationProcessor "com.querydsl:querydsl-apt:4.3.1:jpa"
+    annotationProcessor "com.querydsl:querydsl-apt:4.2.2:jpa"
     annotationProcessor "org.mapstruct:mapstruct-processor:1.2.0.Final"
     annotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
     annotationProcessor "org.springframework.boot:spring-boot-starter-data-mongodb"
@@ -304,6 +294,7 @@ dependencies {
     //--------------------------测试相关-----------------------------//
 
     testCompile "org.projectlombok:lombok"
+    testCompile "junit:junit:4.13"
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "org.junit.vintage", module: "junit-vintage-engine"
     }
@@ -311,7 +302,7 @@ dependencies {
 
     testAnnotationProcessor "org.projectlombok:lombok"
     testAnnotationProcessor "org.hibernate:hibernate-jpamodelgen"
-    testAnnotationProcessor "com.querydsl:querydsl-apt:4.3.1:jpa"
+    testAnnotationProcessor "com.querydsl:querydsl-apt:4.2.2:jpa"
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.2.0.Final"
     testAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
     testAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-mongodb"

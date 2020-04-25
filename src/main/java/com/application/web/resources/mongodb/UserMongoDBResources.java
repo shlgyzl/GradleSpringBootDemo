@@ -81,7 +81,7 @@ public class UserMongoDBResources {
     public ResponseEntity<Page<UserMongoDB>> findAll(
             @QuerydslPredicate(root = UserMongoDB.class) Predicate predicate,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        predicate = JPAUtils.mergePredicate(predicate, new BooleanBuilder());
+
         return ResponseEntity.ok().body(userMongoDBRepository.findAll(predicate, pageable));
     }
 }

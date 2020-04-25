@@ -17,6 +17,7 @@ import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -31,11 +32,14 @@ import java.util.Arrays;
 
 /**
  * 此配置只适用于小型项目(存于JVM中),中大型项目则需要第三方插件
+ * 此处说明：如果使用简单的JVM缓存不加缓存时间则使用后两者,如果使用redis或阿里巴巴的jetCache则开放前两者
+ * 阿里巴巴的缓存application.yaml已经配置好
+ * 独立的redis缓存需要开放第一个Bean即可
  */
 @Configuration
 @EnableCaching// 使用cglib代理和aspectj切入
-@EnableMethodCache(basePackages = "com.application")
-@EnableCreateCacheAnnotation// 用于在属性上开启缓存
+@EnableMethodCache(basePackages = "com.application")//激活Cached 注解 主要用于方法上的缓存
+@EnableCreateCacheAnnotation//激活CreateCache 注解 主要用于对某个自定义变量设为缓存
 @Slf4j
 public class SpringCacheConfiguration {
     private final JHipsterProperties jHipsterProperties;
@@ -45,7 +49,8 @@ public class SpringCacheConfiguration {
     }
 
     @SuppressWarnings("unchecked")
-    @Bean("RedisCacheManager")
+    @Primary
+    @Bean("redisCacheManager")
     public CacheManager cacheManager(LettuceConnectionFactory redisConnectionFactory,
                                      Jackson2JsonRedisSerializer jackson2JsonRedisSerializer,
                                      RedisSerializer keySerializer) {
@@ -62,8 +67,9 @@ public class SpringCacheConfiguration {
                 .build();
     }
 
-    //@Bean
+    @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
+        // 增强Ehcache功能,没啥用
         JHipsterProperties.Cache.Ehcache ehcache = jHipsterProperties.getCache().getEhcache();
         javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration = Eh107Configuration.fromEhcacheCacheConfiguration(
                 CacheConfigurationBuilder.newCacheConfigurationBuilder(Object.class, Object.class,
@@ -73,22 +79,20 @@ public class SpringCacheConfiguration {
 
         // 在此处添加需要cache的实体
         return cm -> {
-            cm.createCache("jetCache", jcacheConfiguration);
+            cm.createCache("eHcache", jcacheConfiguration);
         };
     }
 
-    //@ConditionalOnMissingBean(value = {JCacheCacheManager.class})
-    //@Bean(name = "simpleCacheManager")
+
+    @Bean(name = "simpleCacheManager")
     public CacheManager simpleCacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-        simpleCacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("SimpleCache")));
+        simpleCacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("simpleCache")));
         log.info("创建简单缓存管理器--->[simpleCacheManager]");
         return simpleCacheManager;
     }
 
-    //@ConditionalOnMissingBean(value = {JCacheCacheManager.class})
-    //@Bean(name = "ehCacheCacheManager")
-    //@Primary
+    @Bean(name = "ehCacheCacheManager")
     public CacheManager ehCacheCacheManager(EhCacheManagerFactoryBean bean) {
         EhCacheCacheManager cacheManager = new EhCacheCacheManager();
         net.sf.ehcache.CacheManager manager = bean.getObject();
@@ -97,7 +101,7 @@ public class SpringCacheConfiguration {
         return cacheManager;
     }
 
-    //@Bean
+    @Bean
     public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
         EhCacheManagerFactoryBean cacheManagerFactoryBean = new EhCacheManagerFactoryBean();
         cacheManagerFactoryBean.setCacheManagerName("ehCacheCacheManager");

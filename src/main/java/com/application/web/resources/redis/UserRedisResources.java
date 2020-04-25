@@ -78,7 +78,7 @@ public class UserRedisResources {
     public ResponseEntity<Iterable<UserRedis>> findAll(
             @QuerydslPredicate(root = UserRedis.class) Predicate predicate,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        predicate = JPAUtils.mergePredicate(predicate, new BooleanBuilder());
+
 
         // 目前redis没有实现分页查询
         return ResponseEntity.ok().body(userRedisRepository.findAll());

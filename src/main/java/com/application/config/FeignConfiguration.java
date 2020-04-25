@@ -4,7 +4,7 @@ import com.application.feign.FeignErrorDecoder;
 import com.application.feign.LocalDateTimeTypeAdapter;
 import com.application.feign.service.DamServiceFeign;
 import com.application.feign.service.UserServiceFeign;
-import com.application.properties.ThirdApplicationProperties;
+import com.application.properties.ApplicationProperties;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import feign.*;
@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class FeignConfiguration implements InitializingBean {
     @Autowired
-    private ThirdApplicationProperties thirdApplicationProperties;
+    private ApplicationProperties applicationProperties;
     @Autowired
     private UserServiceFeign userServiceFeign;
     @Autowired
@@ -57,7 +57,7 @@ public class FeignConfiguration implements InitializingBean {
                 return response;
             }
         });
-        return decorate(builder).target(UserServiceFeign.class, thirdApplicationProperties.getApiBaseUrl());
+        return decorate(builder).target(UserServiceFeign.class, applicationProperties.getRemoteDam().getApiBaseUrl());
     }
 
     private Feign.Builder decorate(Feign.Builder builder) {
@@ -85,7 +85,7 @@ public class FeignConfiguration implements InitializingBean {
                     synchronized (this) {
                         if (currentVersion == cookieVersion) {
                             log.info("cookie expire old cookie:{},current version:{}", cookie, currentVersion);
-                            userServiceFeign.userLogin(thirdApplicationProperties.getUsername(), thirdApplicationProperties.getPassword());
+                            userServiceFeign.userLogin(applicationProperties.getRemoteDam().getUsername(), applicationProperties.getRemoteDam().getPassword());
                             cookieVersion++;
                         }
                         response = super.execute(savedRequestTemplates.remove(Thread.currentThread().getId()).request(), options);
@@ -113,11 +113,11 @@ public class FeignConfiguration implements InitializingBean {
 
     @Bean
     public UserServiceFeign userServiceFeign() {
-        return decorate(Feign.builder()).target(UserServiceFeign.class, thirdApplicationProperties.getApiBaseUrl());
+        return decorate(Feign.builder()).target(UserServiceFeign.class, applicationProperties.getRemoteDam().getApiBaseUrl());
     }
 
     @Bean
     public DamServiceFeign damServiceFeign() {// 必须经过客户端登录保存Token设置Header,否则不通过
-        return getCommonServiceFeign(DamServiceFeign.class, thirdApplicationProperties.getApiBaseUrl());
+        return getCommonServiceFeign(DamServiceFeign.class, applicationProperties.getRemoteDam().getApiBaseUrl());
     }
 }
