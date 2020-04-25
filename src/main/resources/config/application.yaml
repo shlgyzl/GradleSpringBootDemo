@@ -126,4 +126,4 @@ jetcache: #开启阿里巴巴封装的jetCache缓存框架
         maxTotal: 50
       host: 47.105.46.4
       port: 6379
-
+      password: 123456

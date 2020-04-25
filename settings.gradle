@@ -1,2 +1,3 @@
+//用于初始化以及工程树配置的，放在根工程目录下
 rootProject.name = 'parent'
 

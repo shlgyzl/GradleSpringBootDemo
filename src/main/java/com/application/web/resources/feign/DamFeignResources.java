@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,7 @@ public class DamFeignResources {
     @ApiOperation(value = "查询接口", notes = "查询大坝")
     @GetMapping("/feign/dams")
     @Timed
+    @Cacheable(value = "Dam")
     public List findAll() {
         return damServiceFeign.findSimpleDams();
     }

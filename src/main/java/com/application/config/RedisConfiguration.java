@@ -12,6 +12,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.io.Serializable;
@@ -39,5 +40,16 @@ public class RedisConfiguration {
         // hash的value序列化方式采用jackson
         template.setHashValueSerializer(jsonRedisSerializer);
         return template;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Bean(name = "jackson2JsonRedisSerializer")
+    public Jackson2JsonRedisSerializer jackson2JsonRedisSerializer() {
+        return new Jackson2JsonRedisSerializer(Object.class);
+    }
+
+    @Bean(name = "keySerializer")
+    public RedisSerializer keySerializer() {
+        return new StringRedisSerializer();
     }
 }

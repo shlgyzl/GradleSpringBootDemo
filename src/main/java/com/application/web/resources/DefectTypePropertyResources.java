@@ -1,6 +1,5 @@
 package com.application.web.resources;
 
-import com.alicp.jetcache.anno.*;
 import com.application.domain.enumeration.BusinessErrorType;
 import com.application.domain.jpa.DefectTypeProperty;
 import com.application.service.DefectTypePropertyService;
@@ -28,7 +27,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Api(value = "DefectTypeProperty", tags = {"DefectTypeProperty缺陷类型属性管理接口"})
 @RestController

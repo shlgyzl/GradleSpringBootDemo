@@ -22,6 +22,9 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -41,11 +44,22 @@ public class SpringCacheConfiguration {
         this.jHipsterProperties = jHipsterProperties;
     }
 
-
-    @Bean
-    public CacheManager cacheManager(LettuceConnectionFactory redisConnectionFactory) {
-        return new RedisCacheManager(RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory),
-                RedisCacheConfiguration.defaultCacheConfig());
+    @SuppressWarnings("unchecked")
+    @Bean("RedisCacheManager")
+    public CacheManager cacheManager(LettuceConnectionFactory redisConnectionFactory,
+                                     Jackson2JsonRedisSerializer jackson2JsonRedisSerializer,
+                                     RedisSerializer keySerializer) {
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
+        redisCacheConfiguration.entryTtl(Duration.ofMinutes(30L))// 缓存超时时间
+                .disableCachingNullValues()// 空值不缓存
+                .serializeKeysWith(RedisSerializationContext.SerializationPair
+                        .fromSerializer(jackson2JsonRedisSerializer))// key序列化
+                .serializeValuesWith(RedisSerializationContext.SerializationPair
+                        .fromSerializer(keySerializer));// value序列化
+        return RedisCacheManager.builder(
+                RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
+                .cacheDefaults(redisCacheConfiguration)
+                .build();
     }
 
     //@Bean
