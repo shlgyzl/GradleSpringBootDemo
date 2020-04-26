@@ -5,6 +5,7 @@ import com.github.xiaoymin.knife4j.annotations.DynamicResponseParameters;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import java.util.Objects;
 public class RedisCacheResources {
 
     @Resource
+    @Qualifier("redisCacheManager")
     private CacheManager cacheManager;
 
 
