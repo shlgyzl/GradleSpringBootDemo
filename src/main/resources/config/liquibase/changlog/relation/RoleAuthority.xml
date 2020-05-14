@@ -6,10 +6,10 @@
 
     <changeSet id="20200309231133" author="YangHaiYong" context="dev, test, prod" >
         <createTable tableName="tbl_role_authority" remarks="角色与权限关系表">
-            <column name="role_id" type="bigint" remarks="角色id">
+            <column name="role_id" type="${bigint}" remarks="角色id">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="authority_id" type="bigint" remarks="权限id">
+            <column name="authority_id" type="${bigint}" remarks="权限id">
                 <constraints unique="false" nullable="false"/>
             </column>
         </createTable>

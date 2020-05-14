@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  * 接受参数定义的实体类,仅仅只限于接受参数
@@ -16,7 +17,8 @@ import javax.validation.constraints.Size;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class LoginVM {
+public class LoginVM implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @NotNull
     @Size(min = 1, max = 50)

@@ -1,5 +1,7 @@
 package com.application;
 
+import com.application.config.DataSourceConfiguration;
+import com.application.config.FastJsonConfiguration;
 import com.application.domain.jpa.Authority;
 import com.application.domain.jpa.DefectType;
 import com.application.domain.jpa.Role;
@@ -14,9 +16,11 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Array;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
@@ -209,6 +213,18 @@ public class CommonTest {
         Integer b = a == 1 ? 3 : ++a;
         System.out.println(b);
         System.out.println(a);
+    }
+
+    @Test
+    public void test14() throws ClassNotFoundException {
+        Class<?> name = FastJsonConfiguration.class;
+        Class<?> superclass = name.getSuperclass();
+        System.out.println(superclass.getSimpleName());
+
+        int length = Array.getLength(new String[]{});
+        Object newInstance = Array.newInstance(String.class, 3,6,7,2);
+        System.out.println(newInstance);
+
     }
 
     /*@Test

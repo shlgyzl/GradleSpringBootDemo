@@ -195,8 +195,8 @@ dependencies {
         exclude group: "io.swagger", module: "swagger-annotations"
         exclude group: "io.swagger", module: "swagger-models"
     }
-    compile("io.springfox:springfox-bean-validators:2.9.2"){
-        exclude group: "org.springframework.plugin",module: "spring-plugin-core"
+    compile("io.springfox:springfox-bean-validators:2.9.2") {
+        exclude group: "org.springframework.plugin", module: "spring-plugin-core"
     }
     compile("io.springfox:springfox-schema:2.9.2") {
         exclude group: "com.google.guava", module: "com.google.guava"

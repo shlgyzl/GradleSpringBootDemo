@@ -4,15 +4,11 @@ import com.application.domain.enumeration.BusinessErrorType;
 import com.application.domain.redis.UserRedis;
 import com.application.repository.redis.UserRedisRepository;
 import com.application.web.resources.exception.BusinessErrorException;
-import com.application.web.resources.util.JPAUtils;
 import com.application.web.resources.util.ResponseUtil;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -51,7 +47,10 @@ public class UserRedisResources {
         return ResponseEntity.created(new URI("/api/userRedis/" + savedUserRedis.getId())).body(savedUserRedis);
     }
 
-    @ApiParam(name = "id", value = "用户id", required = true, defaultValue = "1", example = "1")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户id", required = true,
+                    paramType = "path", example = "1", dataTypeClass = Long.class)
+    })
     @ApiOperation(value = "删除接口", notes = "删除权限")
     @Timed
     @DeleteMapping("/userRedis/{id}")
@@ -60,7 +59,10 @@ public class UserRedisResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiParam(name = "id", value = "用户id", required = true, defaultValue = "1", example = "1")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户id", required = true,
+                    paramType = "path", example = "1", dataTypeClass = Long.class)
+    })
     @ApiOperation(value = "查询接口", notes = "查询权限(根据id)")
     @Timed
     @GetMapping("/userRedis/{id}")

@@ -125,4 +125,4 @@ jetcache: #开启阿里巴巴封装的jetCache缓存框架
       host: 47.105.46.4
       port: 6379
       password: 123456
-      defaultExpireInMillis: 20000    #全局缓存失效时间
+      defaultExpireInMillis: 20000    #全局缓存失效时间      

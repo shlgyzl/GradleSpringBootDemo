@@ -109,6 +109,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .rememberMeServices(rememberMeServices)
                 .rememberMeParameter("remember-me")
                 .key(jHipsterProperties.getSecurity().getRememberMe().getKey());
-        http.headers().frameOptions().disable().and().apply(new JWTConfigurer(tokenProvider));
+        http.headers().frameOptions().disable().and()
+                .apply(new JWTConfigurer(tokenProvider));
     }
 }

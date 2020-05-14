@@ -7,58 +7,58 @@
 
     <changeSet id="20200418091011" author="YangHaiYong" context="dev, test, prod" >
         <createTable tableName="tbl_attachment" remarks="文件">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+            <column name="id" type="${bigint}" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="file_name" type="varchar(255)" remarks="文件名称">
+            <column name="file_name" type="${varchar}" remarks="文件名称">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="simple_name" type="varchar(255)" remarks="文件简称">
+            <column name="simple_name" type="${varchar}" remarks="文件简称">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="original_file_name" type="varchar(255)" remarks="文件原名称">
+            <column name="original_file_name" type="${varchar}" remarks="文件原名称">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="file_size" type="bigint" remarks="文件大小(字节数)">
+            <column name="file_size" type="${bigint}" remarks="文件大小(字节数)">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="file_size_formatted" type="varchar(255)" remarks="文件大小(带有单位)">
+            <column name="file_size_formatted" type="${varchar}" remarks="文件大小(带有单位)">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="content_type" type="varchar(255)" remarks="文件类型">
+            <column name="content_type" type="${varchar}" remarks="文件类型">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="content" type="longblob" remarks="文件内容(blob/longblob)">
+            <column name="content" type="${blob}" remarks="文件内容(blob/longblob)">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="file" type="longblob" remarks="文件内容(longblob)">
+            <column name="file" type="${blob}" remarks="文件内容(longblob)">
                 <constraints unique="false" nullable="true"/>
             </column>
-            <column name="string_content" type="longtext" remarks="文件内容(text/longtext)">
+            <column name="string_content" type="${text}" remarks="文件内容(text/longtext)">
                 <constraints unique="false" nullable="true"/>
             </column>
-            <column name="image" type="longblob" remarks="文件图片(longblob)">
+            <column name="image" type="${blob}" remarks="文件图片(longblob)">
                 <constraints unique="false" nullable="true"/>
             </column>
-            <column name="file_path" type="varchar(255)" remarks="文件路径">
+            <column name="file_path" type="${varchar}" remarks="文件路径">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="url" type="varchar(255)" remarks="文件网络路径">
+            <column name="url" type="${varchar}" remarks="文件网络路径">
                 <constraints unique="false" nullable="true"/>
             </column>
-            <column name="created_by" type="varchar(255)" remarks="第一次创建人">
+            <column name="created_by" type="${varchar}" remarks="第一次创建人">
                 <constraints nullable="true"/>
             </column>
-            <column name="created_date" type="timestamp" defaultValueDate="${now}" remarks="第一次创建时间">
+            <column name="created_date" type="${timestamp}" defaultValueDate="${now}" remarks="第一次创建时间">
                 <constraints nullable="true"/>
             </column>
-            <column name="last_modified_by" type="varchar(255)" remarks="最后一次更新人">
+            <column name="last_modified_by" type="${varchar}" remarks="最后一次更新人">
                 <constraints nullable="true"/>
             </column>
-            <column name="last_modified_date" type="timestamp" defaultValueDate="${now}" remarks="最后一次更新时间">
+            <column name="last_modified_date" type="${timestamp}" defaultValueDate="${now}" remarks="最后一次更新时间">
                 <constraints nullable="true"/>
             </column>
-            <column name="version" type="bigint" defaultValue="0" remarks="文件版本锁">
+            <column name="version" type="${bigint}" defaultValue="0" remarks="文件版本锁">
                 <constraints nullable="false"/>
             </column>
         </createTable>

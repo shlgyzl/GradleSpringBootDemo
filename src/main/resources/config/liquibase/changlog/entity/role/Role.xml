@@ -7,13 +7,13 @@
 
     <changeSet id="20200309230420" author="YangHaiYong" context="dev, test, prod" >
         <createTable tableName="tbl_role" remarks="角色">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+            <column name="id" type="${bigint}" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)" remarks="角色名称">
+            <column name="name" type="${varchar}" remarks="角色名称">
                 <constraints unique="true" nullable="false" uniqueConstraintName="ux_role_name"/>
             </column>
-            <column name="version" type="bigint" defaultValue="0" remarks="角色版本锁">
+            <column name="version" type="${bigint}" defaultValue="0" remarks="角色版本锁">
                 <constraints nullable="false"/>
             </column>
         </createTable>

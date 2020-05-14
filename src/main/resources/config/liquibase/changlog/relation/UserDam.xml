@@ -6,10 +6,10 @@
 
     <changeSet id="20191128000032" author="YangHaiYong" context="dev, test, prod" >
         <createTable tableName="tbl_user_dam" remarks="用户与大坝关系表">
-            <column name="user_id" type="bigint" remarks="用户id">
+            <column name="user_id" type="${bigint}" remarks="用户id">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="dam_id" type="bigint" remarks="大坝id">
+            <column name="dam_id" type="${bigint}" remarks="大坝id">
                 <constraints unique="false" nullable="false"/>
             </column>
         </createTable>

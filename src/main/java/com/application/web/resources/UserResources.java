@@ -5,15 +5,14 @@ import com.application.domain.jpa.User;
 import com.application.repository.jpa.UserRepository;
 import com.application.service.UserService;
 import com.application.web.resources.exception.BusinessErrorException;
-import com.application.web.resources.util.JPAUtils;
 import com.application.web.resources.util.ResponseUtil;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -56,7 +55,10 @@ public class UserResources {
         return ResponseEntity.created(new URI("/api/user/" + savedUser.getId())).body(savedUser);
     }
 
-    @ApiParam(name = "id", value = "用户id", required = true, defaultValue = "1", example = "1")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户id", required = true,
+                    paramType = "path", example = "1", dataTypeClass = Long.class)
+    })
     @ApiOperation(value = "删除接口", notes = "删除用户")
     @Timed
     @DeleteMapping("/user/{id}")
@@ -65,7 +67,10 @@ public class UserResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiParam(name = "id", value = "用户id", required = true, defaultValue = "1", example = "1")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户id", required = true,
+                    paramType = "path", example = "1", dataTypeClass = Long.class)
+    })
     @ApiOperation(value = "查询接口", notes = "查询用户(根据id)")
     @Timed
     @GetMapping("/user/{id}")

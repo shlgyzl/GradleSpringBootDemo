@@ -6,7 +6,7 @@
     <!-- 实体修改 -->
     <changeSet id="2019121134034" author="YangHaiYong" context="dev, test, prod" >
         <addColumn tableName="tbl_dam">
-            <column name="version" type="bigint" defaultValue="0" remarks="大坝版本锁">
+            <column name="version" type="${bigint}" defaultValue="0" remarks="大坝版本锁">
                 <constraints nullable="false"/>
             </column>
         </addColumn>

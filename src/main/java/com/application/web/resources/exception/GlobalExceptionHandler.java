@@ -9,6 +9,7 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.beans.PropertyEditorSupport;
 import java.time.LocalDate;
@@ -135,6 +136,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body("你的时间丢失了");
     }
 
+    /**
+     * 系统查询异常
+     *
+     * @param e 异常
+     * @return String
+     */
+    @ExceptionHandler(ResponseStatusException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<String> responseStatusException(ResponseStatusException e) {
+        log.error("系统查询不存在数据异常,{}", e.getMessage());
+        return ResponseEntity.badRequest().body("你是魔鬼嘛,数据丢失了");
+    }
 
     /**
      * 业务异常

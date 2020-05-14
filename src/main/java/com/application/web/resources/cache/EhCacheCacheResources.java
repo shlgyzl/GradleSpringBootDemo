@@ -1,5 +1,6 @@
 package com.application.web.resources.cache;
 
+import com.application.web.resources.cache.dto.CacheDTO;
 import com.github.xiaoymin.knife4j.annotations.DynamicResponseParameters;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author yanghaiyong
@@ -27,13 +30,15 @@ public class EhCacheCacheResources {
     @Qualifier("ehCacheCacheManager")
     private CacheManager cacheManager;
 
-
     @DynamicResponseParameters
     @ApiOperation(value = "查询接口", notes = "查询所有缓存")
     @Timed
     @GetMapping("/ehcaches")
-    public ResponseEntity<CacheManager> findAll() {
-        return ResponseEntity.ok(cacheManager);
+    public ResponseEntity<Set<CacheDTO>> findAll() {
+        Set<CacheDTO> collect = cacheManager.getCacheNames().stream()
+                .map(cacheName -> new CacheDTO(cacheName, cacheManager.getCache(cacheName)))
+                .collect(Collectors.toSet());
+        return ResponseEntity.ok(collect);
     }
 
     @ApiOperation(value = "删除接口", notes = "清除所有缓存")

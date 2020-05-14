@@ -5,15 +5,14 @@ import com.application.domain.jpa.DefectType;
 import com.application.repository.jpa.DefectTypeRepository;
 import com.application.service.DefectTypeService;
 import com.application.web.resources.exception.BusinessErrorException;
-import com.application.web.resources.util.JPAUtils;
 import com.application.web.resources.util.ResponseUtil;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +22,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 @Api(value = "DefectType", tags = {"DetectType缺陷类型管理接口"})
 @RestController
@@ -57,7 +54,10 @@ public class DefectTypeResources {
         return ResponseEntity.created(new URI("/api/defectType/" + savedDefectType.getId())).body(savedDefectType);
     }
 
-    @ApiParam(name = "id", value = "缺陷类型id", required = true, defaultValue = "1", example = "1")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "缺陷类型id", required = true,
+                    paramType = "path", example = "1", dataTypeClass = Long.class)
+    })
     @ApiOperation(value = "删除接口", notes = "删除缺陷类型")
     @Timed
     @DeleteMapping("/defectType/{id}")
@@ -66,7 +66,10 @@ public class DefectTypeResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiParam(name = "id", value = "缺陷类型id", required = true, defaultValue = "1", example = "1")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "缺陷类型id", required = true,
+                    paramType = "path", example = "1", dataTypeClass = Long.class)
+    })
     @ApiOperation(value = "查询接口", notes = "查询缺陷类型(根据id)")
     @Timed
     @GetMapping("/defectType/{id}")

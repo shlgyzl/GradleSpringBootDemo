@@ -9,8 +9,9 @@ import com.querydsl.core.types.Predicate;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +56,10 @@ public class DamResources {
     }
 
 
-    @ApiParam(name = "大坝id", value = "id", required = true, defaultValue = "1", example = "1")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "大坝id", required = true,
+                    paramType = "path", example = "1", dataTypeClass = Long.class)
+    })
     @ApiOperation(value = "删除接口", notes = "删除大坝")
     @Timed
     @DeleteMapping("/dam/{id}")
@@ -65,7 +69,10 @@ public class DamResources {
     }
 
 
-    @ApiParam(name = "大坝id", value = "id", required = true, defaultValue = "1", example = "1")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "大坝id", required = true,
+                    paramType = "path", example = "1", dataTypeClass = Long.class)
+    })
     @ApiOperation(value = "查询接口", notes = "查询大坝(根据id)")
     @Timed
     @GetMapping("/dam/{id}")

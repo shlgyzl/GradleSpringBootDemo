@@ -8,9 +8,7 @@ import com.application.service.util.SpecificationUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.JpaSort;
@@ -88,12 +86,12 @@ public class UserHibernateResourcesTest {
     @ApiOperation(value = "查询所有用户", notes = "条件限制(简单查询)")
     @GetMapping(value = "/find/simple", params = "login")
     @Transactional
-    @Cacheable(cacheNames = "UserList", key = "#login", cacheManager = "simpleCacheManager")
-    public ResponseEntity<Set<UserDTO>> findBySimple(String login) {
-        Cache managerCache = cacheManager.getCache("default");
+    //@Cacheable(cacheNames = "UserList", key = "#login", cacheManager = "simpleCacheManager")
+    public ResponseEntity<Set<UserDTO>> findBySimple(@RequestParam("login") String login) {
+        /*Cache managerCache = cacheManager.getCache("default");
         Cache.ValueWrapper valueWrapper = managerCache.get(login);
-        System.out.println(valueWrapper);
-        return ResponseEntity.ok().body(userRepository.findAllByLogin(login));
+        System.out.println(valueWrapper);*/
+        return ResponseEntity.ok().body(userRepository.findAllByRoles_name(login));
     }
 
     @GetMapping("/user/specification")

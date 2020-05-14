@@ -6,10 +6,10 @@
     <!-- 实体修改 -->
     <changeSet id="20200310012101" author="YangHaiYong" context="dev, test, prod" >
         <addColumn tableName="tbl_user">
-            <column name="activated" type="boolean" defaultValueBoolean="false" remarks="是否激活">
+            <column name="activated" type="${bit}" defaultValueBoolean="false" remarks="是否激活">
                 <constraints nullable="false"/>
             </column>
-            <column name="image_url" type="varchar(255)" remarks="头像">
+            <column name="image_url" type="${varchar}" remarks="头像">
                 <constraints nullable="true"/>
             </column>
         </addColumn>

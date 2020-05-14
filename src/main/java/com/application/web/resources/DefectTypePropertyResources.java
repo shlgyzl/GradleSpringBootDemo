@@ -4,15 +4,14 @@ import com.application.domain.enumeration.BusinessErrorType;
 import com.application.domain.jpa.DefectTypeProperty;
 import com.application.service.DefectTypePropertyService;
 import com.application.web.resources.exception.BusinessErrorException;
-import com.application.web.resources.util.JPAUtils;
 import com.application.web.resources.util.ResponseUtil;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +54,10 @@ public class DefectTypePropertyResources {
     }
 
 
-    @ApiParam(name = "id", value = "缺陷类型属性id", required = true, defaultValue = "1", example = "1")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "缺陷属性类型id", required = true,
+                    paramType = "path", example = "1", dataTypeClass = Long.class)
+    })
     @ApiOperation(value = "删除接口", notes = "删除缺陷类型属性")
     @Timed
     @DeleteMapping("/defectTypeProperty/{id}")
@@ -64,7 +66,10 @@ public class DefectTypePropertyResources {
         return ResponseEntity.ok().build();
     }
 
-    @ApiParam(name = "id", value = "缺陷类型属性id", required = true, defaultValue = "1", example = "1")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "缺陷属性类型id", required = true,
+                    paramType = "path", example = "1", dataTypeClass = Long.class)
+    })
     @ApiOperation(value = "查询接口", notes = "查询缺陷类型属性(根据id)")
     @Timed
     @GetMapping("/defectTypeProperty/{id}")

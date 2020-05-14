@@ -7,25 +7,25 @@
 
     <changeSet id="202003010000150" author="YangHaiYong" context="dev, test, prod" >
         <createTable tableName="tbl_persistent_token" remarks="持久化token">
-            <column name="id" type="varchar(255)">
+            <column name="id" type="${varchar}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="token_value" type="varchar(255)" remarks="token_value">
+            <column name="token_value" type="${varchar}" remarks="token_value">
                 <constraints nullable="false"/>
             </column>
-            <column name="token_date" type="timestamp" remarks="token有效期">
+            <column name="token_date" type="${timestamp}" remarks="token有效期">
                 <constraints nullable="false"/>
             </column>
-            <column name="ip_address" type="varchar(255)" remarks="ip地址">
+            <column name="ip_address" type="${varchar}" remarks="ip地址">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_agent" type="varchar(255)" remarks="用户代理">
+            <column name="user_agent" type="${varchar}" remarks="用户代理">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="bigint" remarks="用户id">
+            <column name="user_id" type="${bigint}" remarks="用户id">
                 <constraints nullable="false"/>
             </column>
-            <column name="version" type="bigint" defaultValue="0" remarks="持久化token版本锁">
+            <column name="version" type="${bigint}" defaultValue="0" remarks="持久化token版本锁">
                 <constraints nullable="false"/>
             </column>
         </createTable>

@@ -94,7 +94,7 @@ public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslB
      * @param login 登录名
      * @return LinkedHashSet
      */
-    LinkedHashSet<UserDTO> findAllByLogin(String login);
+    LinkedHashSet<UserDTO> findAllByRoles_name(String name);
 
     /**
      * 排序查询

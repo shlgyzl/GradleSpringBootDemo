@@ -1,5 +1,6 @@
 package com.application.service.dto;
 
+import com.application.domain.jpa.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,7 +10,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class UserDTO implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final String login;
-    private final String imageUrl;
+    private final Role RoleDTO;
 
+}
+
+
+@Data
+@AllArgsConstructor
+class RoleDTO implements Serializable {
+    private final String name;
 }
