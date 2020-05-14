@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="20191127223121" author="YangHaiYong" context="dev, test, prod" >
+    <changeSet id="20191127223121" author="YangHaiYong"  >
         <createTable tableName="tbl_defect_type" remarks="缺陷类型">
             <column name="id" type="${bigint}" autoIncrement="${autoIncrement}" remarks="主键id">
                 <constraints primaryKey="true" nullable="false"/>

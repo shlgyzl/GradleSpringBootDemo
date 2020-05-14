@@ -4,18 +4,18 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <!-- 实体修改 -->
-    <changeSet id="20191201142107" author="YangHaiYong" context="dev, test, prod" >
+    <changeSet id="20191201142107" author="YangHaiYong"  >
         <addColumn tableName="tbl_user">
             <column name="created_by" type="${varchar}" remarks="第一次创建人">
                 <constraints nullable="true"/>
             </column>
-            <column name="created_date" type="${timestamp}" defaultValueDate="${now}" remarks="第一次创建时间">
+            <column name="created_date" type="${timestamp}"  remarks="第一次创建时间">
                 <constraints nullable="true"/>
             </column>
             <column name="last_modified_by" type="${varchar}" remarks="最后一次更新人">
                 <constraints nullable="true"/>
             </column>
-            <column name="last_modified_date" type="${timestamp}" defaultValueDate="${now}" remarks="最后一次更新时间">
+            <column name="last_modified_date" type="${timestamp}"  remarks="最后一次更新时间">
                 <constraints nullable="true"/>
             </column>
 

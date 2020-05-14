@@ -6,16 +6,33 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
 
-    <changeSet id="20200320005852" author="YangHaiYong" context="dev, test, prod" >
+    <changeSet id="20200320005852" author="YangHaiYong">
         <!-- 加载初始化数据 -->
         <loadData tableName="tbl_role" separator=";" file="config/liquibase/data/role.csv"
-                  relativeToChangelogFile="false"/>
+                  relativeToChangelogFile="false">
+            <column name="id" type="numeric"/>
+            <column name="name" type="string"/>
+            <column name="version" type="numeric"/>
+        </loadData>
+
         <loadData tableName="tbl_authority" separator=";" file="config/liquibase/data/authority.csv"
-                  relativeToChangelogFile="false"/>
+                  relativeToChangelogFile="false">
+            <column name="id" type="numeric"/>
+            <column name="name" type="string"/>
+            <column name="version" type="numeric"/>
+        </loadData>
+
         <loadData tableName="tbl_user_role" separator=";" file="config/liquibase/data/user_role.csv"
-                  relativeToChangelogFile="false"/>
+                  relativeToChangelogFile="false">
+            <column name="user_id" type="numeric"/>
+            <column name="role_id" type="numeric"/>
+        </loadData>
+
         <loadData tableName="tbl_role_authority" separator=";" file="config/liquibase/data/role_authority.csv"
-                  relativeToChangelogFile="false"/>
+                  relativeToChangelogFile="false">
+            <column name="role_id" type="numeric"/>
+            <column name="authority_id" type="numeric"/>
+        </loadData>
 
     </changeSet>
 </databaseChangeLog>

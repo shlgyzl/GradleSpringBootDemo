@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <!-- 实体修改 -->
-    <changeSet id="20191201135334" author="YangHaiYong" context="dev, test, prod" >
+    <changeSet id="20191201135334" author="YangHaiYong"  >
         <addColumn tableName="tbl_user">
             <column name="version" type="${bigint}" defaultValue="0" remarks="用户版本锁">
                 <constraints nullable="false"/>

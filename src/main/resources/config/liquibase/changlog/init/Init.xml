@@ -5,11 +5,31 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="00000000000001" author="YangHaiYong" context="dev, test, prod" >
+    <changeSet id="20200429210204" author="skyline" dbms="oracle,mssql">
+        <createSequence sequenceName="hibernate_sequence" startValue="100" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="00000000000001" author="YangHaiYong">
+
         <!-- 加载初始化数据 -->
         <loadData tableName="tbl_dam" separator=";" file="config/liquibase/data/dam.csv"
-                  relativeToChangelogFile="false"/>
+                  relativeToChangelogFile="false">
+            <column name="id" type="numeric"/>
+            <column name="name" type="string"/>
+            <column name="version" type="numeric"/>
+        </loadData>
         <loadData tableName="tbl_user" separator=";" file="config/liquibase/data/user.csv"
-                  relativeToChangelogFile="false"/>
+                  relativeToChangelogFile="false">
+            <column name="id" type="numeric"/>
+            <column name="login" type="string"/>
+            <column name="password_hash" type="string"/>
+            <column name="version" type="numeric"/>
+            <column name="created_by" type="string"/>
+            <column name="created_date" type="date"/>
+            <column name="last_modified_by" type="string"/>
+            <column name="last_modified_date" type="timestamp"/>
+            <column name="activated" type="boolean"/>
+            <column name="image_url" type="string"/>
+        </loadData>
     </changeSet>
 </databaseChangeLog>

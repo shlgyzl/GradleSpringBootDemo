@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="20200309231133" author="YangHaiYong" context="dev, test, prod" >
+    <changeSet id="20200309231133" author="YangHaiYong"  >
         <createTable tableName="tbl_role_authority" remarks="角色与权限关系表">
             <column name="role_id" type="${bigint}" remarks="角色id">
                 <constraints unique="false" nullable="false"/>

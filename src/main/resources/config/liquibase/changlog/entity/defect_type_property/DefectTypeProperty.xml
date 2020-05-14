@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="20191127223151" author="YangHaiYong" context="dev, test, prod" >
+    <changeSet id="20191127223151" author="YangHaiYong">
         <createTable tableName="tbl_defect_type_property" remarks="缺陷类型属性">
             <column name="id" type="${bigint}" autoIncrement="${autoIncrement}" remarks="缺陷类型属性id">
                 <constraints primaryKey="true" nullable="false"/>
@@ -15,8 +15,8 @@
             <column name="field_type" type="${varchar}" remarks="字段类型">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="required_field" type="${bit}" defaultValueBoolean="false" remarks="必填项">
-                <constraints unique="false" nullable="false"/>
+            <column name="required_field" type="${bit}" defaultValueNumeric="0" remarks="必填项">
+                <constraints nullable="false"/>
             </column>
             <column name="max_value" type="${varchar}" remarks="最大值">
                 <constraints unique="false" nullable="false"/>
@@ -33,7 +33,7 @@
             <column name="unit" type="${varchar}" remarks="单位">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="defect_type_id" type="${varchar}" remarks="缺陷类型">
+            <column name="defect_type_id" type="${bigint}" remarks="缺陷类型">
                 <constraints unique="false" nullable="false"/>
             </column>
             <column name="region" type="${varchar}" remarks="值所在区间">

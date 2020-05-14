@@ -13,10 +13,3 @@ public class UserDTO implements Serializable {
     private final Role RoleDTO;
 
 }
-
-
-@Data
-@AllArgsConstructor
-class RoleDTO implements Serializable {
-    private final String name;
-}

@@ -91,7 +91,8 @@ public class UserHibernateResourcesTest {
         /*Cache managerCache = cacheManager.getCache("default");
         Cache.ValueWrapper valueWrapper = managerCache.get(login);
         System.out.println(valueWrapper);*/
-        return ResponseEntity.ok().body(userRepository.findAllByRoles_name(login));
+        //return ResponseEntity.ok().body(userRepository.findAllByRoles_name(login));
+        return null;
     }
 
     @GetMapping("/user/specification")

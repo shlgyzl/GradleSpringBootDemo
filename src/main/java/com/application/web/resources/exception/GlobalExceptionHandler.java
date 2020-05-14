@@ -1,6 +1,14 @@
 package com.application.web.resources.exception;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DatePattern;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.ISODateTimeFormat;
+import org.jolokia.util.DateUtil;
+import org.springframework.core.NestedRuntimeException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +20,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.beans.PropertyEditorSupport;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
+import java.lang.reflect.Modifier;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Objects;
 
 import static com.application.constants.DateFormatConstants.*;
 
@@ -28,6 +39,7 @@ import static com.application.constants.DateFormatConstants.*;
 @ResponseBody
 @Slf4j
 public class GlobalExceptionHandler {
+    private static final DatePattern datePattern = new DatePattern();
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -35,6 +47,12 @@ public class GlobalExceptionHandler {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
                 setValue(LocalDate.parse(text, DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)));
+            }
+        });
+        binder.registerCustomEditor(Instant.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(Instant.parse(text));
             }
         });
         binder.registerCustomEditor(LocalDateTime.class, new PropertyEditorSupport() {
@@ -53,6 +71,42 @@ public class GlobalExceptionHandler {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
                 setValue(LocalTime.parse(text, DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                String[] pattern = Arrays.stream(datePattern.getClass().getFields())
+                        .filter(field -> Modifier.isPublic(field.getModifiers()))
+                        .filter(field -> Objects.equals(field.getType(), String.class))
+                        .map(field -> (String) BeanUtil.getFieldValue(datePattern, field.getName()))
+                        .toArray(String[]::new);
+                try {
+                    setValue(DateUtils.parseDate(text, pattern));
+                } catch (ParseException e) {
+                    String date = text.replaceFirst("([+-])(0\\d)\\:(\\d{2})$", "$1$2$3");
+                    date = date.replaceFirst("Z$", "+0000");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                    try {
+                        setValue(dateFormat.parse(date));
+                        return;
+                    } catch (Exception e1) {
+                        log.warn("{}:{}日期格式不正确,转换异常", getClass().getSimpleName(), text);
+                    }
+
+                    org.joda.time.format.DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.dateTime();
+                    DateTime dateTime = dateTimeFormatter.parseDateTime(text);
+                    org.joda.time.format.DateTimeFormatter timeFormatter = DateTimeFormat.mediumDateTime();
+                    String print = timeFormatter.print(dateTime);
+                    try {
+                        setValue(DateUtils.parseDate(print, pattern));
+                    } catch (ParseException e1) {
+                        log.warn("{}:{}日期格式不正确,转换异常", getClass().getSimpleName(), text);
+                    }
+                } catch (RuntimeException e) {
+                    setValue(DateUtil.fromISO8601(text));
+                }
             }
         });
     }

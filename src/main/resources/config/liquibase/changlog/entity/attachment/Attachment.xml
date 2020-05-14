@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
 
-    <changeSet id="20200418091011" author="YangHaiYong" context="dev, test, prod" >
+    <changeSet id="20200418091011" author="YangHaiYong" >
         <createTable tableName="tbl_attachment" remarks="文件">
             <column name="id" type="${bigint}" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
@@ -49,13 +49,13 @@
             <column name="created_by" type="${varchar}" remarks="第一次创建人">
                 <constraints nullable="true"/>
             </column>
-            <column name="created_date" type="${timestamp}" defaultValueDate="${now}" remarks="第一次创建时间">
+            <column name="created_date" type="${timestamp}" remarks="第一次创建时间">
                 <constraints nullable="true"/>
             </column>
             <column name="last_modified_by" type="${varchar}" remarks="最后一次更新人">
                 <constraints nullable="true"/>
             </column>
-            <column name="last_modified_date" type="${timestamp}" defaultValueDate="${now}" remarks="最后一次更新时间">
+            <column name="last_modified_date" type="${timestamp}" remarks="最后一次更新时间">
                 <constraints nullable="true"/>
             </column>
             <column name="version" type="${bigint}" defaultValue="0" remarks="文件版本锁">
