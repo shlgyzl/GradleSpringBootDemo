@@ -27,13 +27,12 @@ spring:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     properties:
-      hibernate:
-        show_sql: true
-        format_sql: false
-        use_sql_comments: false
+      hibernate.show_sql: true
+      hibernate.format_sql: false
+      hibernate.use_sql_comments: false
+      hibernate.jdbc.time_zone: Asia/Shanghai #除非指定，否则JDBC驱动程序使用默认的JVM时区。如果通过此设置配置了不同的时区，JDBC PreparedStatement\setTimestamp将根据指定的时区使用日历实例
     database-platform: org.hibernate.dialect.H2Dialect
     #database-platform: org.hibernate.dialect.MySQL5Dialect
-
     open-in-view: false # 禁用在视图层仍然可以获取懒加载数据,默认SpringMVC是开启状态,会影响性能.
   main:
     allow-bean-definition-overriding: true

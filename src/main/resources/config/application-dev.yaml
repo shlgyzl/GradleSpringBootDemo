@@ -30,6 +30,7 @@ spring:
     properties:
       hibernate.format-sql: true
       hibernate.show-sql: true
+      hibernate.jdbc.time_zone: Asia/Shanghai #除非指定，否则JDBC驱动程序使用默认的JVM时区。如果通过此设置配置了不同的时区，JDBC PreparedStatement\setTimestamp将根据指定的时区使用日历实例
   main:
     allow-bean-definition-overriding: true
   profiles:
