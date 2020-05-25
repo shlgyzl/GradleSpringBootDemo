@@ -1,6 +1,5 @@
 package com.application;
 
-import com.application.config.DataSourceConfiguration;
 import com.application.config.FastJsonConfiguration;
 import com.application.domain.jpa.Authority;
 import com.application.domain.jpa.DefectType;
@@ -16,11 +15,13 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
+import java.io.InputStream;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
@@ -33,6 +34,8 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * 常用测试类
@@ -222,9 +225,24 @@ public class CommonTest {
         System.out.println(superclass.getSimpleName());
 
         int length = Array.getLength(new String[]{});
-        Object newInstance = Array.newInstance(String.class, 3,6,7,2);
+        Object newInstance = Array.newInstance(String.class, 3, 6, 7, 2);
         System.out.println(newInstance);
 
+    }
+
+    @Test
+    public void test15() throws IOException {
+        URL url = new URL("https://cdn.rerecb.com/20191201/38uyDmeq/800kb/hls/i6vcT7Qs.ts");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        // 设置超时间为3秒
+        conn.setConnectTimeout(3 * 1000);
+        // 防止屏蔽程序抓取而返回403错误
+        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36");
+        // 得到输入流
+        InputStream inputStream = conn.getInputStream();
+        Path filePath = Paths.get(System.getProperty("user.dir"), "files","i6vcT7Qs.ts");
+        java.nio.file.Files.createDirectories(filePath.getParent());
+        java.nio.file.Files.copy(inputStream, filePath, REPLACE_EXISTING);
     }
 
     /*@Test

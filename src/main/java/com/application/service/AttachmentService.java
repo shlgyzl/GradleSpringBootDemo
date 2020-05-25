@@ -23,10 +23,7 @@ import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -156,9 +153,18 @@ public class AttachmentService {
                 .setFileSizeFormatted(getPrintSize(multipartFile.getSize()))
                 .setFileName(fileName)
                 .setSimpleName(timeMillis + "")
-                .setContent(multipartFile.getBytes())
+                //.setContent(multipartFile.getBytes())
+                .setContent(Files.readAllBytes(filePath))
+                .setStringContent(Base64.getEncoder().encodeToString(multipartFile.getBytes()))
                 .setFile(filePath.toFile());// 用于访问文件
         return attachment.setUrl(getUrl(attachment));
+    }
+
+    private Path saveFile(MultipartFile multipartFile, String fileName) throws IOException {
+        Path filePath = Paths.get(getSystemPath(), getFileParent(multipartFile), fileName);
+        Files.createDirectories(filePath.getParent());
+        Files.copy(multipartFile.getInputStream(), filePath, REPLACE_EXISTING);
+        return filePath;
     }
 
     public String getSystemPath() {

@@ -2,10 +2,10 @@ server:
   port: 8080
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: root
-    url: jdbc:mysql://47.105.46.4:3306/jpa?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/jpa?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       auto-commit: true
@@ -25,7 +25,6 @@ spring:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     show-sql: true
     generate-ddl: false
-    database-platform: org.hibernate.dialect.MySQL57Dialect
     open-in-view: true # 禁用在视图层仍然可以获取懒加载数据,默认SpringMVC是开启状态,会影响性能.
     properties:
       hibernate.format-sql: true
@@ -37,11 +36,11 @@ spring:
     active: dev
   liquibase:
     contexts: dev
-    drop-first: false
+    drop-first: true
   data:
     mongodb:
       database: jpa
-      host: 47.105.46.4
+      host: localhost
       port: 27017
     redis:
       repositories:
@@ -54,12 +53,12 @@ spring:
         min-idle: 0
         max-idle: 4
       shutdown-timeout: 100
-    host: 47.105.46.4
+    host: localhost
     port: 6379
     database: 0
-    password: 123456
+    #password: 123456
   rabbitmq:
-    host: 47.105.46.4
+    host: localhost
     port: 5672
     username: admin
     password: admin

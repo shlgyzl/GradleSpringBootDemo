@@ -1,6 +1,5 @@
 package com.application.config;
 
-import com.application.constants.DateFormatConstants;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -22,6 +21,8 @@ import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
+import static cn.hutool.core.date.DatePattern.*;
+
 
 @JsonComponent
 @Slf4j
@@ -39,20 +40,20 @@ public class DateTimeConfiguration {
     public JavaTimeModule javaTimeModule() {
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         // 序列化
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_DATE_TIME_FORMAT).withZone(ZoneId.systemDefault())));
-        javaTimeModule.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer(DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_DATE_TIME_FORMAT).withZone(ZoneId.systemDefault())));
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_DATE_FORMAT).withZone(ZoneId.systemDefault())));
-        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_TIME_FORMAT).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer(DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(NORM_DATE_PATTERN).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(NORM_TIME_PATTERN).withZone(ZoneId.systemDefault())));
         // 反序列化
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_DATE_TIME_FORMAT).withZone(ZoneId.systemDefault())));
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_DATE_FORMAT).withZone(ZoneId.systemDefault())));
-        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_TIME_FORMAT).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN).withZone(ZoneId.systemDefault())));
         javaTimeModule.addDeserializer(ZonedDateTime.class, new JsonObjectDeserializer<ZonedDateTime>() {
             @Override
             protected ZonedDateTime deserializeObject(JsonParser jsonParser, DeserializationContext context, ObjectCodec codec, JsonNode tree) throws IOException {
-                return ZonedDateTime.parse(jsonParser.getText(), DateTimeFormatter.ofPattern(DateFormatConstants.DEFAULT_DATE_TIME_FORMAT).withZone(ZoneId.systemDefault()));
+                return ZonedDateTime.parse(jsonParser.getText(), DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN).withZone(ZoneId.systemDefault()));
             }
         });
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(NORM_DATE_PATTERN).withZone(ZoneId.systemDefault())));
+        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(NORM_TIME_PATTERN).withZone(ZoneId.systemDefault())));
         return javaTimeModule;
     }
 }

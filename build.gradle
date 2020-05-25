@@ -248,7 +248,7 @@ dependencies {
     // 引入Sql格式化工具
     compile "org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16"
     // 引入MySQL驱动
-    compile "mysql:mysql-connector-java:5.1.38"
+    compile 'mysql:mysql-connector-java:8.0.20'
 
 
     //-----------------------------queryDsl相关----------------------//

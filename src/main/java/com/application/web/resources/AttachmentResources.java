@@ -28,14 +28,14 @@ public class AttachmentResources {
     private final AttachmentService attachmentService;
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "file[]", value = "文件流对象,接收数组格式", required = true, dataType = "MultipartFile", allowMultiple = true),
+            @ApiImplicitParam(name = "files[]", value = "文件流对象,接收数组格式", required = true, dataType = "MultipartFile", allowMultiple = true),
             @ApiImplicitParam(name = "fileType", paramType = "form", value = "文件类型")}
     )
     @ApiOperation(value = "上传文件", notes = "上传文件")
     @PostMapping("/file/upload")
     @Timed
     public Attachment[] uploadFile(@RequestParam(value = "fileType", required = false) FileType fileType,
-                                   @RequestParam("file[]") MultipartFile[] files) throws IOException {
+                                   MultipartFile[] files) throws IOException {
         if (ObjectUtils.isEmpty(files)) {
             throw new BusinessErrorException(PARAMETER_EXCEPTION);
         }
