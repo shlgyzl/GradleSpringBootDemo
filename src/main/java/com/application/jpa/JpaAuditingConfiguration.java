@@ -1,4 +1,4 @@
-package com.application.config.jpa;
+package com.application.jpa;
 
 import com.application.common.util.SecurityUtil;
 import org.springframework.context.annotation.Bean;
