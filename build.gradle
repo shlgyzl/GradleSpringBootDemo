@@ -310,6 +310,7 @@ dependencies {
 
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(Javadoc) {// 添加JavaDoc字符集配置
     options.encoding = "UTF-8"
+    options.charSet = "UTF-8"
 }

@@ -1,9 +1,9 @@
 package com.application.web.resources.controller.index;
 
-import com.application.domain.enumeration.AuthType;
-import com.application.security.jwt.JWTConfigurer;
-import com.application.security.jwt.TokenProvider;
-import com.application.security.token.RemoteUsernamePasswordAuthenticationToken;
+import com.application.web.domain.enumeration.AuthType;
+import com.application.security.config.jwt.JWTConfigurer;
+import com.application.security.config.jwt.TokenProvider;
+import com.application.security.config.token.RemoteUsernamePasswordAuthenticationToken;
 import com.application.web.resources.vm.LoginVM;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;

@@ -1,10 +1,10 @@
 package com.application.web.resources;
 
-import com.application.domain.enumeration.BusinessErrorType;
-import com.application.domain.jpa.Authority;
-import com.application.service.AuthorityService;
+import com.application.web.domain.enumeration.BusinessErrorType;
+import com.application.web.domain.jpa.Authority;
+import com.application.web.service.AuthorityService;
 import com.application.web.resources.exception.BusinessErrorException;
-import com.application.web.resources.util.ResponseUtil;
+import com.application.common.util.ResponseUtil;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;

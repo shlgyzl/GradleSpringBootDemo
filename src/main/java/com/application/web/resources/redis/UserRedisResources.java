@@ -1,10 +1,10 @@
 package com.application.web.resources.redis;
 
-import com.application.domain.enumeration.BusinessErrorType;
-import com.application.domain.redis.UserRedis;
-import com.application.repository.redis.UserRedisRepository;
+import com.application.web.domain.enumeration.BusinessErrorType;
+import com.application.web.domain.redis.UserRedis;
+import com.application.web.repository.redis.UserRedisRepository;
 import com.application.web.resources.exception.BusinessErrorException;
-import com.application.web.resources.util.ResponseUtil;
+import com.application.common.util.ResponseUtil;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;

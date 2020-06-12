@@ -1,6 +1,6 @@
 package com.application.listener;
 
-import com.application.domain.abstracts.Automatic;
+import com.application.web.domain.abstracts.Automatic;
 import com.mongodb.lang.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
-import javax.persistence.Id;
 import java.util.Objects;
 
 @Component

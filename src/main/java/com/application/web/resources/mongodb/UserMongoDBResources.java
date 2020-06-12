@@ -1,10 +1,10 @@
 package com.application.web.resources.mongodb;
 
-import com.application.domain.enumeration.BusinessErrorType;
-import com.application.domain.mongodb.UserMongoDB;
-import com.application.repository.mongodb.UserMongoDBRepository;
+import com.application.web.domain.enumeration.BusinessErrorType;
+import com.application.web.domain.mongodb.UserMongoDB;
+import com.application.web.repository.mongodb.UserMongoDBRepository;
 import com.application.web.resources.exception.BusinessErrorException;
-import com.application.web.resources.util.ResponseUtil;
+import com.application.common.util.ResponseUtil;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.querydsl.core.types.Predicate;
 import io.micrometer.core.annotation.Timed;

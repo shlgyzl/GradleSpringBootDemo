@@ -1,8 +1,8 @@
 package com.application.web.resources;
 
-import com.application.domain.enumeration.FileType;
-import com.application.domain.jpa.Attachment;
-import com.application.service.AttachmentService;
+import com.application.web.domain.enumeration.FileType;
+import com.application.web.domain.jpa.Attachment;
+import com.application.web.service.AttachmentService;
 import com.application.web.resources.exception.BusinessErrorException;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.application.domain.enumeration.BusinessErrorType.PARAMETER_EXCEPTION;
+import static com.application.web.domain.enumeration.BusinessErrorType.PARAMETER_EXCEPTION;
 
 @Api(value = "Attachment", tags = {"Attachment文件管理接口"})
 @RestController

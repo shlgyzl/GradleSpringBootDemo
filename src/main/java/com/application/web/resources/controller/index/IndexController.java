@@ -1,6 +1,6 @@
 package com.application.web.resources.controller.index;
 
-import com.application.domain.enumeration.BusinessErrorType;
+import com.application.web.domain.enumeration.BusinessErrorType;
 import com.application.web.resources.exception.BusinessErrorException;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;

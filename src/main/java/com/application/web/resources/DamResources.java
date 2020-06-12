@@ -1,8 +1,8 @@
 package com.application.web.resources;
 
-import com.application.domain.enumeration.BusinessErrorType;
-import com.application.domain.jpa.Dam;
-import com.application.service.DamService;
+import com.application.web.domain.enumeration.BusinessErrorType;
+import com.application.web.domain.jpa.Dam;
+import com.application.web.service.DamService;
 import com.application.web.resources.exception.BusinessErrorException;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;

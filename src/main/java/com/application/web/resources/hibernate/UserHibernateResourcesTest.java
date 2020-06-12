@@ -1,10 +1,10 @@
 package com.application.web.resources.hibernate;
 
-import com.application.domain.jpa.User;
-import com.application.repository.jpa.UserRepository;
-import com.application.repository.jpa.dao.IUserDao;
-import com.application.service.dto.UserDTO;
-import com.application.service.util.SpecificationUtil;
+import com.application.web.domain.jpa.User;
+import com.application.web.repository.jpa.UserRepository;
+import com.application.web.repository.jpa.dao.IUserDao;
+import com.application.web.service.dto.UserDTO;
+import com.application.web.service.util.SpecificationUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;

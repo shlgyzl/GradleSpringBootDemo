@@ -1,6 +1,6 @@
 package com.application.web.resources.exception;
 
-import com.application.domain.enumeration.BusinessErrorType;
+import com.application.web.domain.enumeration.BusinessErrorType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

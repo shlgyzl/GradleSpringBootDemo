@@ -1,10 +1,10 @@
 package com.application;
 
-import com.application.config.FastJsonConfiguration;
-import com.application.domain.jpa.Authority;
-import com.application.domain.jpa.DefectType;
-import com.application.domain.jpa.Role;
-import com.application.web.resources.util.DomainUtil;
+import com.application.config.fastjson.FastJsonConfiguration;
+import com.application.web.domain.jpa.Authority;
+import com.application.web.domain.jpa.DefectType;
+import com.application.web.domain.jpa.Role;
+import com.application.common.util.DomainUtil;
 import org.assertj.core.util.Files;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

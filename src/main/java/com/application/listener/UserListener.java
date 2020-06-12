@@ -1,7 +1,7 @@
 package com.application.listener;
 
-import com.application.domain.jpa.User;
-import com.application.event.UserEvent;
+import com.application.web.domain.jpa.User;
+import com.application.common.event.UserEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 

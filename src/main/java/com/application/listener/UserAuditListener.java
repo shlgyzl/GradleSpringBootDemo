@@ -1,6 +1,6 @@
 package com.application.listener;
 
-import com.application.domain.jpa.User;
+import com.application.web.domain.jpa.User;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.PostPersist;

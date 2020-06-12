@@ -1,11 +1,11 @@
 package com.application;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
-import com.application.domain.jpa.User;
-import com.application.domain.mongodb.UserMongoDB;
-import com.application.repository.jpa.UserRepository;
-import com.application.repository.jpa.dao.impl.UserDaoImpl;
-import com.application.repository.mongodb.UserMongoDBRepository;
+import com.application.web.domain.jpa.User;
+import com.application.web.domain.mongodb.UserMongoDB;
+import com.application.web.repository.jpa.UserRepository;
+import com.application.web.repository.jpa.dao.impl.UserDaoImpl;
+import com.application.web.repository.mongodb.UserMongoDBRepository;
 import io.github.jhipster.config.DefaultProfileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
