@@ -1,143 +1,66 @@
 buildscript {
     ext {
-        springBootVersion = "2.2.6.RELEASE"
+        springBootVersion = "2.3.1.RELEASE"
     }
     repositories {
         mavenLocal()
         maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
-        maven { url "https://maven.aliyun.com/repository/google" }
         maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
-        maven { url "https://maven.aliyun.com/repository/jcenter" }
-        maven { url "https://maven.aliyun.com/repository/spring" }
-        maven { url "https://maven.aliyun.com/repository/spring-plugin" }
-        maven { url "https://maven.aliyun.com/repository/public" }
-        maven { url "https://maven.aliyun.com/repository/releases" }
-        maven { url "https://maven.aliyun.com/repository/snapshots" }
-        maven { url "https://maven.aliyun.com/repository/grails-core" }
-        maven { url "https://maven.aliyun.com/repository/mapr-public" }
-        maven { url "https://mirrors.huaweicloud.com/repository/maven/" }
-        maven { url "https://plugins.gradle.org/m2/" }
+
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("io.franzbecker:gradle-lombok:1.11")
-        classpath("io.spring.gradle:propdeps-plugin:0.0.10.RELEASE")
-        classpath("gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2")
     }
 }
 
-
 plugins {
-    id "org.springframework.boot" version "2.2.6.RELEASE"
-    id "io.spring.dependency-management" version "1.0.9.RELEASE"
     id "java"
-    id "net.ltgt.apt-idea" version "0.21"
-    id "org.zeroturnaround.gradle.jrebel" version "1.1.9"
-    id "org.liquibase.gradle" version "2.0.1"
+    id "idea"
+    id "maven-publish"
+    id "jacoco"
 }
-repositories {
-    mavenLocal()
-    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
-    maven { url "https://maven.aliyun.com/repository/google" }
-    maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
-    maven { url "https://maven.aliyun.com/repository/jcenter" }
-    maven { url "https://maven.aliyun.com/repository/spring" }
-    maven { url "https://maven.aliyun.com/repository/spring-plugin" }
-    maven { url "https://maven.aliyun.com/repository/public" }
-    maven { url "https://maven.aliyun.com/repository/releases" }
-    maven { url "https://maven.aliyun.com/repository/snapshots" }
-    maven { url "https://maven.aliyun.com/repository/grails-core" }
-    maven { url "https://maven.aliyun.com/repository/mapr-public" }
-    maven { url "https://mirrors.huaweicloud.com/repository/maven/" }
-}
+
+apply plugin: "java"
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+
 group "com.gradle.cn"
 version "1.0-SNAPSHOT"
+description = "超级功能项目"
 
 sourceCompatibility = 1.8 // 编译时指定的JDK版本
 targetCompatibility = 1.8 // 生成字节码时指定的JDK版本(一般不会小于编译时,如果小于则需要使用jack工具链)
-
-
-apply plugin: "java"
-apply plugin: "idea"
-apply plugin: "org.springframework.boot"
-apply plugin: "io.spring.dependency-management"
-apply plugin: "org.zeroturnaround.gradle.jrebel"
-apply plugin: "eclipse"
-apply plugin: 'propdeps'
 assert System.properties["java.specification.version"] == "1.8"// 判断开发者是否使用JDK1.8,不是则构建失败
 
+repositories {
+    mavenLocal()
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+}
 
-def generatedSrcDir = "$buildDir/generated/source/main"
-def generatedTestDir = "$buildDir/generated-test/source/main"
+ext {
+    set('springBootAdminVersion', "2.2.3")
+    set('springCloudVersion', "Greenwich.SR1")
+    set('jhipsterDependenciesVersion', "3.8.0")
+    set('querydslVersion', "4.3.1")
+    set('mapstructVersion', "1.3.1.Final")
 
-idea {
-    module {
-        sourceDirs += file(generatedSrcDir)
-        testSourceDirs += file(generatedTestDir)
-        downloadSources = true
-        downloadJavadoc = true
+}
+
+configurations {
+    configuration.resolutionStrategy.failOnVersionConflict()
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
     }
-}
-
-defaultTasks "bootRun"
-description = "超级功能项目"
-
-subprojects { task allDepInsight(type: DependencyInsightReportTask) << {} }
-
-compileJava {
-    doFirst() {
-        System.err.println("启用多级注解处理器")
-        file(generatedSrcDir).mkdirs()
-        options.compilerArgs << '-processor' <<
-                'com.querydsl.apt.jpa.JPAAnnotationProcessor,' +
-                'lombok.launch.AnnotationProcessorHider$AnnotationProcessor,' +
-                'org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor,' +
-                'org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor' << '-s' << file(generatedSrcDir).absolutePath
+    compileOnly {
+        extendsFrom annotationProcessor
     }
-}
-
-compileTestJava {
-    doFirst() {
-        System.err.println("启用多级注解处理器")
-        file(generatedTestDir).mkdirs()
-        options.compilerArgs << '-processor' <<
-                'com.querydsl.apt.jpa.JPAAnnotationProcessor,' +
-                'lombok.launch.AnnotationProcessorHider$AnnotationProcessor,' +
-                'org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor,' +
-                'org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor' << '-s' << file(generatedTestDir).absolutePath
-    }
-}
-
-clean {
-    delete generatedSrcDir
-    delete generatedTestDir
-}
-
-configurations.all() {
-    configuration ->
-        // 遇到冲突则停止构建
-        configuration.resolutionStrategy.failOnVersionConflict()
-        configuration.resolutionStrategy.force(["org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE"])
-        configuration.resolutionStrategy.force(["org.javassist:javassist:3.24.0-GA"])
-        configuration.resolutionStrategy.force(["com.google.guava:guava:29.0-jre"])
-        configuration.resolutionStrategy.force(["com.google.code.findbugs:jsr305:3.0.2"])
-        configuration.resolutionStrategy.force(["org.hdrhistogram:HdrHistogram:2.1.1"])
-        configuration.resolutionStrategy.force(["com.netflix.archaius:archaius-core:0.7.6"])
-        configuration.resolutionStrategy.force(["io.github.openfeign:feign-core:10.4.0"])
-        configuration.resolutionStrategy.force(["commons-logging:commons-logging:1.2"])
-        configuration.resolutionStrategy.force(["org.checkerframework:checker-qual:2.11.1"])
-        configuration.resolutionStrategy.force(["com.google.errorprone:error_prone_annotations:2.3.4"])
-        configuration.resolutionStrategy.force(["org.objenesis:objenesis:2.6"])
-
-
 }
 
 
 dependencies {
-    //----------------------本地文件jar包--------------------//
-    compile fileTree(dir: "libs", include: ["*.jar"])
-
-    //----------------------SpringBoot组件-------------------//
+    implementation "org.springframework.boot:spring-boot-loader-tools"
     implementation "org.springframework.boot:spring-boot-loader-tools"
     implementation "org.springframework.boot:spring-boot-starter-mail"
     implementation "org.springframework.boot:spring-boot-starter-logging"
@@ -150,47 +73,56 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-amqp"
     implementation "org.springframework.boot:spring-boot-starter-cache"
     implementation "org.springframework.boot:spring-boot-starter-quartz"
-    //implementation "org.springframework.boot:spring-boot-starter-hateoas" // 此处巨坑,与swagger2冲突.
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-websocket"
     implementation "org.springframework.boot:spring-boot-starter-tomcat"
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-    implementation "org.springframework.boot:spring-boot-devtools"
+    implementation "org.springframework.boot:spring-boot-starter-hateoas"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+
     implementation "org.springframework.security:spring-security-messaging:5.3.1.RELEASE"
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
 
-    //--------------------------监控系统---------------------//
-    // 引入SpringBootAdmin监控系统
-    implementation "de.codecentric:spring-boot-admin-starter-client:2.2.1"
-    // 引入alibabaSentinel监控系统
-    implementation "com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel:2.2.0.RELEASE"
-    implementation "com.alibaba.csp:sentinel-transport-simple-http:1.7.1"
-    runtimeOnly group: "org.springframework.cloud", name: "spring-cloud-dependencies", version: "Finchley.M9", ext: "pom"
+    implementation "de.codecentric:spring-boot-admin-starter-server"
+    implementation "de.codecentric:spring-boot-admin-server-ui"
+    implementation "io.github.jhipster:jhipster-framework:${jhipsterDependenciesVersion}"
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "mysql:mysql-connector-java"
+    implementation "com.microsoft.sqlserver:mssql-jdbc"
+    implementation "com.oracle.ojdbc:ojdbc8"
+    implementation "org.liquibase:liquibase-core"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "cn.hutool:hutool-all:5.2.5"
+    implementation "org.joda:joda-convert:2.2.1"
+    implementation "joda-time:joda-time:2.10.5"
+    implementation "org.mongodb:mongo-java-driver:3.12.5"
+    implementation "org.mongodb:mongodb-driver:4.1.0-beta2"
+    implementation "org.mongodb:mongodb-driver-core:4.1.0-beta2"
 
-    //--------------------------远程API调用------------------//
-    // 引入feign进行远程API调用
-    implementation "org.springframework.cloud:spring-cloud-starter-openfeign:2.2.0.RELEASE"
-    implementation "io.github.openfeign:feign-gson:10.0.0"
-    implementation "io.github.openfeign:feign-jackson:10.0.0"
 
-    //-------------------------数据源-----------------------//
-    // 引入号称最快的数据库连接池HikariCP
-    compile "com.zaxxer:HikariCP:3.4.1"
-    // 引入dbcp2数据源
-    compile "org.apache.commons:commons-dbcp2:2.7.0"
-    // 引入dbcp数据源
-    compile "commons-dbcp:commons-dbcp:1.4"
-    // 引入tomcat-jdbc数据源
-    compile "org.apache.tomcat:tomcat-jdbc:9.0.27"
-    // 引入druid数据源,自定义第三方数据源并配置
-    compile "com.alibaba:druid:1.1.20"
+    compileOnly "org.projectlombok:lombok"
+    compileOnly "com.querydsl:querydsl-jpa:${querydslVersion}"
+    compileOnly "com.querydsl:querydsl-apt:${querydslVersion}"
+    compileOnly "com.querydsl:querydsl-mongodb:${querydslVersion}"
 
-    //-------------------------Swagger2接口文档-----------------------//
-    // 引入API接口文档UI用于网页展示
-    compile("io.springfox:springfox-swagger-ui:2.9.2") {
-        exclude group: "io.swagger", module: "swagger-annotations"
-        exclude group: "io.swagger", module: "swagger-models"
+
+    annotationProcessor "org.projectlombok:lombok"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen"
+    annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jpa"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    annotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
+    annotationProcessor "org.springframework.boot:spring-boot-starter-data-mongodb"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    testImplementation "com.h2database:h2"
+    testImplementation "org.springframework.security:spring-security-test"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "org.junit.vintage', module: 'junit-vintage-engine"
     }
-    // 引入API接口文档用于传输API信息
+
     compile("io.springfox:springfox-swagger2:2.9.2") {
         exclude group: "io.swagger", module: "swagger-annotations"
         exclude group: "io.swagger", module: "swagger-models"
@@ -208,106 +140,20 @@ dependencies {
     // 解决静态页面访问问题
     compile "com.google.guava:guava:29.0-jre"
 
-    //----------------------第三方缓存框架-----------------------//
-    // 引入cache核心
-    compile "org.ehcache:ehcache:3.8.1"
-    // 引入Ehcache
-    compile "net.sf.ehcache:ehcache:2.10.6"
-    // 引入Jcache
-    compile "javax.cache:cache-api:1.1.1"
-    // 引入alibaba封装的cache框架
-    compile "com.alicp.jetcache:jetcache-starter-redis:2.6.0"
 
+}
 
-    //---------------------日期格式转换器----------------------//
-    // 用于LocalDateTime转Instant类型或反转
-    compile "org.joda:joda-convert:2.2.1"
-    // 加入时间工具类
-    compile "joda-time:joda-time:2.10.5"
-    // 引入时间前端展示转换器
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1"
-    compile group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "2.11.0.rc1"
-
-    // fastJson引用
-    compile "com.alibaba:fastjson:1.2.68"
-
-    //---------------------MongoDB数据库---------------------//
-    compile "com.google.code.morphia:morphia:0.104"
-    // 引入mongodb注解驱动
-    compile "org.mongodb.morphia:morphia:1.3.2"
-    // 引入mongodb实体注解配合queryDSL(google扫描)
-    compile "com.google.code:morphia:0.91"
-
-    //--------------------数据库相关------------------------//
-    // 引入hsqldb驱动
-    compile "org.hsqldb:hsqldb:2.5.0"
-    // 引入liquibase数据库版本和迁移工具
-    compile "org.liquibase:liquibase-core:3.8.0"
-    // 引入H2database数据库方便开发测试
-    compile "com.h2database:h2:1.4.200"
-    // 引入Sql格式化工具
-    compile "org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16"
-    // 引入MySQL驱动
-    compile 'mysql:mysql-connector-java:8.0.20'
-
-
-    //-----------------------------queryDsl相关----------------------//
-    // 引入QueryDsl注解驱动器
-    compile "com.querydsl:querydsl-apt:4.2.2"
-    compile "com.querydsl:querydsl-mongodb:4.2.2"
-    compile("com.querydsl:querydsl-jpa:4.2.2")
-
-
-    //----------------------------模板引擎相关----------------------//
-
-    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE"
-    compile "io.github.jpenren:thymeleaf-spring-data-dialect:3.4.1"
-    runtime "io.jsonwebtoken:jjwt-impl:0.11.0"
-    runtime "io.jsonwebtoken:jjwt-jackson:0.11.0"
-    compile "io.jsonwebtoken:jjwt-api:0.11.0"
-    compile "org.apache.commons:commons-lang3:3.9"
-
-    //---------------------------通用工具相关------------------------//
-    // 各种打包模块集合
-    compile "cn.hutool:hutool-all:5.2.5"
-    compile "org.projectlombok:lombok"
-
-
-    //---------------------------jHipster相关----------------------//
-    compile "io.github.jhipster:jhipster-framework:3.1.0"
-
-
-    //--------------------------通用运行时依赖相关-----------------------//
-    runtimeOnly "com.h2database:h2"
-
-
-    //--------------------------注解处理器---------------------------//
-    annotationProcessor "org.projectlombok:lombok"
-    annotationProcessor "org.hibernate:hibernate-jpamodelgen"
-    annotationProcessor "com.querydsl:querydsl-apt:4.2.2:jpa"
-    annotationProcessor "org.mapstruct:mapstruct-processor:1.2.0.Final"
-    annotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
-    annotationProcessor "org.springframework.boot:spring-boot-starter-data-mongodb"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
-
-    //--------------------------测试相关-----------------------------//
-
-    testCompile "org.projectlombok:lombok"
-    testCompile "junit:junit:4.13"
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+dependencyManagement {
+    imports {
+        mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
     }
-    testImplementation "org.springframework.security:spring-security-test"
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
 
-    testAnnotationProcessor "org.projectlombok:lombok"
-    testAnnotationProcessor "org.hibernate:hibernate-jpamodelgen"
-    testAnnotationProcessor "com.querydsl:querydsl-apt:4.2.2:jpa"
-    testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.2.0.Final"
-    testAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
-    testAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-mongodb"
-    testAnnotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-
+test {
+    useJUnitPlatform()
 }
 
 tasks.withType(Javadoc) {// 添加JavaDoc字符集配置

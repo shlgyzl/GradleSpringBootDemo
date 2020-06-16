@@ -1,8 +1,0 @@
-version: '2'
-services:
-  demo-redis:
-    image: rabbitmq:3.8.2
-    ports:
-      - '5672:5672'
-    #volumes:
-    #  - ~/volumes/jhipster/demo/redis/:/data/db/

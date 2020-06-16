@@ -1,0 +1,284 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-1">
+        <createSequence maxValue="9999999999999999999999999999" sequenceName="HIBERNATE_SEQUENCE" startValue="120"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-2">
+        <createTable remarks="文件" tableName="TBL_ATTACHMENT">
+            <column name="ID" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TBL_ATTACHMENT"/>
+            </column>
+            <column name="FILE_NAME" remarks="文件名称" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SIMPLE_NAME" remarks="文件简称" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORIGINAL_FILE_NAME" remarks="文件原名称" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FILE_SIZE" remarks="文件大小(字节数)" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FILE_SIZE_FORMATTED" remarks="文件大小(带有单位)" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CONTENT_TYPE" remarks="文件类型" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CONTENT" remarks="文件内容(blob/longblob)" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FILE_CONTENT" remarks="文件内容(longblob)" type="BLOB"/>
+            <column name="STRING_CONTENT" remarks="文件内容(text/longtext)" type="CLOB"/>
+            <column name="IMAGE_CONTENT" remarks="文件图片(longblob)" type="BLOB"/>
+            <column name="FILE_PATH" remarks="文件路径" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="URL" remarks="文件网络路径" type="NVARCHAR2(255)"/>
+            <column name="CREATED_BY" remarks="第一次创建人" type="NVARCHAR2(255)"/>
+            <column name="CREATED_DATE" remarks="第一次创建时间" type="TIMESTAMP(6)"/>
+            <column name="LAST_MODIFIED_BY" remarks="最后一次更新人" type="NVARCHAR2(255)"/>
+            <column name="LAST_MODIFIED_DATE" remarks="最后一次更新时间" type="TIMESTAMP(6)"/>
+            <column defaultValueNumeric="0" name="VERSION" remarks="文件版本锁" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-3">
+        <createTable remarks="权限" tableName="TBL_AUTHORITY">
+            <column name="ID" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TBL_AUTHORITY"/>
+            </column>
+            <column name="NAME" remarks="权限名称" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="VERSION" remarks="权限版本锁" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-4">
+        <createTable remarks="大坝" tableName="TBL_DAM">
+            <column name="ID" remarks="主键id" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TBL_DAM"/>
+            </column>
+            <column name="NAME" remarks="大坝名称" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="VERSION" remarks="大坝版本锁" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-5">
+        <createTable remarks="缺陷类型" tableName="TBL_DEFECT_TYPE">
+            <column name="ID" remarks="主键id" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TBL_DEFECT_TYPE"/>
+            </column>
+            <column name="NAME" remarks="缺陷类型名称" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CODE" remarks="缺陷类型编号" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DAM_ID" remarks="大坝id" type="NUMBER(20, 0)"/>
+            <column defaultValueNumeric="0" name="VERSION" remarks="缺陷类型版本锁" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-6">
+        <createTable remarks="缺陷类型属性" tableName="TBL_DEFECT_TYPE_PROPERTY">
+            <column name="ID" remarks="缺陷类型属性id" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TBL_DEFECT_TYPE_PROPERTY"/>
+            </column>
+            <column name="NAME" remarks="缺陷类型属性名称" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FIELD_TYPE" remarks="字段类型" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="REQUIRED_FIELD" remarks="必填项" type="NUMBER(1, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MAX_VALUE" remarks="最大值" type="NVARCHAR2(255)"/>
+            <column name="MIN_VALUE" remarks="最小值" type="NVARCHAR2(255)"/>
+            <column name="DEFAULT_VALUE" remarks="默认值" type="NVARCHAR2(255)"/>
+            <column name="VALUE" remarks="测量值" type="NVARCHAR2(255)"/>
+            <column name="UNIT" remarks="单位" type="NVARCHAR2(255)"/>
+            <column name="DEFECT_TYPE_ID" remarks="缺陷类型" type="NUMBER(20, 0)"/>
+            <column name="REGION" remarks="值所在区间" type="NVARCHAR2(255)"/>
+            <column defaultValueNumeric="0" name="VERSION" remarks="缺陷类型属性版本锁" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-7">
+        <createTable remarks="持久化token" tableName="TBL_PERSISTENT_TOKEN">
+            <column name="ID" type="NVARCHAR2(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TBL_PERSISTENT_TOKEN"/>
+            </column>
+            <column name="TOKEN_VALUE" remarks="token_value" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TOKEN_DATE" remarks="token有效期" type="TIMESTAMP(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IP_ADDRESS" remarks="ip地址" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_AGENT" remarks="用户代理" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_ID" remarks="用户id" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="VERSION" remarks="持久化token版本锁" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-8">
+        <createTable remarks="角色" tableName="TBL_ROLE">
+            <column name="ID" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TBL_ROLE"/>
+            </column>
+            <column name="NAME" remarks="角色名称" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="VERSION" remarks="角色版本锁" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-9">
+        <createTable remarks="角色与权限关系表" tableName="TBL_ROLE_AUTHORITY">
+            <column name="ROLE_ID" remarks="角色id" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0016944"/>
+            </column>
+            <column name="AUTHORITY_ID" remarks="权限id" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0016944"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-10">
+        <createTable remarks="用户" tableName="TBL_USER">
+            <column name="ID" remarks="主键id" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TBL_USER"/>
+            </column>
+            <column name="LOGIN" remarks="登录账号" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD_HASH" remarks="登录密码" type="NVARCHAR2(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="VERSION" remarks="用户版本锁" type="NUMBER(20, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" remarks="第一次创建人" type="NVARCHAR2(255)"/>
+            <column name="CREATED_DATE" remarks="第一次创建时间" type="TIMESTAMP(6)"/>
+            <column name="LAST_MODIFIED_BY" remarks="最后一次更新人" type="NVARCHAR2(255)"/>
+            <column name="LAST_MODIFIED_DATE" remarks="最后一次更新时间" type="TIMESTAMP(6)"/>
+            <column defaultValueNumeric="0" name="ACTIVATED" remarks="是否激活" type="NUMBER(1, 0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IMAGE_URL" remarks="头像" type="NVARCHAR2(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-11">
+        <createTable remarks="用户与大坝关系表" tableName="TBL_USER_DAM">
+            <column name="USER_ID" remarks="用户id" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0016943"/>
+            </column>
+            <column name="DAM_ID" remarks="大坝id" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0016943"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-12">
+        <createTable remarks="用户与角色关系表" tableName="TBL_USER_ROLE">
+            <column name="USER_ID" remarks="用户id" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0016942"/>
+            </column>
+            <column name="ROLE_ID" remarks="角色id" type="NUMBER(20, 0)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0016942"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-13">
+        <createIndex indexName="UX_AUTHORITY_NAME" tableName="TBL_AUTHORITY" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-14">
+        <addUniqueConstraint columnNames="NAME" constraintName="UX_AUTHORITY_NAME" forIndexName="UX_AUTHORITY_NAME" tableName="TBL_AUTHORITY"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-15">
+        <createIndex indexName="UX_DAM_NAME" tableName="TBL_DAM" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-16">
+        <addUniqueConstraint columnNames="NAME" constraintName="UX_DAM_NAME" forIndexName="UX_DAM_NAME" tableName="TBL_DAM"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-17">
+        <createIndex indexName="UX_DEFECT_TYPE_CODE" tableName="TBL_DEFECT_TYPE" unique="true">
+            <column name="CODE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-18">
+        <addUniqueConstraint columnNames="CODE" constraintName="UX_DEFECT_TYPE_CODE" forIndexName="UX_DEFECT_TYPE_CODE" tableName="TBL_DEFECT_TYPE"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-19">
+        <createIndex indexName="UX_DEFECT_TYPE_NAME" tableName="TBL_DEFECT_TYPE" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-20">
+        <addUniqueConstraint columnNames="NAME" constraintName="UX_DEFECT_TYPE_NAME" forIndexName="UX_DEFECT_TYPE_NAME" tableName="TBL_DEFECT_TYPE"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-21">
+        <createIndex indexName="UX_ROLE_NAME" tableName="TBL_ROLE" unique="true">
+            <column name="NAME"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-22">
+        <addUniqueConstraint columnNames="NAME" constraintName="UX_ROLE_NAME" forIndexName="UX_ROLE_NAME" tableName="TBL_ROLE"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-23">
+        <createIndex indexName="UX_USER_LOGIN" tableName="TBL_USER" unique="true">
+            <column name="LOGIN"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-24">
+        <addUniqueConstraint columnNames="LOGIN" constraintName="UX_USER_LOGIN" forIndexName="UX_USER_LOGIN" tableName="TBL_USER"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-25">
+        <addForeignKeyConstraint baseColumnNames="AUTHORITY_ID" baseTableName="TBL_ROLE_AUTHORITY" constraintName="FK_C72E50A7ADE843480" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="TBL_AUTHORITY" validate="true"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-26">
+        <addForeignKeyConstraint baseColumnNames="DAM_ID" baseTableName="TBL_USER_DAM" constraintName="FK_C72E50A7ADE843481" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="TBL_DAM" validate="true"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-27">
+        <addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="TBL_USER_DAM" constraintName="FK_C72E50A7ADE843482" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="TBL_USER" validate="true"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-28">
+        <addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="TBL_USER_ROLE" constraintName="FK_C72E50A7ADE843483" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="TBL_USER" validate="true"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-29">
+        <addForeignKeyConstraint baseColumnNames="ROLE_ID" baseTableName="TBL_USER_ROLE" constraintName="FK_C72E50A7ADE843484" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="TBL_ROLE" validate="true"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-30">
+        <addForeignKeyConstraint baseColumnNames="ROLE_ID" baseTableName="TBL_ROLE_AUTHORITY" constraintName="FK_C72E50A7ADE843485" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="TBL_ROLE" validate="true"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-31">
+        <addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="TBL_PERSISTENT_TOKEN" constraintName="FK_C72E50A7ADE843486" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="TBL_USER" validate="true"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-32">
+        <addForeignKeyConstraint baseColumnNames="DEFECT_TYPE_ID" baseTableName="TBL_DEFECT_TYPE_PROPERTY" constraintName="FK_C72E50A7ADE843487" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="TBL_DEFECT_TYPE" validate="true"/>
+    </changeSet>
+    <changeSet author="yanghaiyong (generated)" id="1589702372322-33">
+        <addForeignKeyConstraint baseColumnNames="DAM_ID" baseTableName="TBL_DEFECT_TYPE" constraintName="FK_C72E50A7ADE843488" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="TBL_DAM" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

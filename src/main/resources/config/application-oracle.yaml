@@ -1,0 +1,67 @@
+spring:
+  jpa:
+    generate-ddl: true #是否在启动时初始化架构
+    hibernate:
+      ddl-auto: none #DDL模式。这实际上是“hibernate.hbm2ddl.auto”属性的快捷方式。在使用嵌入式数据库且未检测到架构管理器时，默认为“create drop”。否则，默认为“无”
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy #隐式命名策略的完全限定名
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy #物理命名策略的完全限定名
+      use-new-id-generator-mappings: true #将会生成序列表,是否使用Hibernate新的IdentifierGenerator来实现AUTO、TABLE和SEQUENCE。这实际上是“hibernate.id.new_generator_mappings”属性的快捷方式。未指定时将默认为“true”
+    open-in-view: true #在请求的整个处理过程中将JPA EntityManager绑定到线程
+    properties: #要在JPA提供程序上设置的其他本地属性
+      hibernate.id.new_generator_mappings: false #如果没有使用liquibase,最好开启此处,指示新标识生成器是否用于自动、表和序列的设置。现有应用程序可能需要禁用此选项（设置为false），以便将兼容性从3.x和4.x升级到5.x
+      hibernate.model.generator_name_as_sequence_nam: true #如果为true，则当找不到匹配的@sequence generator或TableGenerator时，@GeneratedValue注释的generator属性指定的值应用作序列/表名。默认值为true，表示默认情况下，@GeneratedValue.generator（）将用作序列/表名。使用旧的hibernate_序列名从早期版本迁移的用户应禁用此设置
+      hibernate.jdbc.time_zone: Asia/Shanghai #除非指定，否则JDBC驱动程序使用默认的JVM时区。如果通过此设置配置了不同的时区，JDBC PreparedStatement\setTimestamp将根据指定的时区使用日历实例
+      hibernate.jdbc.batch_size: 5 #最大JDBC批处理大小。非零值启用批量更新
+      hibernate.order_inserts: true #强制Hibernate按要插入的项的主键值排序SQL插入。这在使用层叠时保留批处理
+      hibernate.order_updates: true #强制Hibernate按要更新的项的主键值排序SQL更新。这在使用级联时保留了批处理，并降低了高并发系统中事务死锁的可能性
+      hibernate.max_fetch_dept: 3 #为单端关联的外部联接获取树设置最大深度。单端关联是一对一或多对一关联。值为0将禁用默认外部联接获取
+      hibernate.default_batch_fetch_siz: 16 #Hibernate批量获取关联的默认大小（可以批量获取延迟获取的关联，以防止出现N+1查询问题）
+      hibernate.jdbc.fetch_size: 15 #非零值通过调用Statement.setFetchSize确定JDBC获取大小
+      hibernate.show_sql: true #将所有SQL语句写入控制台。这是设置日志类别的另一种方法org.hibernate.SQL网站去调试
+      hibernate.format_sq: true #在日志和控制台中打印SQL
+      hibernate.use_sql_comment: true #如果为true，Hibernate将在SQL中生成注释，以便于调试
+      hibernate.hbm2ddl.auto: none #设置为作为SessionFactory生命周期的一部分自动执行SchemaManagement工具操作
+      hibernate.connection.provider_disables_autocommit: true #禁用自动提交
+      hibernate.cache.use_second_level_cache: false #禁用二级缓存
+      hibernate.cache.use_query_cache: false #禁用实体本地缓存
+      hibernate.globally_quoted_identifiers: false #是否应引用所有数据库标识符,如果使用通用的数据库最好不要设置为true
+      hibernate.current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+      hibernate.generate_statistic: true #使Hibernate收集性能调整的统计信息
+      #hibernate.session.events.log: true #是否在控制台显示性能日志
+      hibernate.query.fail_on_pagination_over_collection_fetch: true #显示内存分页警告
+    show-sql: true #是否启用SQL语句的日志记录
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    username: test
+    password: test
+    url: jdbc:oracle:thin:@localhost:1521/helowin
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+      max-lifetime: 100000000
+  liquibase:
+    drop-first: false
+    contexts: dev,test,prod
+    enabled: true
+    change-log: classpath:config/liquibase/db.changelog-master.xml
+    user: test
+    password: test
+    url: jdbc:oracle:thin:@localhost:1521/helowin
+    default-schema: TEST
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss #如果程序里配置了，此处则失效,此配置满足以jackson接收参数和返回,不能直接接收get参数请求，可以使用@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")。可以指定Date或者其他日期类型但是得配置相应得格式，参考StdDateFormat
+    time-zone: Asia/Shanghai # 必须指定时区,否则默认使用UTC,如果程序里配置了，此处则失效
+  servlet:
+    multipart:
+      max-file-size: 100MB #上传文件最大为 100M
+      max-request-size: 200MB #上传总数据大小 200M
+application:
+  file:
+    upload-path: /files

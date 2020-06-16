@@ -31,13 +31,13 @@
             <column name="content" type="${blob}" remarks="文件内容(blob/longblob)">
                 <constraints unique="false" nullable="false"/>
             </column>
-            <column name="file" type="${blob}" remarks="文件内容(longblob)">
+            <column name="file_content" type="${blob}" remarks="文件内容(longblob)">
                 <constraints unique="false" nullable="true"/>
             </column>
             <column name="string_content" type="${text}" remarks="文件内容(text/longtext)">
                 <constraints unique="false" nullable="true"/>
             </column>
-            <column name="image" type="${blob}" remarks="文件图片(longblob)">
+            <column name="image_content" type="${blob}" remarks="文件图片(longblob)">
                 <constraints unique="false" nullable="true"/>
             </column>
             <column name="file_path" type="${varchar}" remarks="文件路径">
