@@ -40,7 +40,7 @@ repositories {
 
 ext {
     set('springBootAdminVersion', "2.2.3")
-    set('springCloudVersion', "Greenwich.SR1")
+    set('springCloudVersion', "Hoxton.SR5")
     set('jhipsterDependenciesVersion', "3.8.0")
     set('querydslVersion', "4.3.1")
     set('mapstructVersion', "1.3.1.Final")
@@ -58,6 +58,14 @@ configurations {
     }
 }
 
+
+sourceSets {
+    main {
+        java {
+            srcDir "$buildDir/generated/sources/annotationProcessor/java/main"
+        }
+    }
+}
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-loader-tools"
@@ -77,7 +85,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-websocket"
     implementation "org.springframework.boot:spring-boot-starter-tomcat"
     implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-    implementation "org.springframework.boot:spring-boot-starter-hateoas"
+    //implementation "org.springframework.boot:spring-boot-starter-hateoas"
     implementation "org.springframework.boot:spring-boot-starter-validation"
 
     implementation "org.springframework.security:spring-security-messaging:5.3.1.RELEASE"
@@ -95,15 +103,22 @@ dependencies {
     implementation "cn.hutool:hutool-all:5.2.5"
     implementation "org.joda:joda-convert:2.2.1"
     implementation "joda-time:joda-time:2.10.5"
-    implementation "org.mongodb:mongo-java-driver:3.12.5"
-    implementation "org.mongodb:mongodb-driver:4.1.0-beta2"
-    implementation "org.mongodb:mongodb-driver-core:4.1.0-beta2"
+    implementation "io.jsonwebtoken:jjwt-impl:0.11.0"
+    implementation "io.jsonwebtoken:jjwt-jackson:0.11.0"
+    implementation "io.jsonwebtoken:jjwt-api:0.11.0"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign:2.2.0.RELEASE"
+    implementation "io.github.openfeign:feign-gson:10.0.0"
+    implementation "io.github.openfeign:feign-jackson:10.0.0"
+    implementation "org.ehcache:ehcache:3.8.1"
+    implementation "net.sf.ehcache:ehcache:2.10.6"
+    implementation "javax.cache:cache-api:1.1.1"
+    implementation "com.alicp.jetcache:jetcache-starter-redis:2.6.0"
 
 
     compileOnly "org.projectlombok:lombok"
-    compileOnly "com.querydsl:querydsl-jpa:${querydslVersion}"
-    compileOnly "com.querydsl:querydsl-apt:${querydslVersion}"
-    compileOnly "com.querydsl:querydsl-mongodb:${querydslVersion}"
+    implementation "com.querydsl:querydsl-jpa:${querydslVersion}"
+    implementation "com.querydsl:querydsl-apt:${querydslVersion}"
+    implementation "com.querydsl:querydsl-mongodb:${querydslVersion}"
 
 
     annotationProcessor "org.projectlombok:lombok"

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.application.**.repository")
+@EnableJpaRepositories(basePackages = "com.application.jpa.repository")
 @EntityScan(basePackages = {"com.application.**.domain"})
 @EnableJpaAuditing
 @EnableSpringDataWebSupport
