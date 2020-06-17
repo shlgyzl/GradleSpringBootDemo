@@ -21,8 +21,8 @@ public interface IBaseJpaDao<T, ID> {
     /**
      * 更新实体类
      *
-     * @param t
-     * @return T
+     * @param t 实体
+     * @return T 返回更新的实体
      */
     T update(T t);
 
@@ -38,6 +38,7 @@ public interface IBaseJpaDao<T, ID> {
      *
      * @param jPQL sql
      * @param obj  参数
+     * @return int 返回更新的条数
      */
     int executeUpdate(String jPQL, Object... obj);
 
@@ -45,15 +46,16 @@ public interface IBaseJpaDao<T, ID> {
      * 根据主键ID查找单个实体类
      *
      * @param id 主键id
-     * @return
+     * @return T 返回实体对象
      */
     T load(ID id);
+
 
     /**
      * 根据jPQL语句查询单个实体类
      *
-     * @param jPQL        sql
-     * @param obj（参数可有可无）
+     * @param jPQL sql
+     * @param obj  参数可有可无
      * @return T
      */
     T load(String jPQL, Object... obj);
@@ -68,9 +70,9 @@ public interface IBaseJpaDao<T, ID> {
     /**
      * 根据jPQL语句查询集合实体类
      *
-     * @param jPQL        sql
-     * @param obj（参数可有可无）
-     * @return List
+     * @param jPQL sql
+     * @param obj  参数可有可无
+     * @return List 返回实体集合
      */
     List<T> find(String jPQL, Object... obj);
 

@@ -23,8 +23,8 @@ public class WebSocketServer {
     /**
      * 连接建立成功调用
      *
-     * @param session
-     * @param sid
+     * @param session 当前session
+     * @param sid     session的id
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("sid") String sid) {

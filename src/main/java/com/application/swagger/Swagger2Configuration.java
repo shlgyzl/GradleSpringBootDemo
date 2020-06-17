@@ -62,7 +62,7 @@ public class Swagger2Configuration {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()// 生成构造器
-                .apis(RequestHandlerSelectors.basePackage("com.application.web.resources"))//为当前包路径
+                .apis(RequestHandlerSelectors.basePackage("com.application.jpa.web.rest"))//为当前包路径
                 .paths(paths())//设置路径选择方式
                 .build()
                 .ignoredParameterTypes(HttpServletRequest.class, HttpServletResponse.class,

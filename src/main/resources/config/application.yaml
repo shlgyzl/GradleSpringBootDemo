@@ -153,3 +153,5 @@ application: #第三方系统登录
     username: test_zuosl
     password: zuo123456
     api-base-url: http://v3.dam.com.cn/
+server:
+  port: 8080

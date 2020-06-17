@@ -28,7 +28,11 @@ public class SpringContextUtil implements ApplicationContextAware {
 
     /**
      * 获取对象 这里重写了bean方法，起主要作用
-     * example: getBean("userService")//注意： 类名首字母一定要小写,除非是开头连续几个大写字母的
+     * * example: getBean("userService")//注意： 类名首字母一定要小写,除非是开头连续几个大写字母的
+     *
+     * @param beanId 当前beanId
+     * @return 返回对象
+     * @throws BeansException
      */
     public static Object getBean(String beanId) throws BeansException {
         return applicationContext.getBean(beanId);

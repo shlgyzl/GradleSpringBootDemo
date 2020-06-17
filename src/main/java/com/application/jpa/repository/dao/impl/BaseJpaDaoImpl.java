@@ -147,7 +147,7 @@ public abstract class BaseJpaDaoImpl<T, ID> implements IBaseJpaDao<T, ID> {
      * @param page page实体
      * @param jPQL sql
      * @param obj  参数
-     * @return Page<T>
+     * @return Page<T> 返回分页的内容
      */
     @Override
     public Page<T> findPage(Page page, String jPQL, Object... obj) {
