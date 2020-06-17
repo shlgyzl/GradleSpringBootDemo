@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.*;
@@ -62,7 +63,7 @@ public class Swagger2Configuration {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()// 生成构造器
-                .apis(RequestHandlerSelectors.basePackage("com.application.jpa.web.rest"))//为当前包路径
+                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))//为当前包路径
                 .paths(paths())//设置路径选择方式
                 .build()
                 .ignoredParameterTypes(HttpServletRequest.class, HttpServletResponse.class,
