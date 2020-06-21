@@ -19,11 +19,11 @@ import java.util.Collections;
 @Slf4j
 public class SpringSimpleCacheConfiguration {
 
-    @Bean(name = "simpleCacheManager")
-    public CacheManager simpleCacheManager() {
-        SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-        //simpleCacheManager.setCaches(Collections.singletonList(new ConcurrentMapCache("simpleCache")));
-        log.info("创建简单缓存管理器--->[simpleCacheManager]");
-        return simpleCacheManager;
-    }
+//    @Bean(name = "simpleCacheManager")
+//    public CacheManager simpleCacheManager() {
+//        SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
+//        //simpleCacheManager.setCaches(Collections.singletonList(new ConcurrentMapCache("simpleCache")));
+//        log.info("创建简单缓存管理器--->[simpleCacheManager]");
+//        return simpleCacheManager;
+//    }
 }

@@ -19,7 +19,7 @@ import java.util.*;
 @Service
 @Slf4j
 @AllArgsConstructor
-@CacheConfig(cacheNames = {"简单缓存"}, cacheManager = {"simpleCacheManager"})
+@CacheConfig(cacheNames = {"简单缓存"})
 public class SimpleCacheService {
     private EHCacheEntityRepository ehCacheEntityRepository;
 

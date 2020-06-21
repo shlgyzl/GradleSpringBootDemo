@@ -42,9 +42,16 @@ targetCompatibility = 1.8 // 生成字节码时指定的JDK版本(一般不会�
 assert System.properties["java.specification.version"] == "1.8"// 判断开发者是否使用JDK1.8,不是则构建失败
 
 
-//compileJava {
-//    options.compilerArgs << '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor' << '-s' << file("${buildDir}/generated/sources/annotationProcessor/java/main").absolutePath
-//}
+compileJava {
+    options.compilerArgs <<
+            '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor,' +
+            'org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor,' +
+            'lombok.launch.AnnotationProcessorHider$AnnotationProcessor,' +
+            'lombok.launch.AnnotationProcessorHider$ClaimingProcessor,' +
+            'org.mapstruct.ap.MappingProcessor,' +
+            'org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor,' +
+            'org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor' << '-s' << file("${buildDir}/generated/sources/annotationProcessor/java/main").absolutePath
+}
 
 
 tasks.withType(Javadoc) {
