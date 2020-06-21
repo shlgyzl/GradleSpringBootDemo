@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @Import(FeignClientsConfiguration.class)
@@ -97,8 +98,8 @@ public class FeignConfiguration implements InitializingBean {
     private Feign.Builder commonBuilder() {
         return Feign.builder()
                 // options方法指定连接超时时长及响应超时时长
-                .options(new Request.Options(1000, 3500))
-                // retryer方法指定重试策略
+                .options(new Request.Options(1000, TimeUnit.SECONDS, 3500,
+                        TimeUnit.SECONDS, true))
                 .retryer(new Retryer.Default(5000, 5000, 3))
                 .errorDecoder(feignErrorDecoder)
                 .requestInterceptor(cookieInterceptor())

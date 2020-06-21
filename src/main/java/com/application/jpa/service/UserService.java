@@ -4,6 +4,7 @@ import com.application.jpa.domain.QUser;
 import com.application.jpa.domain.User;
 import com.application.jpa.repository.UserRepository;
 import com.querydsl.core.BooleanBuilder;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,14 +17,10 @@ import java.util.Objects;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Transactional
     public User job(User user) {

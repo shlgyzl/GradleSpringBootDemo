@@ -4,6 +4,7 @@ import com.application.jpa.domain.DefectType;
 import com.application.jpa.domain.QDefectType;
 import com.application.jpa.repository.DefectTypeRepository;
 import com.querydsl.core.BooleanBuilder;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,12 +15,10 @@ import java.util.Objects;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class DefectTypeService {
     private final DefectTypeRepository defectTypeRepository;
 
-    public DefectTypeService(DefectTypeRepository defectTypeRepository) {
-        this.defectTypeRepository = defectTypeRepository;
-    }
 
     public DefectType saveOrUpdate(DefectType defectType) {
         defectType.addAllDefectTypeProperty(defectType.getDefectTypeProperties());

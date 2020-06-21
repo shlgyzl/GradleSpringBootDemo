@@ -21,6 +21,8 @@ import java.io.Serializable;
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 @EnableRedisRepositories(basePackages = "com.application.redis.repository")
 public class RedisConfiguration {
+
+    @SuppressWarnings("unchecked")
     @Bean
     public RedisTemplate<String, Serializable> redisCacheTemplate(LettuceConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Serializable> template = new RedisTemplate<>();

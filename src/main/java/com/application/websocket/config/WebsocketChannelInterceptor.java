@@ -21,6 +21,7 @@ public class WebsocketChannelInterceptor implements ChannelInterceptor {
         this.tokenProvider = tokenProvider;
     }
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
