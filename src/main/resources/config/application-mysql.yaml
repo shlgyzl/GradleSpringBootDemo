@@ -46,7 +46,7 @@ spring:
         useServerPrepStmts: true
       max-lifetime: 100000000
   liquibase:
-    drop-first: false
+    drop-first: true
     contexts: dev,test,prod
     enabled: true
     change-log: classpath:config/liquibase/db.changelog-master.xml

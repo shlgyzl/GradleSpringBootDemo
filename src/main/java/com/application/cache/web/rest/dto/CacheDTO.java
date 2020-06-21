@@ -1,4 +1,4 @@
-package com.application.cache.service.dto;
+package com.application.cache.web.rest.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;

@@ -20,22 +20,22 @@ import java.time.Duration;
 @Slf4j
 @AllArgsConstructor
 public class SpringRedisCacheConfiguration {
-    @SuppressWarnings("unchecked")
-    @Primary
-    @Bean("redisCacheManager")
-    public CacheManager cacheManager(LettuceConnectionFactory redisConnectionFactory,
-                                     Jackson2JsonRedisSerializer jackson2JsonRedisSerializer,
-                                     RedisSerializer keySerializer) {
-        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
-        redisCacheConfiguration.entryTtl(Duration.ofMinutes(30L))// 缓存超时时间
-                .disableCachingNullValues()// 空值不缓存
-                .serializeKeysWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(jackson2JsonRedisSerializer))// key序列化
-                .serializeValuesWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(keySerializer));// value序列化
-        return RedisCacheManager.builder(
-                RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
-                .cacheDefaults(redisCacheConfiguration)
-                .build();
-    }
+//    @SuppressWarnings("unchecked")
+//    @Primary
+//    @Bean("redisCacheManager")
+//    public CacheManager cacheManager(LettuceConnectionFactory redisConnectionFactory,
+//                                     Jackson2JsonRedisSerializer jackson2JsonRedisSerializer,
+//                                     RedisSerializer keySerializer) {
+//        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
+//        redisCacheConfiguration.entryTtl(Duration.ofMinutes(30L))// 缓存超时时间
+//                .disableCachingNullValues()// 空值不缓存
+//                .serializeKeysWith(RedisSerializationContext.SerializationPair
+//                        .fromSerializer(jackson2JsonRedisSerializer))// key序列化
+//                .serializeValuesWith(RedisSerializationContext.SerializationPair
+//                        .fromSerializer(keySerializer));// value序列化
+//        return RedisCacheManager.builder(
+//                RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
+//                .cacheDefaults(redisCacheConfiguration)
+//                .build();
+//    }
 }

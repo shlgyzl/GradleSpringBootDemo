@@ -1,9 +1,9 @@
 package com.application.cache.repository;
 
 import com.application.cache.domain.EHCacheEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.application.jpa.repository.BaseJpaRepository;
 
-public interface EHCacheEntityRepository extends JpaRepository<EHCacheEntity, Long> {
+public interface EHCacheEntityRepository extends BaseJpaRepository<EHCacheEntity, Long> {
 
 
 }

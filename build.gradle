@@ -41,6 +41,12 @@ sourceCompatibility = 1.8 // 编译时指定的JDK版本
 targetCompatibility = 1.8 // 生成字节码时指定的JDK版本(一般不会小于编译时,如果小于则需要使用jack工具链)
 assert System.properties["java.specification.version"] == "1.8"// 判断开发者是否使用JDK1.8,不是则构建失败
 
+
+//compileJava {
+//    options.compilerArgs << '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor' << '-s' << file("${buildDir}/generated/sources/annotationProcessor/java/main").absolutePath
+//}
+
+
 tasks.withType(Javadoc) {
     options.addStringOption('Xdoclint:none', '-quiet')
     options.addStringOption('encoding', 'UTF-8')
@@ -77,6 +83,8 @@ configurations {
 
 idea {
     module {
+//        sourceDirs += file("${buildDir}/generated/sources/annotationProcessor/java/main")
+//        testSourceDirs+=file("${buildDir}/generated/sources/annotationProcessor/java/test")
         downloadSources = true
         downloadJavadoc = true
     }
@@ -147,10 +155,12 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign:2.2.0.RELEASE"
     implementation "io.github.openfeign:feign-gson:10.0.0"
     implementation "io.github.openfeign:feign-jackson:10.0.0"
-    implementation "org.ehcache:ehcache:3.8.1"
-    implementation "net.sf.ehcache:ehcache:2.10.6"
-    implementation "javax.cache:cache-api:1.1.1"
-    implementation "com.alicp.jetcache:jetcache-starter-redis:2.6.0"
+    implementation "org.apache.commons:commons-pool2:2.8.0"
+
+//    implementation "org.ehcache:ehcache:3.8.1"
+//    implementation "net.sf.ehcache:ehcache:2.10.6"
+//    implementation "javax.cache:cache-api:1.1.1"
+    //implementation "com.alicp.jetcache:jetcache-starter-redis:2.6.0"
     implementation("io.springfox:springfox-swagger2:2.9.2") {
         exclude group: "io.swagger", module: "swagger-annotations"
         exclude group: "io.swagger", module: "swagger-models"
@@ -169,6 +179,7 @@ dependencies {
     implementation "com.google.guava:guava:29.0-jre"
 
     compileOnly "org.projectlombok:lombok"
+    implementation "com.querydsl:querydsl-core:${querydslVersion}"
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}"
     implementation "com.querydsl:querydsl-apt:${querydslVersion}"
     implementation "com.querydsl:querydsl-mongodb:${querydslVersion}"

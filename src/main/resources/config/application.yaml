@@ -4,6 +4,8 @@ logging:
     com.application.repository: DEBUG
   config: classpath:config/log/logback-spring.xml
 spring:
+  cache:
+    type: SIMPLE
   application:
     name: GradleSpringBoot
   data:
@@ -35,18 +37,18 @@ spring:
     listener:
       simple:
         auto-startup: true
-  cloud:
-    sentinel:
-      transport:
-        dashboard: http://47.105.46.4:8082
-      log:
-        dir: ./logs/alibaba-monitor
-      eager: true
-      enabled: true
-  boot:
-    admin:
-      client:
-        url: http://47.105.46.4:8081
+#  cloud:
+#    sentinel:
+#      transport:
+#        dashboard: http://47.105.46.4:8082
+#      log:
+#        dir: ./logs/alibaba-monitor
+#      eager: true
+#      enabled: true
+#  boot:
+#    admin:
+#      client:
+#        url: http://47.105.46.4:8081
   quartz:
     jdbc:
       # fix it 初始化Quartz表结构,项目第一次启动配置程always,然后改成never 否则已生成的job会被初始化掉
@@ -86,20 +88,20 @@ spring:
   profiles:
     active: mysql
 
-management:
-  endpoints:
-    enabled-by-default: true
-    jmx:
-      exposure:
-        include: '*'
-    web:
-      exposure:
-        include: '*'
-      cors:
-        allowed-methods: '*'
-  endpoint:
-    health:
-      show-details: always
+#management:
+#  endpoints:
+#    enabled-by-default: true
+#    jmx:
+#      exposure:
+#        include: '*'
+#    web:
+#      exposure:
+#        include: '*'
+#      cors:
+#        allowed-methods: '*'
+#  endpoint:
+#    health:
+#      show-details: always
 jhipster:
   cors:
     allowed-origins: "*"
@@ -120,34 +122,34 @@ jhipster:
         base64-secret: RFE2Y1NNTlRsRDNDLzJiblVQRnZMYUZ4WXVjV1huWWVYa1luY0NNT3hlTVU1QmI2ZVZ3N2pkVFBISjBHS08zSEV1NWNYMGVGSXh0S3ZTQURjSkdzWWJsRE5sTjg3cVpjdDUwSkxhQnR6WXlhOUdTNHc5YjBkazlmbnk1WXd4MFowT3hZYnZFUUU2dVVyWW1ET0IwbUtNeGNCbmlCc1dYOTFqSnhmNy9VTlc4JTNE
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
-  cache: # ehcache使用
-    ehcache:
-      max-entries: 10000
-      time-to-live-seconds: 3600
-jetcache: #开启阿里巴巴封装的jetCache缓存框架
-  statIntervalMinutes: 15
-  areaInCacheName: false
-  hiddenPackages: true
-  local:
-    default:
-      type: linkedhashmap
-      keyConvertor: fastjson
-      limit: 100
-      defaultExpireInMillis: 20000    #全局缓存失效时间
-  remote:
-    default:
-      type: redis
-      keyConvertor: fastjson
-      valueEncoder: java
-      valueDecoder: java
-      poolConfig:
-        minIdle: 5
-        maxIdle: 20
-        maxTotal: 50
-      host: 47.105.46.4
-      port: 6379
-      password: 123456
-      defaultExpireInMillis: 20000    #全局缓存失效时间
+#  cache: # ehcache使用
+#    ehcache:
+#      max-entries: 10000
+#      time-to-live-seconds: 3600
+#jetcache: #开启阿里巴巴封装的jetCache缓存框架
+#  statIntervalMinutes: 15
+#  areaInCacheName: false
+#  hiddenPackages: true
+#  local:
+#    default:
+#      type: linkedhashmap
+#      keyConvertor: fastjson
+#      limit: 100
+#      defaultExpireInMillis: 20000    #全局缓存失效时间
+#  remote:
+#    default:
+#      type: redis
+#      keyConvertor: fastjson
+#      valueEncoder: java
+#      valueDecoder: java
+#      poolConfig:
+#        minIdle: 5
+#        maxIdle: 20
+#        maxTotal: 50
+#      host: 47.105.46.4
+#      port: 6379
+#      password: 123456
+#      defaultExpireInMillis: 20000    #全局缓存失效时间
 application: #第三方系统登录
   remote-dam:
     username: test_zuosl

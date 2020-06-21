@@ -72,6 +72,10 @@
     <include file="config/liquibase/changlog/entity/role/Role.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/authority/Authority.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/attachment/Attachment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/persistent_token/persistent_token.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/cache/eh_cache/EHCacheEntity.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/cache/redis_cache/RedisCacheEntity.xml" relativeToChangelogFile="false"/>
+
 
     <!-- 关系表 -->
     <include file="config/liquibase/changlog/relation/UserDam.xml" relativeToChangelogFile="false"/>
@@ -93,7 +97,9 @@
     <include file="config/liquibase/changlog/entity/user/User20191201142011.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/defect_type_property/DefectTypeProperty20200109224049.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/user/User20200309225630.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changlog/entity/persistent_token/persistent_token.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/cache/eh_cache/EHCacheEntity20200621144515.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/cache/redis_cache/RedisCacheEntity20200621144528.xml" relativeToChangelogFile="false"/>
+
 
     <!-- 约束更新 -->
     <include file="config/liquibase/changlog/entity/constraint/DefectTypeConstraint.xml" relativeToChangelogFile="false"/>

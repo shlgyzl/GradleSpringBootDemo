@@ -1,7 +1,5 @@
 package com.application.cache.config;
 
-import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
-import com.alicp.jetcache.anno.config.EnableMethodCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
  * 独立的redis缓存需要开放第一个Bean即可
  */
 @EnableCaching// 使用cglib代理和aspectj切入
-@EnableMethodCache(basePackages = "com.application")//激活Cached 注解 主要用于方法上的缓存
-@EnableCreateCacheAnnotation//激活CreateCache 注解 主要用于对某个自定义变量设为缓存
+//@EnableMethodCache(basePackages = "com.application")//激活Cached 注解 主要用于方法上的缓存
+//@EnableCreateCacheAnnotation//激活CreateCache 注解 主要用于对某个自定义变量设为缓存
 @Configuration
 @Slf4j
 public class SpringCacheConfiguration {
