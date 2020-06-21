@@ -4,6 +4,7 @@ import com.application.jpa.domain.Attachment;
 import com.application.jpa.domain.enumeration.FileType;
 import com.application.jpa.service.AttachmentService;
 import com.application.jpa.web.rest.exception.BusinessErrorException;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -28,9 +29,11 @@ public class AttachmentResources {
     private final AttachmentService attachmentService;
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "files[]", value = "文件流对象,接收数组格式", required = true, dataType = "MultipartFile", allowMultiple = true),
-            @ApiImplicitParam(name = "fileType", paramType = "form", value = "文件类型")}
-    )
+            @ApiImplicitParam(name = "fileType", paramType = "form", value = "文件类型"),
+            @ApiImplicitParam(name = "files", value = "文件流对象,接收数组格式", required = true,
+                    dataTypeClass = MultipartFile[].class, allowMultiple = true)
+    })
+    @ApiOperationSupport(order = 1)
     @ApiOperation(value = "上传文件", notes = "上传文件")
     @PostMapping("/file/upload")
     @Timed
@@ -49,8 +52,9 @@ public class AttachmentResources {
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "文件id", required = true,
-                    paramType = "path", example = "123ABDJDD", dataTypeClass = String.class)}
+                    paramType = "path", example = "123456", dataTypeClass = String.class)}
     )
+    @ApiOperationSupport(order = 2)
     @ApiOperation(value = "下载文件(mongodb)", notes = "下载文件(mongodb)")
     @GetMapping(value = "/file/{id}/mongodb", produces = {"application/octet-stream", MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @Timed
@@ -63,6 +67,7 @@ public class AttachmentResources {
             @ApiImplicitParam(name = "url", value = "文件url地址", required = true,
                     paramType = "path", example = "image/jpeg/123453525.jpg", dataTypeClass = String.class)}
     )
+    @ApiOperationSupport(order = 3)
     @ApiOperation(value = "下载文件(disk)", notes = "下载文件(disk)")
     @GetMapping(value = "/file/{url}", produces = {"application/octet-stream", MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @Timed
@@ -75,6 +80,7 @@ public class AttachmentResources {
             @ApiImplicitParam(name = "id", value = "文件id", required = true,
                     paramType = "path", example = "1", dataTypeClass = Long.class)}
     )
+    @ApiOperationSupport(order = 4)
     @ApiOperation(value = "下载文件(database)", notes = "下载文件(database)")
     @GetMapping(value = "/file/{id}/database", produces = {"application/octet-stream", MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @Timed
@@ -87,6 +93,7 @@ public class AttachmentResources {
             @ApiImplicitParam(name = "id", value = "文件id", required = true,
                     paramType = "path", example = "1", dataTypeClass = Long.class)}
     )
+    @ApiOperationSupport(order = 5)
     @ApiOperation(value = "下载文件(redis)", notes = "下载文件(redis)")
     @GetMapping(value = "/file/{id}/redis", produces = {"application/octet-stream", MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @Timed

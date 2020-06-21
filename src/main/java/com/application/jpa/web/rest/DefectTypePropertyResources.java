@@ -35,7 +35,7 @@ public class DefectTypePropertyResources {
 
     private final DefectTypePropertyService defectTypePropertyService;
 
-    @ApiOperationSupport(ignoreParameters = {"defectType"})
+    @ApiOperationSupport(ignoreParameters = {"defectType"}, order = 1)
     @ApiOperation(value = "保存接口", notes = "保存缺陷类型属性")
     @Timed
     @PostMapping("/defectTypeProperty")
@@ -44,7 +44,7 @@ public class DefectTypePropertyResources {
         return ResponseEntity.created(new URI("/api/defectTypeProperty/" + save.getId())).body(save);
     }
 
-    @ApiOperationSupport(ignoreParameters = {"defectType"})
+    @ApiOperationSupport(ignoreParameters = {"defectType"}, order = 2)
     @ApiOperation(value = "更新接口", notes = "更新缺陷类型属性")
     @Timed
     @PutMapping("/defectTypeProperty")
@@ -58,6 +58,7 @@ public class DefectTypePropertyResources {
             @ApiImplicitParam(name = "id", value = "缺陷属性类型id", required = true,
                     paramType = "path", example = "1", dataTypeClass = Long.class)
     })
+    @ApiOperationSupport(order = 3)
     @ApiOperation(value = "删除接口", notes = "删除缺陷类型属性")
     @Timed
     @DeleteMapping("/defectTypeProperty/{id}")
@@ -70,6 +71,7 @@ public class DefectTypePropertyResources {
             @ApiImplicitParam(name = "id", value = "缺陷属性类型id", required = true,
                     paramType = "path", example = "1", dataTypeClass = Long.class)
     })
+    @ApiOperationSupport(order = 4)
     @ApiOperation(value = "查询接口", notes = "查询缺陷类型属性(根据id)")
     @Timed
     @GetMapping("/defectTypeProperty/{id}")
@@ -81,13 +83,13 @@ public class DefectTypePropertyResources {
     }
 
 
+    @ApiOperationSupport(order = 5)
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
     @Timed
-    @GetMapping(value = "/defectTypeProperties")
+    @PostMapping(value = "/defectTypeProperties")
     public ResponseEntity<Page<DefectTypeProperty>> findAllDefectTypeProperty(
-            @QuerydslPredicate(root = DefectTypeProperty.class) Predicate predicate,
+            @RequestBody(required = false) DefectTypeProperty defectTypeProperty,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-
-        return ResponseEntity.ok().body(defectTypePropertyService.findAll(predicate, pageable));
+        return ResponseEntity.ok().body(defectTypePropertyService.findAll(defectTypeProperty, pageable));
     }
 }

@@ -39,7 +39,7 @@ public class RoleResources {
 
     private final RoleService roleService;
 
-    @ApiOperationSupport(ignoreParameters = {"users", "authorities"})
+    @ApiOperationSupport(ignoreParameters = {"users", "authorities"},order = 1)
     @ApiOperation(value = "保存接口", notes = "保存角色")
     @Timed
     @PostMapping("/role")
@@ -48,7 +48,7 @@ public class RoleResources {
         return ResponseEntity.created(new URI("/api/role/" + savedRole.getId())).body(savedRole);
     }
 
-    @ApiOperationSupport(ignoreParameters = {"users", "authorities"})
+    @ApiOperationSupport(ignoreParameters = {"users", "authorities"},order = 2)
     @ApiOperation(value = "更新接口", notes = "更新角色")
     @Timed
     @PutMapping("/role")
@@ -61,6 +61,7 @@ public class RoleResources {
             @ApiImplicitParam(name = "id", value = "角色id", required = true,
                     paramType = "path", example = "1", dataTypeClass = Long.class)
     })
+    @ApiOperationSupport(order = 3)
     @ApiOperation(value = "删除接口", notes = "删除角色")
     @Timed
     @DeleteMapping("/role/{id}")
@@ -73,6 +74,7 @@ public class RoleResources {
             @ApiImplicitParam(name = "id", value = "角色id", required = true,
                     paramType = "path", example = "1", dataTypeClass = Long.class)
     })
+    @ApiOperationSupport(order = 4)
     @ApiOperation(value = "查询接口", notes = "查询角色(根据id)")
     @Timed
     @GetMapping("/role/{id}")
@@ -83,13 +85,13 @@ public class RoleResources {
         return ResponseUtil.wrapOrNotFound(roleRepository.findById(id));
     }
 
+    @ApiOperationSupport(order = 5)
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
     @Timed
-    @GetMapping(value = "/roles")
+    @PostMapping(value = "/roles")
     public ResponseEntity<Page<Role>> findAllRole(
-            @QuerydslPredicate(root = Role.class) Predicate predicate,
+            @RequestBody(required = false) Role role,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-
-        return ResponseEntity.ok().body(roleRepository.findAll(predicate, pageable));
+        return ResponseEntity.ok().body(roleService.findAll(role, pageable));
     }
 }

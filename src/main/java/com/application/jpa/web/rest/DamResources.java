@@ -4,6 +4,7 @@ import com.application.jpa.domain.Dam;
 import com.application.jpa.domain.enumeration.BusinessErrorType;
 import com.application.jpa.service.DamService;
 import com.application.jpa.web.rest.exception.BusinessErrorException;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -38,6 +39,7 @@ import java.util.Optional;
 public class DamResources {
     private final DamService damService;
 
+    @ApiOperationSupport(order = 1)
     @ApiOperation(value = "保存接口", notes = "保存大坝")
     @Timed
     @PostMapping("/dam")
@@ -47,6 +49,7 @@ public class DamResources {
     }
 
 
+    @ApiOperationSupport(order = 2)
     @ApiOperation(value = "更新接口", notes = "更新大坝")
     @Timed
     @PutMapping("/dam")
@@ -60,6 +63,7 @@ public class DamResources {
             @ApiImplicitParam(name = "id", value = "大坝id", required = true,
                     paramType = "path", example = "1", dataTypeClass = Long.class)
     })
+    @ApiOperationSupport(order = 3)
     @ApiOperation(value = "删除接口", notes = "删除大坝")
     @Timed
     @DeleteMapping("/dam/{id}")
@@ -73,6 +77,7 @@ public class DamResources {
             @ApiImplicitParam(name = "id", value = "大坝id", required = true,
                     paramType = "path", example = "1", dataTypeClass = Long.class)
     })
+    @ApiOperationSupport(order = 4)
     @ApiOperation(value = "查询接口", notes = "查询大坝(根据id)")
     @Timed
     @GetMapping("/dam/{id}")
@@ -84,13 +89,13 @@ public class DamResources {
     }
 
 
+    @ApiOperationSupport(order = 5)
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
     @Timed
-    @GetMapping(value = "/dams")
+    @PostMapping(value = "/dams")
     public ResponseEntity<Page<Dam>> findAllDam(
-            @QuerydslPredicate(root = Dam.class) Predicate predicate,
+            @RequestBody(required = false) Dam dam,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        predicate = new BooleanBuilder(predicate);
-        return ResponseEntity.ok().body(damService.findAll(predicate, pageable));
+        return ResponseEntity.ok().body(damService.findAll(dam, pageable));
     }
 }

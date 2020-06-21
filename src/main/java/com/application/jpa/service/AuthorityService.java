@@ -1,16 +1,20 @@
 package com.application.jpa.service;
 
 import com.application.jpa.domain.Authority;
+import com.application.jpa.domain.QAuthority;
 import com.application.jpa.repository.AuthorityRepository;
-import com.querydsl.core.types.Predicate;
+import com.querydsl.core.BooleanBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -40,7 +44,14 @@ public class AuthorityService {
     }
 
     @Cacheable
-    public Page<Authority> findAll(Predicate predicate, Pageable pageable) {
-        return authorityRepository.findAll(predicate, pageable);
+    public Page<Authority> findAll(Authority authority, Pageable pageable) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (Objects.nonNull(authority)) {
+            QAuthority qAuthority = QAuthority.authority;
+            if (StringUtils.isNotBlank(authority.getName())) {
+                builder.and(qAuthority.name.containsIgnoreCase(authority.getName()));
+            }
+        }
+        return authorityRepository.findAll(builder, pageable);
     }
 }

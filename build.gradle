@@ -10,11 +10,6 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-
-        classpath 'io.github.swagger2markup:swagger2markup-spring-restdocs-ext:1.3.3'
-        classpath 'io.github.swagger2markup:swagger2markup-gradle-plugin:1.3.3'
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.7'
-        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.17'
     }
 }
 
@@ -25,11 +20,18 @@ plugins {
     id "jacoco"
 }
 
+repositories {
+    mavenLocal()
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+}
+
 apply plugin: "java"
-apply plugin: 'io.github.swagger2markup'
-apply plugin: 'org.asciidoctor.convert'
+apply plugin: "idea"
+apply plugin: 'maven'
 apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
+
 
 group "com.gradle.cn"
 version "1.0-SNAPSHOT"
@@ -39,10 +41,18 @@ sourceCompatibility = 1.8 // 编译时指定的JDK版本
 targetCompatibility = 1.8 // 生成字节码时指定的JDK版本(一般不会小于编译时,如果小于则需要使用jack工具链)
 assert System.properties["java.specification.version"] == "1.8"// 判断开发者是否使用JDK1.8,不是则构建失败
 
-repositories {
-    mavenLocal()
-    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
-    maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
+    options.deprecation = true
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked"
 }
 
 ext {
@@ -78,7 +88,22 @@ sourceSets {
             srcDir "$buildDir/generated/sources/annotationProcessor/java/main"
         }
     }
+    test {
+        java {
+            srcDir "$buildDir/generated/sources/annotationProcessor/java/test"
+        }
+    }
 }
+
+dependencyManagement {
+    imports {
+        mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
+    }
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-loader-tools"
@@ -126,7 +151,22 @@ dependencies {
     implementation "net.sf.ehcache:ehcache:2.10.6"
     implementation "javax.cache:cache-api:1.1.1"
     implementation "com.alicp.jetcache:jetcache-starter-redis:2.6.0"
-
+    implementation("io.springfox:springfox-swagger2:2.9.2") {
+        exclude group: "io.swagger", module: "swagger-annotations"
+        exclude group: "io.swagger", module: "swagger-models"
+    }
+    implementation("io.springfox:springfox-bean-validators:2.9.2") {
+        exclude group: "org.springframework.plugin", module: "spring-plugin-core"
+    }
+    implementation("io.springfox:springfox-schema:2.9.2") {
+        exclude group: "com.google.guava", module: "com.google.guava"
+    }
+    // 用于解决访问swagger2静态页面失败问题
+    implementation("io.swagger:swagger-annotations:1.5.21")
+    implementation("io.swagger:swagger-models:1.5.21")
+    implementation "com.github.xiaoymin:knife4j-spring-boot-starter:2.0.3"
+    // 解决静态页面访问问题
+    implementation "com.google.guava:guava:29.0-jre"
 
     compileOnly "org.projectlombok:lombok"
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}"
@@ -151,42 +191,8 @@ dependencies {
         exclude group: "org.junit.vintage', module: 'junit-vintage-engine"
     }
 
-    implementation("io.springfox:springfox-swagger2:2.9.2") {
-        exclude group: "io.swagger", module: "swagger-annotations"
-        exclude group: "io.swagger", module: "swagger-models"
-    }
-    implementation("io.springfox:springfox-bean-validators:2.9.2") {
-        exclude group: "org.springframework.plugin", module: "spring-plugin-core"
-    }
-    implementation("io.springfox:springfox-schema:2.9.2") {
-        exclude group: "com.google.guava", module: "com.google.guava"
-    }
-    // 用于解决访问swagger2静态页面失败问题
-    implementation("io.swagger:swagger-annotations:1.5.21")
-    implementation("io.swagger:swagger-models:1.5.21")
-    implementation "com.github.xiaoymin:knife4j-spring-boot-starter:2.0.2"
-    // 解决静态页面访问问题
-    implementation "com.google.guava:guava:29.0-jre"
+    testImplementation "io.github.swagger2markup:swagger2markup:1.3.3"
+    testImplementation "io.github.swagger2markup:swagger2markup-spring-restdocs-ext:1.3.3"
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
-    }
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
-test {
-    useJUnitPlatform()
-}
-
-
-tasks.withType(Javadoc) {
-    options.addStringOption('Xdoclint:none', '-quiet')
-    options.addStringOption('encoding', 'UTF-8')
-    options.addStringOption('charSet', 'UTF-8')
 }

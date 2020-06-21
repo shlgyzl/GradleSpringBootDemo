@@ -1,12 +1,12 @@
 package com.application.jpa.web.rest;
 
 import com.application.jpa.domain.User;
+import com.application.jpa.domain.User_;
 import com.application.jpa.domain.enumeration.BusinessErrorType;
 import com.application.jpa.repository.UserRepository;
 import com.application.jpa.service.UserService;
 import com.application.jpa.web.rest.exception.BusinessErrorException;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
-import com.querydsl.core.types.Predicate;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
@@ -37,7 +36,7 @@ public class UserResources {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    @ApiOperationSupport(ignoreParameters = {"dams", "roles"})
+    @ApiOperationSupport(ignoreParameters = {"dams", "roles"}, order = 1)
     @ApiOperation(value = "保存接口", notes = "保存用户")
     @Timed
     @PostMapping("/user")
@@ -46,7 +45,7 @@ public class UserResources {
         return ResponseEntity.created(new URI("/api/user/" + savedUser.getId())).body(savedUser);
     }
 
-    @ApiOperationSupport(ignoreParameters = {"dams", "roles"})
+    @ApiOperationSupport(ignoreParameters = {"dams", "roles"}, order = 2)
     @ApiOperation(value = "更新接口", notes = "更新用户")
     @Timed
     @PutMapping("/user")
@@ -59,6 +58,7 @@ public class UserResources {
             @ApiImplicitParam(name = "id", value = "用户id", required = true,
                     paramType = "path", example = "1", dataTypeClass = Long.class)
     })
+    @ApiOperationSupport(order = 3)
     @ApiOperation(value = "删除接口", notes = "删除用户")
     @Timed
     @DeleteMapping("/user/{id}")
@@ -71,6 +71,7 @@ public class UserResources {
             @ApiImplicitParam(name = "id", value = "用户id", required = true,
                     paramType = "path", example = "1", dataTypeClass = Long.class)
     })
+    @ApiOperationSupport(order = 4)
     @ApiOperation(value = "查询接口", notes = "查询用户(根据id)")
     @Timed
     @GetMapping("/user/{id}")
@@ -81,13 +82,13 @@ public class UserResources {
         return ResponseUtil.wrapOrNotFound(userRepository.findById(id));
     }
 
+    @ApiOperationSupport(includeParameters = {User_.LOGIN}, order = 5)
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
     @Timed
-    @GetMapping(value = "/users")
+    @PostMapping(value = "/users")
     public ResponseEntity<Page<User>> findAllUser(
-            @QuerydslPredicate(root = User.class) Predicate predicate,
+            @RequestBody(required = false) User user,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-
-        return ResponseEntity.ok().body(userRepository.findAll(predicate, pageable));
+        return ResponseEntity.ok().body(userService.findAll(user, pageable));
     }
 }
