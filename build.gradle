@@ -63,6 +63,19 @@ compileJava {
             '-s' << file("${generatedSrc}").absolutePath
 }
 
+compileTestJava {
+    println "启用多级注解处理器,代码自动生成路径:\n${generatedTestSrc}"
+    options.compilerArgs <<
+            '-processor' << 'com.querydsl.apt.jpa.JPAAnnotationProcessor,' +
+            'org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor,' +
+            'lombok.launch.AnnotationProcessorHider$AnnotationProcessor,' +
+            'lombok.launch.AnnotationProcessorHider$ClaimingProcessor,' +
+            'org.mapstruct.ap.MappingProcessor,' +
+            'org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor,' +
+            'org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor' <<
+            '-s' << file("${generatedTestSrc}").absolutePath
+}
+
 
 tasks.withType(Javadoc) {
     options.addStringOption('Xdoclint:none', '-quiet')
@@ -77,8 +90,6 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     options.compilerArgs << "-Xlint:unchecked"
 }
-
-
 
 configurations {
     configuration.resolutionStrategy.failOnVersionConflict()
@@ -202,6 +213,14 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
     annotationProcessor "org.springframework.boot:spring-boot-starter-data-mongodb"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    testAnnotationProcessor "org.projectlombok:lombok"
+    testAnnotationProcessor "org.hibernate:hibernate-jpamodelgen"
+    testAnnotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jpa"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    testAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
+    testAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-mongodb"
+    testAnnotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     testImplementation "com.h2database:h2"
     testImplementation "org.springframework.security:spring-security-test"

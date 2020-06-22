@@ -3,8 +3,9 @@
     <!-- 从application.yml 中注入变量  -->
     <!-- <springProperty scope="context" name="LOG_PATH" source="log.home"/> -->
     <!-- <springProperty scope="context" name="APPDIR" source="spring.application.name"/> -->
-    <property name="LOG_PATH" value="./logs"/>
-    <property name="APPDIR" value="graceLogs"/>
+    <property scope="context" name="LOG_PATH" value="./logs"/>
+    <property scope="context" name="APPDIR" value="graceLogs"/>
+
 
     <!-- 彩色日志 -->
     <!-- 彩色日志依赖的渲染类 -->
@@ -25,7 +26,6 @@
             <charset>GBK</charset>
         </encoder>
     </appender>
-
 
     <!-- error级别日志文件输出,按日期时间滚动记录输出 -->
     <appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
