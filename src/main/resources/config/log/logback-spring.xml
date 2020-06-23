@@ -27,6 +27,35 @@
         </encoder>
     </appender>
 
+    <appender name="FILE-THREAD" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>requestId</key>
+            <defaultValue>head0</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${logFileName}"
+                      class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${LOG_PATH}/${requestId}.log</file>
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <Pattern>
+                        %d{yyyy-MM-dd HH:mm:ss} %mdc [%thread] %level %logger{35} - %msg%n
+                    </Pattern>
+                </encoder>
+                <rollingPolicy
+                        class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                    <FileNamePattern>${LOG_PATH}/${requestId}.%i.log.zip
+                    </FileNamePattern>
+                    <MinIndex>1</MinIndex>
+                    <MaxIndex>10</MaxIndex>
+                </rollingPolicy>
+                <triggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                    <MaxFileSize>10MB</MaxFileSize>
+                </triggeringPolicy>
+            </appender>
+        </sift>
+    </appender>
+
     <!-- error级别日志文件输出,按日期时间滚动记录输出 -->
     <appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/${APPDIR}/log_error.log</file>
@@ -127,6 +156,11 @@
     <logger name="org.springframework.web.servlet.DispatcherServlet" level="ERROR" additivity="false"/>
     <logger name="io.undertow.servlet" level="ERROR" additivity="false"/>
     <logger name="org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod" level="ERROR"/>
+
+    <logger name="com.application.log.logback.web.rest" level="TRACE" additivity="false">
+        <appender-ref ref="FILE-THREAD"/>
+    </logger>
+
     <!--设置日志打印级别为INFO-->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
