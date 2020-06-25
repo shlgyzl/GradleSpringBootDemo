@@ -2,6 +2,9 @@ package com.application.log.logback.web.rest;
 
 
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.sift.SiftingAppender;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.micrometer.core.annotation.Timed;
@@ -16,9 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Api(value = "Logback", tags = {"Logback 日志功能接口"})
@@ -34,14 +36,7 @@ public class LogbackResources {
     @Timed
     @GetMapping("/logback/print")
     public ResponseEntity<Void> print() {
-        String uuid = UUID.randomUUID().toString();
-        MDC.put(REQUEST_ID, uuid);
         logger.debug("hello");
-        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-        List<ch.qos.logback.classic.Logger> loggerList = context.getLoggerList();
-        ch.qos.logback.classic.Logger logger = loggerList.parallelStream().filter(n -> Objects.equals(n.getName(), LogbackResources.logger.getName())).findFirst().get();RollingFileAppender next = (RollingFileAppender) logger.iteratorForAppenders().next();
-        String file = next.getFile();
-        MDC.remove(REQUEST_ID);
         return ResponseEntity.ok().build();
     }
 }

@@ -37,18 +37,18 @@ spring:
     listener:
       simple:
         auto-startup: true
-#  cloud:
-#    sentinel:
-#      transport:
-#        dashboard: http://47.105.46.4:8082
-#      log:
-#        dir: ./logs/alibaba-monitor
-#      eager: true
-#      enabled: true
-#  boot:
-#    admin:
-#      client:
-#        url: http://47.105.46.4:8081
+  #  cloud:
+  #    sentinel:
+  #      transport:
+  #        dashboard: http://47.105.46.4:8082
+  #      log:
+  #        dir: ./logs/alibaba-monitor
+  #      eager: true
+  #      enabled: true
+  #  boot:
+  #    admin:
+  #      client:
+  #        url: http://47.105.46.4:8081
   quartz:
     jdbc:
       # fix it 初始化Quartz表结构,项目第一次启动配置程always,然后改成never 否则已生成的job会被初始化掉
@@ -155,5 +155,7 @@ application: #第三方系统登录
     username: test_zuosl
     password: zuo123456
     api-base-url: http://v3.dam.com.cn/
+  logback:
+    logPath: ./logs
 server:
   port: 8080

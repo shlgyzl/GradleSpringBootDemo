@@ -1,74 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true">
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
     <!-- 从application.yml 中注入变量  -->
-    <!-- <springProperty scope="context" name="LOG_PATH" source="log.home"/> -->
-    <!-- <springProperty scope="context" name="APPDIR" source="spring.application.name"/> -->
-    <property scope="context" name="LOG_PATH" value="./logs"/>
-    <property scope="context" name="APPDIR" value="graceLogs"/>
+    <springProperty scope="context" name="LOG_PATH" source="application.logback.logPath"/>
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
 
+    <!-- 日志输出格式 -->
+    <property name="DEFAULT_LOG_PATTERN"
+              value="%ip %d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } [%t] [%-40.40logger{39}:%line] %m%n"/>
+    <property name="CURRENT_LOG_PATTERN" value="%ip %d{yyyy年MM月dd日 E HH:mm:ss} %-5level %logger Line:%-3L - %m%n"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%ip ${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy年MM月dd日 E HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="MDC_LOG_PATTERN" value="%ip %d{yyyy年MM月dd日 HH:mm:ss} %mdc [%thread] %level %logger{35} - %msg%n"/>
+
+
+    <!-- 本地属性配置 -->
+    <property scope="local" name="MIN_INDEX" value="1"/>
+    <property scope="local" name="MAX_INDEX" value="10"/>
+    <property scope="local" name="MAX_FILE_SIZE" value="200MB"/>
+    <property scope="local" name="CHARSET" value="UTF-8"/>
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
 
     <!-- 彩色日志 -->
     <!-- 彩色日志依赖的渲染类 -->
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="clr"
+                    converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <conversionRule conversionWord="wex"
                     converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
     <conversionRule conversionWord="wEx"
                     converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
-    <!-- 定义彩色日志格式模板 -->
-    <property name="CONSOLE_LOG_PATTERN"
-              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy年MM月dd日 E HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <conversionRule conversionWord="ip"
+                    converterClass="com.application.log.logback.config.IpLogConfiguration"/>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <!--<pattern>1-%d{yyyy年MM月dd日 E HH:mm:ss} [%thread] %-5level %logger - %msg%n</pattern>-->
-            <!--使用彩色日志-->
-            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
-            <charset>GBK</charset>
-        </encoder>
-    </appender>
-
-    <appender name="FILE-THREAD" class="ch.qos.logback.classic.sift.SiftingAppender">
-        <discriminator>
-            <key>requestId</key>
-            <defaultValue>head0</defaultValue>
+    <!-- 单独线程记录(每个线程都会产生一个自定义的日志文件) -->
+    <appender name="FILE_THREAD" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator">
+            <key>LOG_FILE_NAME</key>
+            <defaultValue>业务-线程启动日志</defaultValue>
         </discriminator>
         <sift>
-            <appender name="FILE-${logFileName}"
-                      class="ch.qos.logback.core.rolling.RollingFileAppender">
-                <file>${LOG_PATH}/${requestId}.log</file>
+            <appender name="FILE_${LOG_FILE_NAME}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
                 <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-                    <Pattern>
-                        %d{yyyy-MM-dd HH:mm:ss} %mdc [%thread] %level %logger{35} - %msg%n
-                    </Pattern>
+                    <Pattern>${MDC_LOG_PATTERN}</Pattern>
                 </encoder>
-                <rollingPolicy
-                        class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-                    <FileNamePattern>${LOG_PATH}/${requestId}.%i.log.zip
+                <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                    <FileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%i.log.zip
                     </FileNamePattern>
-                    <MinIndex>1</MinIndex>
-                    <MaxIndex>10</MaxIndex>
+                    <MinIndex>${MIN_INDEX}</MinIndex>
+                    <MaxIndex>${MAX_INDEX}</MaxIndex>
                 </rollingPolicy>
-                <triggeringPolicy
-                        class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-                    <MaxFileSize>10MB</MaxFileSize>
+                <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                    <MaxFileSize>${MAX_FILE_SIZE}</MaxFileSize>
                 </triggeringPolicy>
             </appender>
         </sift>
     </appender>
 
-    <!-- error级别日志文件输出,按日期时间滚动记录输出 -->
-    <appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/${APPDIR}/log_error.log</file>
+    <appender name="FILE_IP" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator">
+            <key>IP</key>
+            <defaultValue>IP-线程启动日志</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE_${LOG_FILE_NAME}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${LOG_PATH}/${IP}.log</file>
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <Pattern>${MDC_LOG_PATTERN}</Pattern>
+                </encoder>
+                <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                    <FileNamePattern>${LOG_PATH}/${IP}.%i.log.zip
+                    </FileNamePattern>
+                    <MinIndex>${MIN_INDEX}</MinIndex>
+                    <MaxIndex>${MAX_INDEX}</MaxIndex>
+                </rollingPolicy>
+                <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                    <MaxFileSize>${MAX_FILE_SIZE}</MaxFileSize>
+                </triggeringPolicy>
+            </appender>
+        </sift>
+    </appender>
+
+    <!-- error 级别日志文件输出,按日期时间滚动记录输出 -->
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}/log_error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/${APPDIR}/error/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}/error/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>500MB</maxFileSize>
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <append>true</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy年MM月dd日 E HH:mm:ss} %-5level %logger Line:%-3L - %msg%n</pattern>
-            <charset>utf-8</charset>
+            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>error</level>
@@ -77,19 +101,19 @@
         </filter>
     </appender>
 
-    <!-- warn级别日志文件输出,按日期时间滚动记录输出 -->
-    <appender name="FILEWARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/${APPDIR}/log_warn.log</file>
+    <!-- warn 级别日志文件输出,按日期时间滚动记录输出 -->
+    <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}/log_warn.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/${APPDIR}/warn/log-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}/warn/log-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>2MB</maxFileSize>
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <append>true</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy年MM月dd日 E HH:mm:ss} %-5level %logger Line:%-3L - %msg%n</pattern>
-            <charset>utf-8</charset>
+            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>warn</level>
@@ -99,19 +123,19 @@
     </appender>
 
 
-    <!-- info级别日志文件输出,按日期时间滚动记录输出 -->
-    <appender name="FILEINFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/${APPDIR}/log_info.log</file>
+    <!-- info 级别日志文件输出,按日期时间滚动记录输出 -->
+    <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}/log_info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/${APPDIR}/info/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}/info/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>2MB</maxFileSize>
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <append>true</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy年MM月dd日 E HH:mm:ss} %-5level %logger Line:%-3L - %msg%n</pattern>
-            <charset>utf-8</charset>
+            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>info</level>
@@ -119,54 +143,160 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+
+    <!-- debug级别日志文件输出,按日期时间滚动记录输出 -->
+    <appender name="FILE_DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}/log_debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}/debug/log-debug-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>debug</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- rest 接口日志文件输出,按日期时间滚动记录输出 -->
+    <appender name="FILE_REST" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}/log_rest.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}/rest/log-rest-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- service 服务日志文件输出,按日期时间滚动记录输出 -->
+    <appender name="FILE_SERVICE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}/log_service.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}/service/log-service-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- repository 持久层日志文件输出,按日期时间滚动记录输出 -->
+    <appender name="FILE_REPOSITORY" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}/log_repository.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}/repository/log-repository-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${DEFAULT_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <!--<pattern>%d{yyyy年MM月dd日 E HH:mm:ss} %-5level %logger Line:%-3L - %msg%n</pattern>-->
-            <!--使用彩色日志-->
             <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+            <charset>${CHARSET}</charset>
         </encoder>
     </appender>
 
-    <!--设置为OFF,即屏蔽; 留下sqltiming作为INFO级别输出-->
-    <logger name="jdbc.connection" level="OFF" additivity="false"/>
-    <logger name="jdbc.resultset" level="OFF" additivity="false"/>
-    <logger name="jdbc.resultsettable" level="OFF" additivity="false"/>
-    <logger name="jdbc.audit" level="OFF" additivity="false"/>
-    <logger name="jdbc.sqlonly" level="OFF" additivity="false"/>
-    <logger name="jdbc.sqltiming" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-    </logger>
-    <logger name="org.hibernate.SQL" additivity="false" level="DEBUG">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILEINFO"/>
-        <appender-ref ref="FILEWARN"/>
-        <appender-ref ref="FILEERROR"/>
-    </logger>
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <!-- 异步日志(占用线程,存在丢失日志的情况,队列引起的。可以设置为不丢失,默认是队列80%满,剩下的则丢失) -->
+    <appender name="ASYNC_INFO" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>512</queueSize>
+        <!-- 解决行号不显示问题 -->
+        <includeCallerData>true</includeCallerData>
+        <!-- 将 DEBUG 日志设置为异步 -->
+        <appender-ref ref="FILE_INFO"/>
+    </appender>
+
 
     <!-- 2. 输出SQL 的参数到控制台和文件-->
+    <logger name="org.hibernate.SQL" additivity="false" level="DEBUG"/>
     <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="OFF"/>
     <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="OFF"/>
     <logger name="org.hibernate.engine.QueryParameters" level="OFF"/>
     <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG"/>
     <logger name="org.springframework.aop.framework.CglibAopProxy" level="ERROR" additivity="false"/>
     <logger name="springfox.documentation" level="ERROR" additivity="false"/>
-    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="ERROR"
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"
+            level="ERROR" additivity="false"/>
+    <logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="ERROR"
             additivity="false"/>
-    <logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="ERROR" additivity="false"/>
     <logger name="org.springframework.web.servlet.DispatcherServlet" level="ERROR" additivity="false"/>
     <logger name="io.undertow.servlet" level="ERROR" additivity="false"/>
-    <logger name="org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod" level="ERROR"/>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod"
+            level="ERROR"/>
 
-    <logger name="com.application.log.logback.web.rest" level="TRACE" additivity="false">
-        <appender-ref ref="FILE-THREAD"/>
+    <logger name="com.application" level="DEBUG" additivity="true">
+        <appender-ref ref="FILE_IP"/>
+    </logger>
+
+
+    <!-- 手动触发 -->
+    <logger name="rest" level="info" additivity="false">
+        <appender-ref ref="FILE_REST"/>
+    </logger>
+    <logger name="service" level="info" additivity="false">
+        <appender-ref ref="FILE_SERVICE"/>
+    </logger>
+    <logger name="repository" level="info" additivity="false">
+        <appender-ref ref="FILE_REPOSITORY"/>
     </logger>
 
     <!--设置日志打印级别为INFO-->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILEINFO"/>
-        <appender-ref ref="FILEWARN"/>
-        <appender-ref ref="FILEERROR"/>
+
+        <!--<appender-ref ref="ASYNC_INFO"/>-->
+        <appender-ref ref="FILE_INFO"/>
+        <appender-ref ref="FILE_WARN"/>
+        <appender-ref ref="FILE_ERROR"/>
+        <appender-ref ref="FILE_DEBUG"/>
     </root>
 
 </configuration>
