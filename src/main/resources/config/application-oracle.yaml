@@ -19,7 +19,7 @@ spring:
       hibernate.default_batch_fetch_siz: 16 #Hibernate批量获取关联的默认大小（可以批量获取延迟获取的关联，以防止出现N+1查询问题）
       hibernate.jdbc.fetch_size: 15 #非零值通过调用Statement.setFetchSize确定JDBC获取大小
       hibernate.show_sql: true #将所有SQL语句写入控制台。这是设置日志类别的另一种方法org.hibernate.SQL网站去调试
-      hibernate.format_sq: true #在日志和控制台中打印SQL
+      hibernate.format_sql: true #在日志和控制台中打印SQL
       hibernate.use_sql_comment: true #如果为true，Hibernate将在SQL中生成注释，以便于调试
       hibernate.hbm2ddl.auto: none #设置为作为SessionFactory生命周期的一部分自动执行SchemaManagement工具操作
       hibernate.connection.provider_disables_autocommit: true #禁用自动提交
@@ -28,7 +28,7 @@ spring:
       hibernate.globally_quoted_identifiers: false #是否应引用所有数据库标识符,如果使用通用的数据库最好不要设置为true
       hibernate.current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
       hibernate.generate_statistic: true #使Hibernate收集性能调整的统计信息
-      #hibernate.session.events.log: true #是否在控制台显示性能日志
+      hibernate.session.events.log: true #是否在控制台显示性能日志
       hibernate.query.fail_on_pagination_over_collection_fetch: true #显示内存分页警告
     show-sql: true #是否启用SQL语句的日志记录
   datasource:
@@ -37,31 +37,271 @@ spring:
     password: test
     url: jdbc:oracle:thin:@localhost:1521/helowin
     type: com.zaxxer.hikari.HikariDataSource
+    platform: all #在DDL或DML脚本中使用的平台（例如schema-${Platform}.sql或data-${Platform}.sql）。
     hikari:
-      poolName: Hikari
-      auto-commit: false
-      data-source-properties:
-        cachePrepStmts: true
-        prepStmtCacheSize: 250
-        prepStmtCacheSqlLimit: 2048
+      #### 通过HikariConfigMXBean在运行时更改的属性 ###
+      catalog: jpa #连接上设置的默认目录名称
+      connection-timeout: 330 #连接超时,不能小于250ms
+      validation-timeout: 330 #有效性超时时间,不能小于250ms
+      idleTimeout: 10 #空闲时间
+      leakDetectionThreshold: 10 #泄漏检测阈值
+      max-lifetime: 100000000 #连接的最大寿命
+      maximum-pool-size: 10 #连接池的最大限度
+      minimum-idle: 10 #最小空闲时间
+      username: test
+      password: test
+      ### 属性在运行时不可更改 ###
+      initialization-fail-timeout: 100 #初始化失败超时
+      connection-test-query: SELECT * from dual #连接测试查询
+      #dataSource-class-name: HikariDataSource #数据源Class名称
+      driver-class-name: oracle.jdbc.driver.OracleDriver #驱动 cannot use driverClassName and dataSourceClassName together.
+      jdbc-url: jdbc:oracle:thin:@localhost:1521/helowin
+      pool-name: 主连接池 #连接池的名称,用于打印日志信息,无大作用
+      login-timeout: 300 #登录超时
+      allow-pool-suspension: false #是否允许远程终止连接池,一般用于较为深入的业务才会使用
+      read-only: false #当前数据源是否只读
+      schema: TEST #模式名称,一般用数据库名
+      auto-commit: false #让JPA来提交
+      data-source-properties: #HikariConfig 该实体具有详细配置
+        cachePrepStmts: true #开启预查询缓存
+        prepStmtCacheSize: 250 #预查询的缓存大小
+        prepStmtCacheSqlLimit: 2048 #预查询最大查询数量
         useServerPrepStmts: true
-      max-lifetime: 100000000
+      #connection-init-sql: : #初始化sql
+      #data-source-j-n-d-i: #数据源jndiname
+      #exception-override-class-name: #异常信息处理类,可以用于自定义异常信息SQLExceptionOverride
+      #scheduled-executor: #定时任务执行器
+      #health-check-properties: #监控指标配置,暂时用不了
+      #metric-registry: #监控指标配置,暂时用不了
+      #isolate-internal-queries: false #隔离内部查询
+      #metrics-tracker-factory: #监控指标配置,暂时用不了
+      #register-mbeans: false #监控指标配置,暂时用不了
+      #transaction-isolation: #事务隔离级别
+  data:
+    mongodb:
+      database: jpa #连接数据库名
+      host: localhost #连接地址,不能是URL
+      port: 27017 #连接端口
+      authentication-database: jpa #认证数据库名
+      auto-index-creation: true #是否创建索引
+      grid-fs-database: jpa #文件数据库名
+      password: #密码
+      username: #账号
+      uuid-representation: java_legacy #将UUID转换为BSON二进制值时要使用的表示形式。
+      repositories:
+        type: auto #要启用的Mongo存储库的类型。
+      #field-naming-strategy: org.springframework.data.mapping.model.PropertyNameFieldNamingStrategy #完全限定名
+      #replica-set-name: #群集所需的副本集名称。无法使用URI设置
+      #uri: #使用url就不能使用port和host
+    redis:
+      repositories:
+        enabled: false #是否启用Redis存储库
+  rabbitmq:
+    host: localhost #地址
+    port: 5672 #服务端口
+    username: admin #用户名
+    password: admin #密码
+    virtual-host: / #虚拟地址(用于隔离每个开发连接服务器时的地址,类似于虚拟机)
+    listener:
+      simple:
+        auto-startup: true #自动启动后台
+  redis:
+    lettuce:
+      pool:
+        max-active: 8 #池在给定时间可以分配的最大连接数。使用负值表示无限制
+        max-wait: -1 #当池耗尽时，连接分配在引发异常之前应阻塞的最长时间。使用负值无限期阻止
+        min-idle: 0 #空闲对象逐出器线程的运行间隔时间。为正值时，空闲对象逐出线程启动，否则不执行空闲对象逐出
+        max-idle: 8 #池中“空闲”连接的最大数量。使用负值表示空闲连接的数量不受限制
+      shutdown-timeout: 100 #关机超时
+    host: localhost #地址
+    port: 6379 #端口
+    database: 10 #连接工厂使用的数据库索引
+    timeout: 100 #连接超时
+    ssl: false #是否启用SSL支持
+    #password: 123456 #redis服务器的登录密码。
+    #url: #连接URL。覆盖主机、端口和密码。用户被忽略。例子：redis://user:password@example.com：6379个
+  cache:
+    type: SIMPLE #如果使用第三方插件,那么需要制定缓存,如果是编程式则将该配置禁用
   liquibase:
-    drop-first: false
-    contexts: dev,test,prod
-    enabled: true
-    change-log: classpath:config/liquibase/db.changelog-master.xml
-    user: test
-    password: test
+    drop-first: true #是否删库跑路
+    contexts: dev,test,prod #要使用的运行时上下文的逗号分隔列表
+    enabled: true #开启Liquibase功能
+    change-log: classpath:config/liquibase/db.changelog-master.xml #主日志文件路径
     url: jdbc:oracle:thin:@localhost:1521/helowin
-    default-schema: TEST
+    user: test #数据源账号
+    password: test #数据源密码
+    clear-checksums: false #是否清除当前变更日志中的所有校验和，以便在下次更新时重新计算它们
+    database-change-log-lock-table: DATABASECHANGELOGLOCK #用于跟踪并发Liquibase使用情况的表的名称
+    database-change-log-table: DATABASECHANGELOG #用于跟踪更改历史记录的表的名称
+    default-schema: TEST #默认数据库架构
+    tag: 1.0 #应用数据库更改时要使用的标记名。也可以与“rollspeffle”一起使用，为与该标记关联的所有现有更改生成回滚脚本
+    #labels:  #要使用的运行时标签的逗号分隔列表
+    #liquibase-schema: jpa #用于Liquibase对象的架构
+    #liquibase-tablespace: jpa #用于Liquibase对象的表空间
+    #parameters: #更改日志参数
+    #test-rollback-on-update: false #是否应在执行更新之前测试回滚
+    #rollback-file: #执行更新时将回滚SQL写入的文件
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss #如果程序里配置了，此处则失效,此配置满足以jackson接收参数和返回,不能直接接收get参数请求，可以使用@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")。可以指定Date或者其他日期类型但是得配置相应得格式，参考StdDateFormat
     time-zone: Asia/Shanghai # 必须指定时区,否则默认使用UTC,如果程序里配置了，此处则失效
   servlet:
     multipart:
+      enabled: true #是否支持多部分上传。
       max-file-size: 100MB #上传文件最大为 100M
-      max-request-size: 200MB #上传总数据大小 200M
+      max-request-size: 1024MB #上传总数据大小 200M
+      file-size-threshold: 0 #将文件写入磁盘的阈值(单位是B)
+      location: #上传文件的中间位置
+      resolve-lazily: false #是否在访问文件或参数时延迟解析多部分请求
+  quartz:
+    auto-startup: true #初始化后是否自动启动计划程序
+    jdbc:
+      initialize-schema: always # TODO 生产环境改成never # fix it 初始化Quartz表结构,项目第一次启动配置程always,然后改成never 否则已生成的job会被初始化掉
+      comment-prefix: '#,--,--#' #SQL初始化脚本中单行注释的前缀,此处可能不同数据库会出现无法解析SQL问题,请查询相关数据库SQL注释前缀进行匹配
+      #schema: classpath:org/quartz/impl/jdbcjobstore/tables_@@platform@@.sql #用于初始化数据库架构的SQL文件的路径,暂时用不上
+    job-store-type: jdbc #设置quartz任务的数据持久化方式，默认是内存方式,使用jdbc表示将表创建到数据库中
+    overwrite-existing-jobs: false #配置的作业是否应覆盖现有作业定义
+    scheduler-name: 定时任务名称 #设定定时任务名称
+    startup-delay: 0s #初始化完成后启动调度程序的延迟。如果在整个应用程序启动之前不应运行任何作业，则设置此属性是有意义的
+    wait-for-jobs-to-complete-on-shutdown: false #关闭时是否等待正在运行的作业完成
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: GradleSpringBootScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX # 单机存储,非集群
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.oracle.OracleDelegate
+            tablePrefix: QRTZ_  #Quartz表前缀
+            isClustered: true
+            clusterCheckinInterval: 20000
+            useProperties: false
+            maxMisfiresToHandleAtATime: 1
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 2
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+  devtools:
+    add-properties: true #是否启用开发属性默认值。
+    livereload:
+      enabled: true #是否启用livereload.com网站-兼容服务器
+      port: 35729 #端口
+    remote:
+      context-path: /.~~spring-boot!~ #用于处理远程连接的上下文路径
+      proxy:
+        host: localhost #用于连接到远程应用程序的代理主机
+        port: 35728 #端口
+      restart:
+        enabled: true #是否启用远程重新启动
+      #secret: #建立连接所需的共享机密（启用远程支持所需）
+      #secret-header-name: X-AUTH-TOKEN #用于传输共享机密的HTTP头
+    restart:
+      enabled: true #是否启用自动重启
+      exclude: META-INF/maven/**,META-INF/resources/**,resources/**,static/**,public/**,templates/**,**/*Test.class,**/*Tests.class,git.properties,META-INF/build-info.properties #不应触发完全重新启动的模式
+      log-condition-evaluation-delta: true #重新启动时是否记录条件评估增量
+      poll-interval: 1s #轮询类路径更改之间等待的时间量
+      quiet-period: 400ms #在触发重新启动之前，无需更改类路径所需的安静时间
+      #additional-exclude: "**/*Test.class,**/*Tests.class" #应排除在触发完全重新启动之外的其他模式,一般用于自定义
+      #additional-paths: ‪C:\Users\yanghaiyong\Desktop\cmd.exe #监视更改的其他路径,文件路径
+      #trigger-file: ‪C:\Users\yanghaiyong\Desktop\cmd.exe #更改后触发重新启动检查的特定文件的名称。必须是出现在类路径上的文件的简单名称（没有任何路径）。如果没有指定的类路径，则重新启动指定的文件
+  main:
+    banner-mode: console
+    allow-bean-definition-overriding: true #多个Bean可以覆盖
+    lazy-initialization: true #初始化是否应该延迟执行
+    log-startup-info: true #是否在应用程序启动时记录有关应用程序的信息
+    register-shutdown-hook: true #应用程序是否应注册关闭挂钩
+    web-application-type: servlet #用于显式请求特定类型的web应用程序的标志。如果未设置，则根据类路径自动检测
+    cloud-platform: none #覆盖云平台自动检测 需要第三方插件,比如 卡夫卡
+#  cloud:
+#    sentinel:
+#      transport:
+#        dashboard: http://47.105.46.4:8082
+#      log:
+#        dir: ./logs/alibaba-monitor
+#      eager: true
+#      enabled: true
+#  boot:
+#    admin:
+#      client:
+#        url: http://47.105.46.4:8081
 application:
-  file:
+  file: #文件上传或下载路径
     upload-path: /files
+  remote-dam: #第三方系统登录
+    username: test_zuosl
+    password: zuo123456
+    api-base-url: http://v3.dam.com.cn/
+  logback: #日志生成路径
+    logPath: ./logs
+knife4j: #接口文档
+  production: false
+  basic:
+    enable: false
+    username: admin
+    password: admin
+jhipster:
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    exposed-headers: "Authorization,Link,X-Total-Count"
+    allow-credentials: true
+    max-age: 1800
+  async:
+    core-pool-size: 2
+    max-pool-size: 50
+    queue-capacity: 10000
+  security:
+    remember-me:
+      key: 4e431fe0f41cec2457ba464d1fa53d2e287a54e5e92c9dca30c68d95af40e1bbc2cc4d3d25f0f61049dc3934466e6586a8eb
+    authentication:
+      jwt:
+        base64-secret: RFE2Y1NNTlRsRDNDLzJiblVQRnZMYUZ4WXVjV1huWWVYa1luY0NNT3hlTVU1QmI2ZVZ3N2pkVFBISjBHS08zSEV1NWNYMGVGSXh0S3ZTQURjSkdzWWJsRE5sTjg3cVpjdDUwSkxhQnR6WXlhOUdTNHc5YjBkazlmbnk1WXd4MFowT3hZYnZFUUU2dVVyWW1ET0IwbUtNeGNCbmlCc1dYOTFqSnhmNy9VTlc4JTNE
+        token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 2592000
+#jetcache: #开启阿里巴巴封装的jetCache缓存框架
+#  statIntervalMinutes: 15
+#  areaInCacheName: false
+#  hiddenPackages: true
+#  local:
+#    default:
+#      type: linkedhashmap
+#      keyConvertor: fastjson
+#      limit: 100
+#      defaultExpireInMillis: 20000    #全局缓存失效时间
+
+#remote:
+#  default:
+#    type: redis
+#    keyConvertor: fastjson
+#    valueEncoder: java
+#    valueDecoder: java
+#    poolConfig:
+#      minIdle: 5
+#      maxIdle: 20
+#      maxTotal: 50
+#    host: 47.105.46.4
+#    port: 6379
+#    password: 123456
+#    defaultExpireInMillis: 20000    #全局缓存失效时间
+
+#management:
+#  endpoints:
+#    enabled-by-default: true
+#    jmx:
+#      exposure:
+#        include: '*'
+#    web:
+#      exposure:
+#        include: '*'
+#      cors:
+#        allowed-methods: '*'
+#  endpoint:
+#    health:
+#      show-details: always
+
+#  cache: # ehcache使用
+#    ehcache:
+#      max-entries: 10000
+#      time-to-live-seconds: 3600
