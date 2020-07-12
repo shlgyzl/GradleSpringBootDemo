@@ -28,8 +28,9 @@ import java.util.concurrent.TimeUnit;
 public class FeignConfiguration implements InitializingBean {
     @Autowired
     private ApplicationProperties applicationProperties;
-    @Autowired
+
     private UserServiceFeign userServiceFeign;
+
     @Autowired
     private FeignErrorDecoder feignErrorDecoder;
     private final Gson gson = new GsonBuilder()

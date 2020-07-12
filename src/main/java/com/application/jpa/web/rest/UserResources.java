@@ -82,7 +82,7 @@ public class UserResources {
         return ResponseUtil.wrapOrNotFound(userRepository.findById(id));
     }
 
-    @ApiOperationSupport(includeParameters = {User_.LOGIN}, order = 5)
+    @ApiOperationSupport(includeParameters = {User_.LOGIN, "page", "size", "sort"}, order = 5)
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
     @Timed
     @PostMapping(value = "/users")

@@ -7,10 +7,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.*;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -34,6 +36,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Accessors(chain = true)
 @DynamicInsert
 @DynamicUpdate
+@OptimisticLocking(type = OptimisticLockType.ALL)
 public class User extends AbstractAuditingEntity implements Serializable {
 
 
@@ -76,7 +79,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "dam_id", referencedColumnName = "id")})
     @BatchSize(size = 20)
     @ManyToMany(fetch = FetchType.LAZY)
-    @OrderBy("id asc")
+    //@OrderBy("id asc")// 直接对Dam的实体id排序
+    @org.hibernate.annotations.OrderBy(clause = "user_id desc")// 中间表user_id排序
+    //@OrderColumn(name = "id desc", nullable = false)
+    //@LazyCollection(value = LazyCollectionOption.EXTRA)// 额外的操作,仅适用于有序集合
     @ApiModelProperty(hidden = true)
     private Set<Dam> dams = new LinkedHashSet<>(5);
 

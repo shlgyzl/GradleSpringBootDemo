@@ -75,6 +75,8 @@
     <include file="config/liquibase/changlog/entity/persistent_token/persistent_token.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/cache/eh_cache/EHCacheEntity.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changlog/entity/cache/redis_cache/RedisCacheEntity.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changlog/entity/hibernate/lock/hibernate_user/User.xml" relativeToChangelogFile="false"/>
+
 
 
     <!-- 关系表 -->

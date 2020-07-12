@@ -18,7 +18,6 @@ import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.querydsl.binding.SingleValueBinding;
 import org.springframework.data.repository.query.Param;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.LockModeType;
 import javax.validation.constraints.NotNull;
@@ -41,8 +40,8 @@ public interface UserRepository extends BaseJpaRepository<User, Long>, QuerydslB
             "where U.id in ( :ids) ")
     List<User> findByIds(@Param("ids") Collection<Long> ids);
 
-    @EntityGraph(attributePaths = {"dams"})
-    Page<User> findAll(@Nullable Predicate predicate, @Nullable Pageable pageable);
+    @EntityGraph(attributePaths = {"dams"},type = EntityGraph.EntityGraphType.FETCH)
+    Page<User> findAll(Predicate predicate, Pageable pageable);
 
     @EntityGraph(attributePaths = {"dams"})
     Page<User> findAll(Pageable pageable);

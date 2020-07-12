@@ -203,6 +203,23 @@ dependencies {
 
     implementation "com.mchange:c3p0:0.9.5.5"
 
+    // jackson 序列化问题
+    implementation  "com.fasterxml.jackson.module:jackson-module-parameter-names:2.11.1"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.11.1"
+    //implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.11.1"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.1"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.1"
+    //implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk7:2.11.1"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-guava:2.11.1"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.11.1"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda-money:2.11.1"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr353:2.11.1"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc:2.11.1"
+    //implementation "com.fasterxml.jackson.datatype:jackson-datatype-pcollecions:2.11.1"
+    //implementation "com.fasterxml.jackson.datatype:jackson-datatype-jars:2.11.1"
+    implementation "org.glassfish:javax.json:1.1.4"
+
+
 
     compileOnly "org.projectlombok:lombok"
     implementation "com.querydsl:querydsl-core:${querydslVersion}"

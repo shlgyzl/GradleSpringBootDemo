@@ -10,4 +10,4 @@ spring:
   application:
     name: GradleSpringBoot
   profiles:
-    active: sqlserver
+    active: mysql

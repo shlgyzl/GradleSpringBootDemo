@@ -7,6 +7,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.fasterxml.jackson.datatype.hppc.HppcModule;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.datatype.jodamoney.JodaMoneyModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr353.JSR353Module;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -24,7 +32,7 @@ public class JacksonConfiguration {
     @Bean
     @Primary
     @ConditionalOnMissingBean(ObjectMapper.class)
-    public ObjectMapper jacksonObjectMapper(@Qualifier("javaTimeModule") Module javaTimeModule, Jackson2ObjectMapperBuilder builder) {
+    public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
         ObjectMapper objectMapper = builder.createXmlMapper(false).build();
         // 序列化禁用日期转为时间戳
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -48,7 +56,16 @@ public class JacksonConfiguration {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DateFormatConstants.DEFAULT_DATE_TIME_FORMAT);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
         objectMapper.setDateFormat(simpleDateFormat);
-        objectMapper.registerModule(javaTimeModule).registerModule(new ParameterNamesModule());
+        objectMapper
+                .registerModule(new ParameterNamesModule())
+                .registerModule(new JavaTimeModule())
+                .registerModule(new Hibernate5Module())
+                .registerModule(new GuavaModule())
+                .registerModule(new HppcModule())
+                .registerModule(new JSR353Module())
+                .registerModule(new JodaModule())
+                .registerModule(new JodaMoneyModule())
+                .registerModule(new SimpleModule());
         return objectMapper;
     }
 }

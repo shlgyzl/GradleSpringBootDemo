@@ -83,7 +83,7 @@ public class DefectTypePropertyResources {
     }
 
 
-    @ApiOperationSupport(order = 5)
+    @ApiOperationSupport(includeParameters = {"page", "size", "sort"},order = 5)
     @ApiOperation(value = "高级分页查询", notes = "条件限制")
     @Timed
     @PostMapping(value = "/defectTypeProperties")

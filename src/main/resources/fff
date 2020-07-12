@@ -1,0 +1,120 @@
+Author author1 = new Author();
+        author1.setId(7L);
+        author1.setAge(1);
+        author1.setGenre("你好");
+        author1.setName("ddd");
+        authorRepository.save(author1);
+        List<BookstoreDto2> dto = authorRepository.fetchAll(LocalDateTime.now().plusDays(-1), LocalDateTime.now().plusDays(1));
+        // 条件封装
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        // 结果集封装
+        CriteriaQuery<BookstoreDto2> query = builder.createQuery(BookstoreDto2.class);
+        // 查询的表
+        Root<Author> rootAuthor = query.from(Author.class);
+        Root<Book> rootBook = query.from(Book.class);
+
+
+        // 组装条件
+        query.where(builder.and(builder.equal(rootAuthor.get("genre"), rootBook.get("genre"))));
+
+        // 封装结果
+        CriteriaQuery<BookstoreDto2> select
+                = query.select(builder.construct(BookstoreDto2.class,
+                rootAuthor.get("age"),
+                rootAuthor.get("name"),
+                builder.countDistinct(rootAuthor.get("age"))))
+                .groupBy(rootAuthor.get("age"), rootAuthor.get("name"))
+                .orderBy(builder.desc(rootAuthor.get("age")), builder.desc(rootAuthor.get("name")));
+
+
+        // 查询
+        List<BookstoreDto2> resultList
+                = entityManager.createQuery(select)
+                .unwrap(Query.class)
+                .setLockOptions(new LockOptions(LockMode.PESSIMISTIC_WRITE).setFollowOnLocking(false))// 禁用跟随锁
+                .setFirstResult(1)
+                .setMaxResults(10)
+                .getResultList();
+
+
+        // the fetched Author are managed by Hibernate
+        // the following line of code will trigger an UPDATE
+        // dto.get(0).getAuthor().setAge(47);
+
+
+
+        QAuthor author = QAuthor.author;
+        QBook book = QBook.book;
+        OrderSpecifier orderAge = new OrderSpecifier(Order.DESC,author.age, OrderSpecifier.NullHandling.NullsLast);
+        OrderSpecifier orderName = new OrderSpecifier(Order.DESC,author.name, OrderSpecifier.NullHandling.NullsLast);
+        JPAQuery<BookstoreDto2> jpaQuery = new JPAQuery<>(entityManager);
+        List<BookstoreDto2> fetch = jpaQuery
+                .select(Projections.constructor(BookstoreDto2.class, author.age, author.name, author.name.countDistinct()))
+                .from(author)
+                .leftJoin(book).on(author.genre.eq(book.genre))
+                .where(book.loginDate.between(LocalDateTime.now().plus(-6, ChronoUnit.DAYS), LocalDateTime.now()))
+                .groupBy(author.age, author.name)
+                .orderBy(author.age.desc(), author.name.desc())
+                .offset(0).limit(10)
+                .setLockMode(LockModeType.PESSIMISTIC_READ)
+                .fetch();
+
+        JPADeleteClause deleteClause = new JPADeleteClause(entityManager, author);
+        //deleteClause.where()
+        JPAUpdateClause updateClause = new JPAUpdateClause(entityManager, author);
+        //updateClause.set()
+        //JPAExpressions.selectDistinct(book.id). 子查询
+
+        // Query jpaQuery = queryFactory.selectFrom(employee).createQuery(); 原始查询
+        //// ...
+        //List results = jpaQuery.getResultList();
+        // 常量的使用
+        // queryFactory.select(Expressions.constant(1),
+        //                    Expressions.constant("abc"));
+/*        List<Long> longs = jpaQuery.select(SQLExpressions.rowNumber()
+                .over()
+                .partitionBy(author.name)
+                .orderBy(author.id))
+                .from(author).fetch();*/
+
+/*        Map<Long, List<Book>> transform = jpaQuery.from(author, book)
+                .where(author.genre.eq(book.genre))
+                .transform(groupBy(author.id).as(list(book)));*/
+
+
+<dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>4.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-mongodb</artifactId>
+            <version>4.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <version>4.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-collections</artifactId>
+            <version>4.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-sql-codegen</artifactId>
+            <version>4.2.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-sql</artifactId>
+            <version>4.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>

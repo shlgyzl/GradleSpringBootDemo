@@ -13,6 +13,7 @@ spring:
       hibernate.model.generator_name_as_sequence_nam: true #如果为true，则当找不到匹配的@sequence generator或TableGenerator时，@GeneratedValue注释的generator属性指定的值应用作序列/表名。默认值为true，表示默认情况下，@GeneratedValue.generator（）将用作序列/表名。使用旧的hibernate_序列名从早期版本迁移的用户应禁用此设置
       hibernate.jdbc.time_zone: Asia/Shanghai #除非指定，否则JDBC驱动程序使用默认的JVM时区。如果通过此设置配置了不同的时区，JDBC PreparedStatement\setTimestamp将根据指定的时区使用日历实例
       hibernate.jdbc.batch_size: 5 #最大JDBC批处理大小。非零值启用批量更新
+      hibernate.jdbc.batch_versioned_data: 10 #返回行数用于乐观锁的检测,也就是@Version注解的批量操作
       hibernate.order_inserts: true #强制Hibernate按要插入的项的主键值排序SQL插入。这在使用层叠时保留批处理
       hibernate.order_updates: true #强制Hibernate按要更新的项的主键值排序SQL更新。这在使用级联时保留了批处理，并降低了高并发系统中事务死锁的可能性
       hibernate.max_fetch_dept: 3 #为单端关联的外部联接获取树设置最大深度。单端关联是一对一或多对一关联。值为0将禁用默认外部联接获取
@@ -23,13 +24,14 @@ spring:
       hibernate.use_sql_comment: true #如果为true，Hibernate将在SQL中生成注释，以便于调试
       hibernate.hbm2ddl.auto: none #设置为作为SessionFactory生命周期的一部分自动执行SchemaManagement工具操作
       hibernate.connection.provider_disables_autocommit: true #禁用自动提交
+      hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 25 #开启慢日志查询,并显示SQL
       hibernate.cache.use_second_level_cache: false #禁用二级缓存
       hibernate.cache.use_query_cache: false #禁用实体本地缓存
       hibernate.globally_quoted_identifiers: false #是否应引用所有数据库标识符,如果使用通用的数据库最好不要设置为true
       hibernate.current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
-      hibernate.generate_statistic: true #使Hibernate收集性能调整的统计信息
+      hibernate.generate_statistic: false #使Hibernate收集性能调整的统计信息
       hibernate.session.events.log: true #是否在控制台显示性能日志
-      hibernate.query.fail_on_pagination_over_collection_fetch: true #显示内存分页警告
+      hibernate.query.fail_on_pagination_over_collection_fetch: false #显示内存分页警告
     show-sql: true #是否启用SQL语句的日志记录
   datasource:
     username: root
