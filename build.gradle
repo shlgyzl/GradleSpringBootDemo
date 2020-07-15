@@ -226,7 +226,10 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}"
     implementation "com.querydsl:querydsl-apt:${querydslVersion}"
     implementation "com.querydsl:querydsl-mongodb:${querydslVersion}"
-
+    implementation "com.querydsl:querydsl-sql:${querydslVersion}"
+    implementation "com.querydsl:querydsl-sql-codegen:${querydslVersion}"
+    implementation "com.querydsl:querydsl-codegen:${querydslVersion}"
+    
 
     annotationProcessor "org.projectlombok:lombok"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen"
