@@ -17,7 +17,6 @@ public class BookDTO implements Serializable {
     private String name;
     private Long count;
 
-    @QueryProjection
     public BookDTO(String login, String name, Long count) {
         this.login = login;
         this.name = name;
