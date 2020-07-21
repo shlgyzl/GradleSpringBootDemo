@@ -166,25 +166,51 @@ spring:
     properties:
       org:
         quartz:
+          context:
+            key:
+              SOME_KEY: none #设置调度程序上下文中的事务相关性,除非使用JTA 事务,否则不发生变化
           scheduler:
             instanceName: GradleSpringBootScheduler
             instanceId: AUTO
+            instanceIdGenerator:
+              class: org.quartz.simpl.SimpleInstanceIdGenerator
+            threadName: 定时任务线程名称
+            makeSchedulerThreadDaemon: false #是否守护线程
+            threadsInheritContextClassLoaderOfInitializer: true #如果使用 SimpleThreadPool 则可以将此设置为true,提升性能
+            idleWaitTime: 30000 #等待时间30s 计划程序在重新查询可用触发器之前将等待的时间量（毫秒）
+            dbFailureRetryInterval: 15000 #DB数据库失败重试周期15s 当调度程序检测到JobStore内（例如到数据库）的连接丢失时，它将在两次重试之间等待的时间（以毫秒为单位）
+            classLoadHelper:
+              class: org.quartz.simpl.CascadingClassLoadHelper
+            jobFactory:
+              class: org.quartz.simpl.PropertySettingJobFactory #JobFatcory负责生成jobClass的实例
+            #userTransactionURL: 'java:comp/UserTransaction' #仅当Quartz配置为使用JobStoreCMT时使用，并且org.quartz.scheduler公司.wrapJobExecutionInUserTransaction设置为true
+            #wrapJobExecutionInUserTransaction: true #是否在作业之前启动事务,如想更细粒度使用事务,可以在Job上添加事务 @ExecuteInJTATransaction 控制
+            skipUpdateCheck: false #生产环境关闭 定时任务更新,类似于APP应用更新
+            batchTriggerAcquisitionMaxCount: 2 #每个调度程序节点触发数,如果大于1则会导致集群之间存在不平衡问题,那么在JDBC JobStore模式下,需要设置acquireTriggersWithinLock为true
+            batchTriggerAcquisitionFireAheadTimeWindow: 0 #在需要同时触发多个触发器的情况下,可以将值设置大一点,否则默认最好使用0
           jobStore: #JobStoreSupport
             class: org.quartz.impl.jdbcjobstore.JobStoreTX # 单机存储,非集群(数据保存方式为数据库持久化)
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.MSSQLDelegate # TODO 每个数据库不同
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate # TODO 每个数据库不同
             tablePrefix: QRTZ_  #Quartz表前缀
             isClustered: true #是否加入集群
             clusterCheckinInterval: 20000 #调度实例失效的检查时间间隔
-            maxMisfiresToHandleAtATime: 1
+            maxMisfiresToHandleAtATime: 1 #jobstore将处理的最大错误触发数
             misfireThreshold: 120000 #信息保存时间 ms 默认值60秒
-            txIsolationLevelSerializable: false
-            selectWithLockSQL: SELECT * FROM {0}LOCKS WHERE LOCK_NAME = ? FOR UPDATE
+            txIsolationLevelSerializable: true #有助于防止某些数据库在高负载和“长时间”事务下的锁定超时
+            selectWithLockSQL: SELECT * FROM {0}LOCKS WHERE SCHED_NAME = {1} AND LOCK_NAME = ? FOR UPDATE #在“LOCKS”表中选择一行并在该行上加锁的SQL字符串
             useProperties: false
-          threadPool: #程池的实现类（一般使用SimpleThreadPool即可满足几乎所有用户的需求）
-            class: org.quartz.simpl.SimpleThreadPool
-            threadCount: 2 #定线程数，至少为1（无默认值）(一般设置为1-100之间的整数合适)
+            dontSetAutoCommitFalse: false
+            acquireTriggersWithinLock: true
+            lockHandler:
+              class: org.quartz.impl.jdbcjobstore.UpdateLockRowSemaphore
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool #程池的实现类（一般使用SimpleThreadPool即可满足几乎所有用户的需求）
+            threadCount: 10 #定线程数，至少为1（无默认值）(一般设置为1-100之间的整数合适)
             threadPriority: 5 #设置线程的优先级（最大为java.lang.Thread.MAX_PRIORITY 10，最小为Thread.MIN_PRIORITY 1，默认为5）
             threadsInheritContextClassLoaderOfInitializingThread: true
+            makeThreadsDaemons: false #是否都是守护线程
+            threadsInheritGroupOfInitializingThread: true
+            threadNamePrefix: SQL_ #前缀
   devtools:
     add-properties: true #是否启用开发属性默认值。
     livereload:
