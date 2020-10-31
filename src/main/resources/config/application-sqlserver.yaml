@@ -35,7 +35,7 @@ spring:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: SA
     password: Admin123456%
-    url: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=JPA
+    url: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=jpa
     type: com.zaxxer.hikari.HikariDataSource
     platform: all #在DDL或DML脚本中使用的平台（例如schema-${Platform}.sql或data-${Platform}.sql）。
     hikari:
@@ -126,8 +126,8 @@ spring:
     drop-first: true #是否删库跑路
     contexts: dev,test,prod #要使用的运行时上下文的逗号分隔列表
     enabled: true #开启Liquibase功能
-    change-log: classpath:config/liquibase/master.xml #主日志文件路径
-    url: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=JPA
+    change-log: classpath:config/liquibase/db.changelog-master.xml #主日志文件路径
+    url: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=jpa
     user: SA #数据源账号
     password: Admin123456% #数据源密码
     clear-checksums: false #是否清除当前变更日志中的所有校验和，以便在下次更新时重新计算它们
@@ -155,66 +155,64 @@ spring:
   quartz:
     auto-startup: true #初始化后是否自动启动计划程序
     jdbc:
-      initialize-schema: always # TODO 生产环境改成 never # fix it 初始化Quartz表结构,项目第一次启动配置程 always,然后改成never 否则已生成的job会被初始化掉
+      initialize-schema: always # TODO 生产环境改成never # fix it 初始化Quartz表结构,项目第一次启动配置程always,然后改成never 否则已生成的job会被初始化掉
       comment-prefix: '#,--,--#' #SQL初始化脚本中单行注释的前缀,此处可能不同数据库会出现无法解析SQL问题,请查询相关数据库SQL注释前缀进行匹配
-      schema: classpath:config/liquibase/changlog/entity/add/tables_sqlServer.sql #用于初始化数据库架构的SQL文件的路径,暂时用不上
+      schema: classpath:org/quartz/impl/jdbcjobstore/tables_sqlServer.sql #用于初始化数据库架构的SQL文件的路径,暂时用不上
     job-store-type: jdbc #设置quartz任务的数据持久化方式，默认是内存方式,使用jdbc表示将表创建到数据库中
     overwrite-existing-jobs: false #配置的作业是否应覆盖现有作业定义
-    scheduler-name: quartzScheduler #设定定时任务名称
+    scheduler-name: 定时任务名称 #设定定时任务名称
     startup-delay: 0s #初始化完成后启动调度程序的延迟。如果在整个应用程序启动之前不应运行任何作业，则设置此属性是有意义的
     wait-for-jobs-to-complete-on-shutdown: false #关闭时是否等待正在运行的作业完成
     properties:
       org:
         quartz:
+          context:
+            key:
+              SOME_KEY: none #设置调度程序上下文中的事务相关性,除非使用JTA 事务,否则不发生变化
           scheduler:
             instanceName: GradleSpringBootScheduler
             instanceId: AUTO
-            wrapJobExecutionInUserTransaction: false #Job执行完毕，JobDataMap更新完（如果是StatefulJob）事务就会提交。默认值是false，可以在job类上使用@ExecuteInJTATransaction 注解，以便在各自的job上决定是否开启JTA事务。
-            makeSchedulerThreadDaemon: true #是否为守护线程
-            batchTriggerAcquisitionMaxCount: 1 #一个scheduler节点允许接收的trigger的最大数，默认是1，这个值越大，定时任务执行的越多，但代价是集群节点之间的不均衡。
-            rmi:
-              export: false
-              proxy: false
+            instanceIdGenerator:
+              class: org.quartz.simpl.SimpleInstanceIdGenerator
+            threadName: 定时任务线程名称
+            makeSchedulerThreadDaemon: false #是否守护线程
+            threadsInheritContextClassLoaderOfInitializer: true #如果使用 SimpleThreadPool 则可以将此设置为true,提升性能
+            idleWaitTime: 30000 #等待时间30s 计划程序在重新查询可用触发器之前将等待的时间量（毫秒）
+            dbFailureRetryInterval: 15000 #DB数据库失败重试周期15s 当调度程序检测到JobStore内（例如到数据库）的连接丢失时，它将在两次重试之间等待的时间（以毫秒为单位）
+            classLoadHelper:
+              class: org.quartz.simpl.CascadingClassLoadHelper
+            jobFactory:
+              class: org.quartz.simpl.PropertySettingJobFactory #JobFatcory负责生成jobClass的实例
+            #userTransactionURL: 'java:comp/UserTransaction' #仅当Quartz配置为使用JobStoreCMT时使用，并且org.quartz.scheduler公司.wrapJobExecutionInUserTransaction设置为true
+            #wrapJobExecutionInUserTransaction: true #是否在作业之前启动事务,如想更细粒度使用事务,可以在Job上添加事务 @ExecuteInJTATransaction 控制
+            skipUpdateCheck: false #生产环境关闭 定时任务更新,类似于APP应用更新
+            batchTriggerAcquisitionMaxCount: 2 #每个调度程序节点触发数,如果大于1则会导致集群之间存在不平衡问题,那么在JDBC JobStore模式下,需要设置acquireTriggersWithinLock为true
+            batchTriggerAcquisitionFireAheadTimeWindow: 0 #在需要同时触发多个触发器的情况下,可以将值设置大一点,否则默认最好使用0
           jobStore: #JobStoreSupport
             class: org.quartz.impl.jdbcjobstore.JobStoreTX # 单机存储,非集群(数据保存方式为数据库持久化)
             driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate # TODO 每个数据库不同
             tablePrefix: QRTZ_  #Quartz表前缀
-            isClustered: true #是否加入集群,如果有多个Quartz实例在用同一套数据库时，必须设置为true
+            isClustered: true #是否加入集群
             clusterCheckinInterval: 20000 #调度实例失效的检查时间间隔
-            maxMisfiresToHandleAtATime: 1 #这是JobStore能处理的错过触发的Trigger的最大数量。处理太多（2打）很快就会导致数据库表被锁定够长的时间，
+            maxMisfiresToHandleAtATime: 1 #jobstore将处理的最大错误触发数
             misfireThreshold: 120000 #信息保存时间 ms 默认值60秒
-            txIsolationLevelSerializable: false #值为true时告知Quartz（当使用JobStoreTX或CMT）调用JDBC连接的setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE) 方法。这有助于某些数据库在高负载和长时间事务时锁的超时。
-            selectWithLockSQL: SELECT * FROM {0}LOCKS UPDLOCK WHERE LOCK_NAME = ?
-            useProperties: false #（若是true的话，便可不用让更复杂的对象以序列化的形式保存到BLOB列中。以防序列化可能导致的版本号问题）
-            dataSource: quartzDataSource
-            dontSetAutoCommitFalse: false #在少数情况下是有用的，比如有一个驱动本来是关闭的，但是又调用这个关闭的方法。但是大部分情况下驱动都要求调用setAutoCommit(false)
-          threadPool: #程池的实现类（一般使用SimpleThreadPool即可满足几乎所有用户的需求）
-            class: org.quartz.simpl.SimpleThreadPool
-            threadCount: 2 #定线程数，至少为1（无默认值）(一般设置为1-100之间的整数合适)
+            txIsolationLevelSerializable: true #有助于防止某些数据库在高负载和“长时间”事务下的锁定超时
+            selectWithLockSQL: SELECT * FROM {0}LOCKS WHERE SCHED_NAME = {1} AND LOCK_NAME = ? FOR UPDATE #在“LOCKS”表中选择一行并在该行上加锁的SQL字符串
+            useProperties: false
+            dontSetAutoCommitFalse: false
+            acquireTriggersWithinLock: true
+            lockHandler:
+              class: org.quartz.impl.jdbcjobstore.UpdateLockRowSemaphore
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool #程池的实现类（一般使用SimpleThreadPool即可满足几乎所有用户的需求）
+            threadCount: 10 #定线程数，至少为1（无默认值）(一般设置为1-100之间的整数合适)
             threadPriority: 5 #设置线程的优先级（最大为java.lang.Thread.MAX_PRIORITY 10，最小为Thread.MIN_PRIORITY 1，默认为5）
-            threadsInheritContextClassLoaderOfInitializingThread: true #加载任务代码的ClassLoader是否从外部继承
-            threadsInheritGroupOfInitializingThread: false
-            threadNamePrefix: Quartz线程池
-          plugin:
-            triggHistory: #配置trigger执行历史日志（可以看到类的文档和参数列表）
-              class: org.quartz.plugins.history.LoggingTriggerHistoryPlugin
-              triggerFiredMessage: 'Trigger {1}.{0} fired job {6}.{5} at\: {4, date, HH\:mm\:ss MM/dd/yyyy}'
-              triggerCompleteMessage: 'Trigger {1}.{0} completed firing job {6}.{5} at {4, date, HH\:mm\:ss MM/dd/yyyy} with resulting trigger instruction code\: {9}'
-#            jobInitializer: #配置job调度插件  quartz_jobs(jobs and triggers内容)的XML文档
-#              class: org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin
-#              fileNames: my_quartz_job2.xml
-#              overWriteExistingJobs: false
-#              failOnFileNotFound: true
-#              scanInterval: 10 #自动扫描任务单并发现改动的时间间隔,单位为秒
-#              wrapInUserTransaction: false #覆盖任务调度器中同名的jobDetail,避免只修改了CronExpression所造成的不能重新生效情况
-#          dataSource: #当开启之后,就会使用C3P0线程池,关闭则默认使用JDBC数据源
-#            quartzDataSource:
-#              driver: com.microsoft.sqlserver.jdbc.SQLServerDriver
-#              URL: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=jpa
-#              user: SA
-#              password: Admin123456%
+            threadsInheritContextClassLoaderOfInitializingThread: true
+            makeThreadsDaemons: false #是否都是守护线程
+            threadsInheritGroupOfInitializingThread: true
+            threadNamePrefix: SQL_ #前缀
   devtools:
-    add-properties: false #是否启用开发属性默认值。
+    add-properties: true #是否启用开发属性默认值。
     livereload:
       enabled: true #是否启用livereload.com网站-兼容服务器
       port: 35729 #端口
