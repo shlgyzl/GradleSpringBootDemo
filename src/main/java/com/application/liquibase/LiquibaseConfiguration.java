@@ -25,7 +25,7 @@ public class LiquibaseConfiguration {
 //    public SpringLiquibase liquibase() {
 //        AsyncSpringLiquibase liquibase = new AsyncSpringLiquibase(executor, env);
 //        liquibase.setDataSource(dataSource);
-//        liquibase.setChangeLog("classpath:config/liquibase/db.changelog-master.xml");
+//        liquibase.setChangeLog("classpath:config/liquibase/master.xml");
 //        liquibase.setContexts(liquibaseProperties.getContexts());
 //        liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
 //        liquibase.setDropFirst(liquibaseProperties.isDropFirst());

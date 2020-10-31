@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!-- 实体修改 -->
+    <changeSet id="20201031093939" author="YangHaiYong"  >
+        <modifyDataType tableName="tbl_defect_type_property" columnName="required_field" newDataType="${int}"/>
+        <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="max_value" columnDataType="${varchar}"/>
+        <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="min_value" columnDataType="${varchar}"/>
+        <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="default_value" columnDataType="${varchar}"/>
+        <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="value" columnDataType="${varchar}"/>
+        <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="unit" columnDataType="${varchar}"/>
+        <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="defect_type_id" columnDataType="${varchar}"/>
+        <dropNotNullConstraint tableName="tbl_defect_type_property" columnName="region" columnDataType="${varchar}"/>
+    </changeSet>
+</databaseChangeLog>

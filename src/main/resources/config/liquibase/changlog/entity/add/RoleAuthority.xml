@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20201031093933" author="YangHaiYong"  >
+        <createTable tableName="tbl_role_authority" remarks="角色与权限关系表">
+            <column name="role_id" type="${bigint}" remarks="角色id">
+                <constraints unique="false" nullable="false"/>
+            </column>
+            <column name="authority_id" type="${bigint}" remarks="权限id">
+                <constraints unique="false" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

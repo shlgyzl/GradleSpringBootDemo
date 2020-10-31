@@ -36,7 +36,7 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://localhost:3306/master?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&&logger=Slf4JLogger&profileSQL=true
+    url: jdbc:mysql://localhost:3306/jpa?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&&logger=Slf4JLogger&profileSQL=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
     platform: all #在DDL或DML脚本中使用的平台（例如schema-${Platform}.sql或data-${Platform}.sql）。
@@ -57,7 +57,7 @@ spring:
       connection-test-query: SELECT 1 #连接测试查询
       #dataSource-class-name: HikariDataSource #数据源Class名称
       driver-class-name: com.mysql.cj.jdbc.Driver #驱动 cannot use driverClassName and dataSourceClassName together.
-      jdbc-url: jdbc:mysql://localhost:3306/master?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&&logger=Slf4JLogger&profileSQL=true
+      jdbc-url: jdbc:mysql://localhost:3306/jpa?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&&logger=Slf4JLogger&profileSQL=true
       pool-name: 主连接池 #连接池的名称,用于打印日志信息,无大作用
       login-timeout: 300 #登录超时
       allow-pool-suspension: false #是否允许远程终止连接池,一般用于较为深入的业务才会使用
@@ -128,8 +128,8 @@ spring:
     drop-first: true #是否删库跑路
     contexts: dev,test,prod #要使用的运行时上下文的逗号分隔列表
     enabled: true #开启Liquibase功能
-    change-log: classpath:config/liquibase/db.changelog-master.xml #主日志文件路径
-    url: jdbc:mysql://localhost:3306/master?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&&logger=Slf4JLogger&profileSQL=true
+    change-log: classpath:config/liquibase/master.xml #主日志文件路径
+    url: jdbc:mysql://localhost:3306/jpa?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&&logger=Slf4JLogger&profileSQL=true
     user: root #数据源账号
     password: root #数据源密码
     clear-checksums: false #是否清除当前变更日志中的所有校验和，以便在下次更新时重新计算它们

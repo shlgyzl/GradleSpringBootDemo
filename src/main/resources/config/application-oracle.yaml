@@ -33,14 +33,14 @@ spring:
     show-sql: true #是否启用SQL语句的日志记录
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    username: test
-    password: test
+    username: JPA
+    password: JPA
     url: jdbc:oracle:thin:@localhost:1521/helowin
     type: com.zaxxer.hikari.HikariDataSource
     platform: all #在DDL或DML脚本中使用的平台（例如schema-${Platform}.sql或data-${Platform}.sql）。
     hikari:
       #### 通过HikariConfigMXBean在运行时更改的属性 ###
-      catalog: jpa #连接上设置的默认目录名称
+      catalog: JPA #连接上设置的默认目录名称
       connection-timeout: 330 #连接超时,不能小于250ms
       validation-timeout: 330 #有效性超时时间,不能小于250ms
       idleTimeout: 10 #空闲时间
@@ -48,8 +48,8 @@ spring:
       max-lifetime: 100000000 #连接的最大寿命
       maximum-pool-size: 10 #连接池的最大限度
       minimum-idle: 10 #最小空闲时间
-      username: test
-      password: test
+      username: JPA
+      password: JPA
       ### 属性在运行时不可更改 ###
       initialization-fail-timeout: 100 #初始化失败超时
       connection-test-query: SELECT * from dual #连接测试查询
@@ -60,7 +60,7 @@ spring:
       login-timeout: 300 #登录超时
       allow-pool-suspension: false #是否允许远程终止连接池,一般用于较为深入的业务才会使用
       read-only: false #当前数据源是否只读
-      schema: TEST #模式名称,一般用数据库名
+      schema: JPA #模式名称,一般用数据库名
       auto-commit: false #让JPA来提交
       data-source-properties: #HikariConfig 该实体具有详细配置
         cachePrepStmts: true #开启预查询缓存
@@ -126,14 +126,14 @@ spring:
     drop-first: true #是否删库跑路
     contexts: dev,test,prod #要使用的运行时上下文的逗号分隔列表
     enabled: true #开启Liquibase功能
-    change-log: classpath:config/liquibase/db.changelog-master.xml #主日志文件路径
+    change-log: classpath:config/liquibase/master.xml #主日志文件路径
     url: jdbc:oracle:thin:@localhost:1521/helowin
-    user: test #数据源账号
-    password: test #数据源密码
+    user: JPA #数据源账号
+    password: JPA #数据源密码
     clear-checksums: false #是否清除当前变更日志中的所有校验和，以便在下次更新时重新计算它们
     database-change-log-lock-table: DATABASECHANGELOGLOCK #用于跟踪并发Liquibase使用情况的表的名称
     database-change-log-table: DATABASECHANGELOG #用于跟踪更改历史记录的表的名称
-    default-schema: TEST #默认数据库架构
+    default-schema: JPA #默认数据库架构
     tag: 1.0 #应用数据库更改时要使用的标记名。也可以与“rollspeffle”一起使用，为与该标记关联的所有现有更改生成回滚脚本
     #labels:  #要使用的运行时标签的逗号分隔列表
     #liquibase-schema: jpa #用于Liquibase对象的架构

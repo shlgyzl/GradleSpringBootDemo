@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!-- 定义全局变量 -->
+    <property name="now" value="now()" dbms="h2" global="true"/>
+    <property name="now" value="now()" dbms="mysql,mssql" global="true"/>
+    <property name="now" value="sysdate" dbms="oracle" global="true"/>
+
+    <property name="autoIncrement" value="true" global="true" dbms="mysql"/>
+
+    <!-- 字符集+中文存储 -->
+    <property name="varchar" value="varchar(255)" dbms="mysql" global="true"/>
+    <property name="varchar" value="nvarchar2(255)" dbms="oracle,mssql" global="true"/>
+
+    <!-- Long整型存储 -->
+    <property name="bigint" value="bigint" dbms="mysql" global="true"/>
+    <property name="bigint" value="number(20,0)" dbms="oracle,mssql" global="true"/>
+
+    <!-- 浮点类型存储 -->
+    <property name="decimal" value="decimal(18,2)" dbms="mysql" global="true"/>
+    <property name="decimal" value="number(20,2)" dbms="oracle" global="true"/>
+    <property name="decimal" value="decimal(20,2)" dbms="mssql" global="true"/>
+
+    <!-- Bit类型存储 -->
+    <property name="bit" value="bit" dbms="mysql,mssql" global="true"/>
+    <property name="bit" value="number(1,0)" dbms="oracle" global="true"/>
+
+    <!-- 日期类型存储 -->
+    <property name="timestamp" value="timestamp" dbms="mysql" global="true"/>
+    <property name="timestamp" value="timestamp(6)" dbms="oracle" global="true"/>
+    <property name="timestamp" value="datetime2(6)" dbms="mssql" global="true"/>
+
+    <!-- 二进制类型存储 -->
+    <property name="blob" value="longblob" dbms="mysql" global="true"/>
+    <property name="blob" value="blob" dbms="oracle" global="true"/>
+    <property name="blob" value="image" dbms="mssql" global="true"/>
+
+    <!-- 纯文本类型存储 -->
+    <property name="text" value="mediumtext" dbms="mysql" global="true"/>
+    <property name="text" value="clob" dbms="oracle" global="true"/>
+    <property name="text" value="ntext" dbms="mssql" global="true"/>
+
+    <!-- Boolean默认值 -->
+    <property name="defaultBoolean" value="false" dbms="mysql,mssql" global="true"/>
+    <property name="defaultBoolean" value="0" dbms="oracle" global="true"/>
+
+    <!-- Int类型存储 -->
+    <property name="int" value="int(6)" dbms="mysql,mssql" global="true"/>
+    <property name="int" value="number(6,0)" dbms="oracle" global="true"/>
+
+    <property name="uuid_type" value="uuid" dbms="postgresql" global="true"/>
+    <property name="uuid_type" value="uniqueidentifier" dbms="mssql" global="true"/>
+    <property name="uuid_type" value="RAW(16)" dbms="oracle" global="true"/>
+    <property name="uuid_type" value="uuid_type" dbms="mysql" global="true"/>
+    <property name="uuid_type" value="uuid_type" dbms="h2" global="true"/>
+
+    <property name="uuid_function" value="uid.uuid_generate_v4()" dbms="postgresql" global="true"/>
+    <property name="uuid_function" value="NEWID()" dbms="mssql" global="true"/>
+    <property name="uuid_function" value="sys_guid()" dbms="oracle" global="true"/>
+    <property name="uuid_function" value="uuid()" dbms="mysql" global="true"/>
+    <property name="uuid_function" value="uuid()" dbms="h2" global="true"/>
+
+    <changeSet id="20201031110032" author="YangHaiYong">
+        <tagDatabase tag="1.0"/>
+    </changeSet>
+
+    <changeSet id="20201031110033" author="YangHaiYong" dbms="oracle,mssql" failOnError="true">
+        <preConditions onErrorMessage="创建序列失败" onFailMessage="创建序列失败">
+            <not>
+                <sequenceExists sequenceName="hibernate_sequence"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="hibernate_sequence" startValue="100" incrementBy="1"/>
+    </changeSet>
+
+    <!-- 新增实体 -->
+    <includeAll path="config/liquibase/changlog/entity/add" relativeToChangelogFile="false"/>
+    <!-- 新增约束 -->
+    <includeAll path="config/liquibase/changlog/constraint/add" relativeToChangelogFile="false"/>
+
+    <!-- 删除约束 -->
+    <includeAll path="config/liquibase/changlog/constraint/delete" relativeToChangelogFile="false"/>
+    <!-- 删除默认值 -->
+
+    <!-- 更新实体 -->
+    <includeAll path="config/liquibase/changlog/entity/update" relativeToChangelogFile="false"/>
+    <!-- 更新约束 -->
+    <includeAll path="config/liquibase/changlog/constraint/update" relativeToChangelogFile="false"/>
+
+    <!-- 初始化数据 -->
+    <!-- 数据加载顺序最好以约束中的表出现顺序递增加载 -->
+    <includeAll path="config/liquibase/changlog/init" relativeToChangelogFile="false"/>
+
+</databaseChangeLog>

@@ -58,7 +58,8 @@ compileJava {
             'lombok.launch.AnnotationProcessorHider$AnnotationProcessor,' +
             'org.mapstruct.ap.MappingProcessor,' +
             'org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor,' +
-            'org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor' <<
+            'org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor,' + 
+            'com.querydsl.apt.jdo.JDOAnnotationProcessor' <<
             '-s' << file("${generatedSrc}").absolutePath
 }
 
@@ -70,7 +71,8 @@ compileTestJava {
             'lombok.launch.AnnotationProcessorHider$AnnotationProcessor,' +
             'org.mapstruct.ap.MappingProcessor,' +
             'org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor,' +
-            'org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor' <<
+            'org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor,' +
+            'com.querydsl.apt.jdo.JDOAnnotationProcessor' <<
             '-s' << file("${generatedTestSrc}").absolutePath
 }
 
@@ -229,7 +231,9 @@ dependencies {
     implementation "com.querydsl:querydsl-sql:${querydslVersion}"
     implementation "com.querydsl:querydsl-sql-codegen:${querydslVersion}"
     implementation "com.querydsl:querydsl-codegen:${querydslVersion}"
-    
+    implementation "com.querydsl:querydsl-jdo:${querydslVersion}"
+
+
 
     annotationProcessor "org.projectlombok:lombok"
     annotationProcessor "org.hibernate:hibernate-jpamodelgen"

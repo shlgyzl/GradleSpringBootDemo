@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!-- 实体修改 -->
+    <changeSet id="20201031093946" author="YangHaiYong"  >
+        <modifyDataType tableName="tbl_defect_type_property" columnName="defect_type_id" newDataType="${bigint}"/>
+    </changeSet>
+</databaseChangeLog>

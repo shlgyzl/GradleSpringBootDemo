@@ -1,5 +1,0 @@
-id;login;password_hash;activated;image_url;version
-1;yanghaiyong;$2a$10$WcfCHPDo2gWg/DMk/x6vI.xTedQhkk5Ez29gRR9PFeMQoN.eYk14O;false;null;0
-2;admin;$2a$10$LDNVjamjjAZF4YIkDPAdiu5ldADW6WGLQgBKSTeyCwNPLtXSSFdVG;true;null;0
-3;user;$2a$10$4S4CtYvKjkQGI18EREYAIOMq5pwfELPB99uluKaJrnzv6xi465RFe;false;null;0
-4;guest;$2a$10$OQOCmUQzbC1FktuN/sT3eOql09Eh6MKGJTr06Kq8eE1hwzwe3LYGS;false;null;0
