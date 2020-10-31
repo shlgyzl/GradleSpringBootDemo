@@ -35,7 +35,7 @@ spring:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: SA
     password: Admin123456%
-    url: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=jpa
+    url: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=JPA
     type: com.zaxxer.hikari.HikariDataSource
     platform: all #在DDL或DML脚本中使用的平台（例如schema-${Platform}.sql或data-${Platform}.sql）。
     hikari:
@@ -55,7 +55,7 @@ spring:
       connection-test-query: SELECT 1 #连接测试查询
       #dataSource-class-name: HikariDataSource #数据源Class名称
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver #驱动 cannot use driverClassName and dataSourceClassName together.
-      jdbc-url: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=jpa
+      jdbc-url: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=JPA
       pool-name: 主连接池 #连接池的名称,用于打印日志信息,无大作用
       login-timeout: 300 #登录超时
       allow-pool-suspension: false #是否允许远程终止连接池,一般用于较为深入的业务才会使用
@@ -126,8 +126,8 @@ spring:
     drop-first: true #是否删库跑路
     contexts: dev,test,prod #要使用的运行时上下文的逗号分隔列表
     enabled: true #开启Liquibase功能
-    change-log: classpath:config/liquibase/db.changelog-master.xml #主日志文件路径
-    url: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=jpa
+    change-log: classpath:config/liquibase/master.xml #主日志文件路径
+    url: jdbc:sqlserver://localhost:1433;SelectMethod=cursor;databaseName=JPA
     user: SA #数据源账号
     password: Admin123456% #数据源密码
     clear-checksums: false #是否清除当前变更日志中的所有校验和，以便在下次更新时重新计算它们
@@ -157,7 +157,7 @@ spring:
     jdbc:
       initialize-schema: always # TODO 生产环境改成never # fix it 初始化Quartz表结构,项目第一次启动配置程always,然后改成never 否则已生成的job会被初始化掉
       comment-prefix: '#,--,--#' #SQL初始化脚本中单行注释的前缀,此处可能不同数据库会出现无法解析SQL问题,请查询相关数据库SQL注释前缀进行匹配
-      schema: classpath:org/quartz/impl/jdbcjobstore/tables_sqlServer.sql #用于初始化数据库架构的SQL文件的路径,暂时用不上
+      schema: classpath:config/liquibase/changlog/entity/add/tables_sqlServer.sql #用于初始化数据库架构的SQL文件的路径,暂时用不上
     job-store-type: jdbc #设置quartz任务的数据持久化方式，默认是内存方式,使用jdbc表示将表创建到数据库中
     overwrite-existing-jobs: false #配置的作业是否应覆盖现有作业定义
     scheduler-name: 定时任务名称 #设定定时任务名称
